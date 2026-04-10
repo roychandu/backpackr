@@ -40,7 +40,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.zapp.testbuild.10005",
+      "productID" : "com.backpackr.10005",
       "referenceName" : "pack 1",
       "type" : "Consumable"
     },
@@ -55,7 +55,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.zapp.testbuild.10006",
+      "productID" : "com.backpackr.10006",
       "referenceName" : "pack 1 copy",
       "type" : "Consumable"
     },
@@ -70,7 +70,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.zapp.testbuild.10007",
+      "productID" : "com.backpackr.10007",
       "referenceName" : "pack 1 copy 2",
       "type" : "Consumable"
     },
@@ -85,7 +85,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.zapp.testbuild.10008",
+      "productID" : "com.backpackr.10008",
       "referenceName" : "pack 1 copy 3",
       "type" : "Consumable"
     },
@@ -100,7 +100,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.zapp.testbuild.10009",
+      "productID" : "com.backpackr.10009",
       "referenceName" : "pack 1 copy 4",
       "type" : "Consumable"
     },
@@ -115,7 +115,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.zapp.testbuild.10010",
+      "productID" : "com.backpackr.10010",
       "referenceName" : "pack 1 copy 5",
       "type" : "Consumable"
     },
@@ -130,7 +130,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.zapp.testbuild.10011",
+      "productID" : "com.backpackr.10011",
       "referenceName" : "pack 1 copy 6",
       "type" : "Consumable"
     }

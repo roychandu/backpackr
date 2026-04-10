@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 const nonConsumableId = kDebugMode
     ? "com.test.bet"
     : "com.birtansokullu.preglob";
-const trophiesId = kDebugMode ? "com.zapp.testbuild.10006" : "";
+const trophiesId = kDebugMode ? "com.backpackr.10006" : "";
 
 /// nonConsumable  is non consumable
 /// trophies  is consumable

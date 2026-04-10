@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         ],
         child: GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Yuvon Globe',
+          title: 'Backpackr',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
             useMaterial3: true,

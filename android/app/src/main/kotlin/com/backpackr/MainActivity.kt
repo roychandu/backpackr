@@ -1,4 +1,4 @@
-package com.zapp.testbuild
+package com.backpackr
 
 import io.flutter.embedding.android.FlutterActivity
 
