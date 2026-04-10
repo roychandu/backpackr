@@ -1,0 +1,859 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'dart:math' as math;
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../common_widgets/app_colors.dart';
+import '../../common_widgets/app_text_styles.dart';
+import '../../models/blog.dart';
+import '../../services/blog_service.dart';
+import '../../utils/error_handler.dart';
+import 'traveling_blog_details_screen.dart';
+
+class OtherTravelersBlogScreen extends StatefulWidget {
+  final String userId;
+  final String userName;
+  final String? currentLocation;
+  final String? avatarUrl;
+  final List<String>? destinations;
+
+  const OtherTravelersBlogScreen({
+    super.key,
+    required this.userId,
+    required this.userName,
+    this.currentLocation,
+    this.avatarUrl,
+    this.destinations,
+  });
+
+  @override
+  State<OtherTravelersBlogScreen> createState() =>
+      _OtherTravelersBlogScreenState();
+}
+
+class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
+  final BlogService _blogService = BlogService();
+  List<Blog> _userBlogs = [];
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserBlogs();
+  }
+
+  Future<void> _loadUserBlogs() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final blogs = await _blogService.getUserBlogs(widget.userId);
+
+      setState(() {
+        _userBlogs = blogs;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = ErrorHandler.getFriendlyErrorMessage(e);
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: RefreshIndicator(
+        onRefresh: _loadUserBlogs,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              const SizedBox(height: 16),
+              if (_isLoading)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(32.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              else if (_errorMessage != null)
+                _buildErrorWidget()
+              else if (_userBlogs.isEmpty)
+                _buildEmptyState()
+              else
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      ..._userBlogs.map(
+                        (blog) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: _buildBlogCard(blog),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    final double topInset = MediaQuery.of(context).padding.top;
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.primary.withOpacity(0.98),
+            AppColors.primary.withOpacity(0.78),
+          ],
+        ),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.35),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.fromLTRB(16, topInset + 8, 16, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Back button row
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  tooltip: 'Back',
+                  padding: const EdgeInsets.all(8),
+                ),
+              ),
+              const Spacer(),
+              Text(
+                "Traveler's Blogs",
+                style: AppTextStyles.h3.copyWith(color: Colors.white),
+              ),
+              const Spacer(),
+              // User avatar circle
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: Colors.white.withOpacity(0.2),
+                backgroundImage:
+                    widget.avatarUrl != null && widget.avatarUrl!.isNotEmpty
+                    ? CachedNetworkImageProvider(widget.avatarUrl!)
+                    : null,
+                child: widget.avatarUrl == null || widget.avatarUrl!.isEmpty
+                    ? Text(
+                        widget.userName.isNotEmpty
+                            ? widget.userName[0].toUpperCase()
+                            : 'U',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : null,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Title section
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.article_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.userName,
+                      style: AppTextStyles.h3.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 26,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Travel Journals',
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.primaryText,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          // Single container with all traveler info
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.25),
+                width: 1,
+              ),
+            ),
+            child: Column(
+              children: [
+                // Last Trip (from most recent blog)
+                if (_userBlogs.isNotEmpty) ...[
+                  _buildInfoRow(
+                    icon: Icons.flight_land,
+                    label: 'Last Trip',
+                    value: _userBlogs.first.destination,
+                  ),
+                  const SizedBox(height: 10),
+                  Divider(color: Colors.white.withOpacity(0.2), height: 1),
+                  const SizedBox(height: 10),
+                ],
+                // Current Location
+                if (widget.currentLocation != null &&
+                    widget.currentLocation!.isNotEmpty) ...[
+                  _buildInfoRow(
+                    icon: Icons.location_on,
+                    label: 'Current Location',
+                    value: widget.currentLocation!,
+                  ),
+                  const SizedBox(height: 10),
+                  Divider(color: Colors.white.withOpacity(0.2), height: 1),
+                  const SizedBox(height: 10),
+                ],
+                // Next Destination
+                if (widget.destinations != null &&
+                    widget.destinations!.isNotEmpty) ...[
+                  _buildInfoRow(
+                    icon: Icons.flight_takeoff,
+                    label: 'Next Destination',
+                    value: widget.destinations!.first,
+                  ),
+                  const SizedBox(height: 10),
+                  Divider(color: Colors.white.withOpacity(0.2), height: 1),
+                  const SizedBox(height: 10),
+                ],
+                // Stories count
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.auto_stories,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      '${_userBlogs.length} ${_userBlogs.length == 1 ? 'Travel Story' : 'Travel Stories'}',
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.travel_explore,
+                            color: Colors.white,
+                            size: 14,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Explorer',
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          children: [
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text('Error loading blogs', style: AppTextStyles.h4),
+            const SizedBox(height: 8),
+            Text(
+              _errorMessage ?? 'Something went wrong',
+              style: AppTextStyles.bodyMedium.copyWith(color: Colors.black54),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: _loadUserBlogs,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    final media = MediaQuery.of(context);
+    final screenWidth = media.size.width;
+    final screenHeight = media.size.height;
+    final imageSize = math.min(screenWidth, screenHeight) * 0.4;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          children: [
+            SizedBox(
+              width: imageSize,
+              height: imageSize,
+              child: Image.asset('assets/blog-empty.png', fit: BoxFit.contain),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'No blogs yet',
+              style: AppTextStyles.h4.copyWith(color: AppColors.primaryText),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '${widget.userName} hasn\'t shared any travel stories yet',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.primaryText,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBlogCard(Blog blog) {
+    return _BlogCardWithSlider(blog: blog);
+  }
+
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: Colors.white, size: 16),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 11,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BlogCardWithSlider extends StatefulWidget {
+  final Blog blog;
+
+  const _BlogCardWithSlider({required this.blog});
+
+  @override
+  State<_BlogCardWithSlider> createState() => _BlogCardWithSliderState();
+}
+
+class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
+  int _currentImageIndex = 0;
+  final PageController _pageController = PageController();
+  Timer? _autoScrollTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startAutoScroll();
+  }
+
+  @override
+  void dispose() {
+    _autoScrollTimer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _startAutoScroll() {
+    // Only auto-scroll if there are multiple images
+    if (widget.blog.imageUrls.length <= 1) return;
+
+    _autoScrollTimer?.cancel();
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
+      final nextPage = (_currentImageIndex + 1) % widget.blog.imageUrls.length;
+
+      _pageController.animateToPage(
+        nextPage,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentImageIndex = index;
+    });
+    // Reset auto-scroll timer when user manually swipes
+    _startAutoScroll();
+  }
+
+  Widget _buildTagChip(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: AppColors.primary,
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inDays == 0) {
+      return 'Today';
+    } else if (difference.inDays == 1) {
+      return 'Yesterday';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} days ago';
+    } else {
+      return '${date.day}/${date.month}/${date.year}';
+    }
+  }
+
+  String _formatTravelDate(DateTime date) {
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TravelingBlogDetailsScreen(blog: widget.blog),
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Images Slider
+            if (widget.blog.imageUrls.isNotEmpty)
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                    child: SizedBox(
+                      height: 250,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        onPageChanged: _onPageChanged,
+                        itemCount: widget.blog.imageUrls.length,
+                        itemBuilder: (context, index) {
+                          return CachedNetworkImage(
+                            imageUrl: widget.blog.imageUrls[index],
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            placeholder: (context, url) => Container(
+                              color: Colors.grey[200],
+                              child: const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              color: Colors.grey[300],
+                              child: const Icon(
+                                Icons.image_not_supported,
+                                size: 50,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  // Image indicators
+                  if (widget.blog.imageUrls.length > 1)
+                    Positioned(
+                      bottom: 12,
+                      left: 0,
+                      right: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          widget.blog.imageUrls.length,
+                          (index) => Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            width: _currentImageIndex == index ? 24 : 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: _currentImageIndex == index
+                                  ? AppColors.primary
+                                  : Colors.white.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  // Image counter
+                  if (widget.blog.imageUrls.length > 1)
+                    Positioned(
+                      top: 12,
+                      right: 12,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${_currentImageIndex + 1}/${widget.blog.imageUrls.length}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+
+            // Content padding
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Author and date
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundColor: AppColors.primary.withOpacity(0.1),
+                        child: Text(
+                          widget.blog.author.isNotEmpty
+                              ? widget.blog.author[0].toUpperCase()
+                              : 'A',
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.blog.author,
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              _formatDate(widget.blog.dateCreated),
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: Colors.black45,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Blog title
+                  Text(
+                    widget.blog.title,
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+
+                  // Blog content preview
+                  Text(
+                    widget.blog.content,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.black54, fontSize: 14),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Tags
+                  if (widget.blog.tags.isNotEmpty) ...[
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: widget.blog.tags
+                          .map((tag) => _buildTagChip(tag))
+                          .toList(),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+
+                  // Bottom row with location and distance
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on,
+                        size: 16,
+                        color: Colors.black38,
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          '${widget.blog.startPlace} → ${widget.blog.destination}',
+                          style: const TextStyle(
+                            color: Colors.black54,
+                            fontSize: 13,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(
+                        Icons.social_distance_rounded,
+                        size: 16,
+                        color: Colors.black38,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        widget.blog.distance,
+                        style: const TextStyle(
+                          color: Colors.black54,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  // Travel dates row
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.calendar_today,
+                        size: 16,
+                        color: Colors.black38,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        _formatTravelDate(widget.blog.startDate),
+                        style: const TextStyle(
+                          color: Colors.black54,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      if (widget.blog.endDate != null) ...[
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.arrow_forward,
+                          size: 12,
+                          color: Colors.black38,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          _formatTravelDate(widget.blog.endDate!),
+                          style: const TextStyle(
+                            color: Colors.black54,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                      const Spacer(),
+                      const Icon(
+                        Icons.schedule,
+                        size: 16,
+                        color: Colors.black38,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        widget.blog.duration,
+                        style: const TextStyle(
+                          color: Colors.black54,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

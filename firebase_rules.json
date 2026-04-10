@@ -1,0 +1,121 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": false,
+
+    "coins": {
+      ".read": "auth != null",
+      ".write": false
+    },
+
+    "userProfiles": {
+      ".read": "auth != null",
+      ".write": false,
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid",
+        "waves": {
+          ".indexOn": ["senderId", "receiverId", "status"],
+          ".read": "auth != null && auth.uid == $uid",
+          "$waveId": {
+            ".read": "auth != null && (data.child('senderId').val() == auth.uid || data.child('receiverId').val() == auth.uid)",
+            ".write": "auth != null && (data.child('senderId').val() == auth.uid || newData.child('senderId').val() == auth.uid || data.child('receiverId').val() == auth.uid || newData.child('receiverId').val() == auth.uid)",
+            ".validate": "!newData.exists() || (newData.child('senderId').val() == auth.uid || newData.child('receiverId').val() == auth.uid)"
+          }
+        },
+        "attendingMeetups": {
+          ".read": "auth != null && auth.uid == $uid",
+          ".write": "auth != null"
+        },
+        "hostedMeetups": {
+          ".read": "auth != null && auth.uid == $uid",
+          ".write": "auth != null && auth.uid == $uid"
+        },
+        "meetupNotifications": {
+          ".indexOn": ["read", "timestamp"],
+          ".read": "auth != null && auth.uid == $uid",
+          ".write": "auth != null"
+        },
+        "travelingBlogs": {
+          ".indexOn": ["dateCreated", "destination"],
+          ".read": "auth != null",
+          ".write": "auth != null && auth.uid == $uid",
+          "$blogId": {
+            ".read": "auth != null",
+            ".write": "auth != null && auth.uid == $uid",
+            ".validate": "newData.child('authorId').val() == auth.uid"
+          }
+        }
+      }
+    },
+
+    "users": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+
+    "chats": {
+      "$chatId": {
+        ".read": "auth != null && (!data.exists() || data.child('participants').child(auth.uid).exists())",
+        ".write": "auth != null && (data.child('participants').child(auth.uid).exists() || newData.child('participants').child(auth.uid).exists())",
+        ".validate": "auth != null && (data.child('participants').child(auth.uid).exists() || newData.child('participants').child(auth.uid).exists())",
+        "lastMessage": {
+          ".write": "auth != null && data.parent().child('participants').child(auth.uid).exists()"
+        },
+        "unreadCounts": {
+          ".write": "auth != null && data.parent().child('participants').child(auth.uid).exists()"
+        },
+        "lastReadTimestamps": {
+          ".write": "auth != null && data.parent().child('participants').child(auth.uid).exists()"
+        }
+      }
+    },
+
+    "hiddenTravelers": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+
+    "userReports": {
+      "$reporterId": {
+        ".read": "auth != null && auth.uid == $reporterId",
+        "$reportedId": {
+          ".write": "auth != null && auth.uid == $reporterId",
+          ".validate": "newData.child('reason').isString() && newData.child('reason').val().length > 0"
+        }
+      }
+    },
+
+    "messages": {
+      "$conversationId": {
+        ".read": "auth != null && root.child('chats').child($conversationId).child('participants').child(auth.uid).exists()",
+        ".write": "auth != null && root.child('chats').child($conversationId).child('participants').child(auth.uid).exists()",
+        ".validate": "auth != null && root.child('chats').child($conversationId).child('participants').child(auth.uid).exists()",
+        "$messageId": {
+          ".validate": "newData.child('senderId').val() == auth.uid"
+        }
+      }
+    },
+
+    "connectionRequests": {
+      "$requestId": {
+        ".read": "auth != null && (data.child('receiverId').val() == auth.uid || data.child('senderId').val() == auth.uid)",
+        ".write": "auth != null && (newData.child('senderId').val() == auth.uid || data.child('receiverId').val() == auth.uid)"
+      }
+    },
+
+    "meetups": {
+      ".indexOn": ["isActive", "dateTime", "hostId"],
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$meetupId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    }
+  }
+}
