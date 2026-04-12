@@ -55,6 +55,8 @@ class AppColors {
   // Platform buttons
   static const Color appleButton = Color(0xFF000000);
   static const Color appleButtonText = Color(0xFFFFFFFF);
+  static const Color googleButton = Color(0xFFFFFFFF);
+  static const Color googleButtonText = Color(0xFF000000);
 
   // Shadow Colors
   static const Color shadow = Color(0x1A000000);

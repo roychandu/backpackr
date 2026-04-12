@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isEmailLoginLoading = false;
   bool _isGuestLoading = false;
   bool _isAppleLoading = false;
+  bool _isGoogleLoading = false;
   final AuthService _authService = AuthService();
   // Removed unused AppFlowService instance
 
@@ -36,7 +37,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   bool get _isAnyLoading =>
-      _isEmailLoginLoading || _isGuestLoading || _isAppleLoading;
+      _isEmailLoginLoading ||
+      _isGuestLoading ||
+      _isAppleLoading ||
+      _isGoogleLoading;
 
   Widget _buildEulaContent() {
     return Column(
@@ -440,6 +444,32 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _handleGoogleSignIn() async {
+    setState(() {
+      _isGoogleLoading = true;
+    });
+
+    try {
+      await _authService.signInWithGoogle();
+
+      if (mounted) {
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil('/home', (route) => false);
+      }
+    } catch (e) {
+      if (mounted) {
+        ErrorHandler.showErrorSnackBar(context, e);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isGoogleLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -732,6 +762,53 @@ class _LoginScreenState extends State<LoginScreen> {
                                   'Sign in with Apple',
                                   style: AppTextStyles.buttonLarge.copyWith(
                                     color: AppColors.text2,
+                                  ),
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Sign in with Google Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton.icon(
+                          onPressed: _isAnyLoading ? null : _handleGoogleSignIn,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.googleButton,
+                            foregroundColor: AppColors.googleButtonText,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                          ),
+                          icon: _isGoogleLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.cta1,
+                                    ),
+                                  ),
+                                )
+                              : Image.asset(
+                                  'assets/icons/google-icon.png',
+                                  height: 24,
+                                  width: 24,
+                                ),
+                          label: _isGoogleLoading
+                              ? Text(
+                                  'Signing in...',
+                                  style: AppTextStyles.buttonLarge.copyWith(
+                                    color: AppColors.textPrimary,
+                                  ),
+                                )
+                              : Text(
+                                  'Sign in with Google',
+                                  style: AppTextStyles.buttonLarge.copyWith(
+                                    color: AppColors.textPrimary,
                                   ),
                                 ),
                         ),

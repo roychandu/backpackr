@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'app_flow_service.dart';
 import 'package:flutter/material.dart';
@@ -428,6 +429,51 @@ class AuthService {
     } catch (e) {
       print('Apple Sign-In failed: $e');
       throw Exception('Apple Sign-In failed: $e');
+    }
+  }
+
+  // Sign in with Google
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return null;
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+
+      if (userCredential.user != null) {
+        // Save user data to SharedPreferences
+        await saveUserData(
+          userId: userCredential.user!.uid,
+          email: userCredential.user!.email ?? '',
+          name: userCredential.user!.displayName,
+        );
+
+        // Save user data to Firebase Realtime Database
+        await _saveUserDataToFirebase(
+          userCredential.user!.uid,
+          userCredential.user!.displayName ??
+              userCredential.user!.email?.split('@').first ??
+              'User',
+          userCredential.user!.email ?? '',
+        );
+      }
+
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      debugPrint('Google Sign-In failed: $e');
+      throw _handleAuthException(e);
+    } catch (e) {
+      debugPrint('Google Sign-In failed: $e');
+      throw Exception('Google Sign-In failed: $e');
     }
   }
 
