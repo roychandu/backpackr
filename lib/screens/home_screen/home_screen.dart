@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
-import 'package:ios_permission/ios_permission.dart';
 import 'package:permission_handler/permission_handler.dart' as perm;
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
@@ -282,48 +281,32 @@ class _HomeScreenState extends State<HomeScreen>
   /// Request location permission
   Future<void> _requestLocationPermission() async {
     try {
-      // Check native location permission status
-      final nativeStatus = await IosPermission.getLocationPermissionStatus();
-      debugPrint('nativeStatus: ${nativeStatus.status}');
-      // If already authorized, no need to request
-      if (nativeStatus.canUseLocation) {
-        print('Location permission already granted');
+      // Check current status using permission_handler
+      var status = await perm.Permission.location.status;
+
+      // If already granted or limited (iOS), no need to request
+      if (status.isGranted || status.isLimited || status.isProvisional) {
+        debugPrint('Location permission already granted or limited');
         return;
       }
 
-      // If needs settings (denied or restricted), open settings dialog
-      if (nativeStatus.needsSettings) {
+      // If permanently denied, show settings dialog
+      if (status.isPermanentlyDenied) {
         if (mounted) {
           _showOpenSettingsDialog();
         }
         return;
       }
 
-      // Request location permission using native iOS method
-      final granted = await IosPermission.smartLocationPermissionRequest();
+      // Request permission
+      final result = await perm.Permission.location.request();
 
-      if (!granted) {
-        // Check status again after request
-        final updatedStatus = await IosPermission.getLocationPermissionStatus();
-
-        // If still denied or restricted, show settings dialog
-        if (updatedStatus.needsSettings || !updatedStatus.canUseLocation) {
-          if (mounted) {
-            _showOpenSettingsDialog();
-          }
-        }
+      // If user denied after request, maybe show settings dialog if suitable
+      if (result.isPermanentlyDenied && mounted) {
+        _showOpenSettingsDialog();
       }
     } catch (e) {
-      print('Error requesting location permission: $e');
-      // Fallback to permission_handler if native method fails
-      try {
-        final status = await perm.Permission.location.request();
-        if (status.isPermanentlyDenied && mounted) {
-          _showOpenSettingsDialog();
-        }
-      } catch (fallbackError) {
-        print('Error with fallback permission request: $fallbackError');
-      }
+      debugPrint('Error requesting location permission: $e');
     }
   }
 
@@ -475,12 +458,11 @@ class _HomeScreenState extends State<HomeScreen>
         return;
       }
 
-      var status = await perm.Permission.locationWhenInUse.status;
-      if (status.isDenied) {
-        status = await perm.Permission.locationWhenInUse.request();
-      }
-      if (status.isPermanentlyDenied || status.isDenied) {
-        // Permission denied - stop loading
+      // Check status but DO NOT auto-request here to avoid popups on every app resume
+      var status = await perm.Permission.location.status;
+
+      if (!status.isGranted && !status.isLimited && !status.isProvisional) {
+        // Not granted - stop loading rather than showing a popup again
         if (mounted) {
           setState(() {
             _isLoadingTravelers = false;

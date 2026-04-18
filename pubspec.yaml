@@ -89,9 +89,6 @@ dependencies:
   google_maps_flutter: ^2.13.1
   google_sign_in: ^6.2.1
 
-  ios_permission:
-    path: ./ios_permission/
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
