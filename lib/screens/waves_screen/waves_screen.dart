@@ -11,6 +11,7 @@ import '../../services/chat_service.dart';
 import '../../utils/error_handler.dart';
 import '../chat_screens/conversation_screen.dart';
 import '../traveling_blogs_screen/other_travelers_blog_screen.dart';
+import '../../common_widgets/app_header.dart';
 
 class WavesScreen extends StatefulWidget {
   const WavesScreen({super.key});
@@ -507,51 +508,10 @@ class _WavesScreenState extends State<WavesScreen>
   }
 
   Widget _buildHeader(BuildContext context) {
-    final double topInset = MediaQuery.of(context).padding.top;
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primary.withOpacity(0.98),
-            AppColors.primary.withOpacity(0.78),
-          ],
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.35),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.fromLTRB(16, topInset + 16, 16, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Your Waves',
-            style: AppTextStyles.h3.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 32,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Connect with fellow travelers',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: Colors.white.withOpacity(0.9),
-            ),
-          ),
-        ],
-      ),
+    return const AppHeader(
+      title: 'Your Waves',
+      subtitle: 'Connect with fellow travelers',
+      fontSize: 32,
     );
   }
 

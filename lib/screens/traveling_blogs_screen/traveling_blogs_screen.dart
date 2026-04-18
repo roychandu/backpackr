@@ -9,6 +9,7 @@ import '../../common_widgets/app_text_styles.dart';
 import '../../models/blog.dart';
 import '../../services/blog_service.dart';
 import '../../services/user_setup_service.dart';
+import '../../common_widgets/app_header.dart';
 import '../../utils/error_handler.dart';
 import 'create_traveling_blog_bottom_sheet.dart';
 import 'traveling_blog_details_screen.dart';
@@ -108,58 +109,10 @@ class _TravelingBlogsScreenState extends State<TravelingBlogsScreen> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    final double topInset = MediaQuery.of(context).padding.top;
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primary.withOpacity(0.98),
-            AppColors.primary.withOpacity(0.78),
-          ],
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.35),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.fromLTRB(16, topInset + 16, 16, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Traveling Blogs',
-            style: AppTextStyles.h3.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 28,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Share your travel stories',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.primaryText,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            '${_allBlogs.length} ${_allBlogs.length == 1 ? 'blog' : 'blogs'}',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.primaryText,
-            ),
-          ),
-        ],
-      ),
+    return AppHeader(
+      title: 'Traveling Blogs',
+      subtitle: 'Share your travel stories',
+      additionalSubtitle: '${_allBlogs.length} ${_allBlogs.length == 1 ? 'blog' : 'blogs'}',
     );
   }
 

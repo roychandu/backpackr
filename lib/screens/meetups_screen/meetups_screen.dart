@@ -14,6 +14,7 @@ import '../../services/user_setup_service.dart';
 import '../../utils/error_handler.dart';
 import 'create_meetup_screen.dart';
 import 'meetup_details_screen.dart';
+import '../../common_widgets/app_header.dart';
 
 class MeetupsScreen extends StatefulWidget {
   const MeetupsScreen({super.key});
@@ -436,58 +437,10 @@ class _MeetupsScreenState extends State<MeetupsScreen>
   }
 
   Widget _buildHeader(BuildContext context) {
-    final double topInset = MediaQuery.of(context).padding.top;
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primary.withOpacity(0.98),
-            AppColors.primary.withOpacity(0.78),
-          ],
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.35),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.fromLTRB(16, topInset + 16, 16, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Meetups',
-            style: AppTextStyles.h3.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 28,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Join or create amazing experiences',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.primaryText,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            '${_myMeetups.length + _allMeetups.length} upcoming events',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.primaryText,
-            ),
-          ),
-        ],
-      ),
+    return AppHeader(
+      title: 'Meetups',
+      subtitle: 'Join or create amazing experiences',
+      additionalSubtitle: '${_myMeetups.length + _allMeetups.length} upcoming events',
     );
   }
 

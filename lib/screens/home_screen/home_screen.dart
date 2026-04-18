@@ -1,4 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print, empty_catches, deprecated_member_use, prefer_interpolation_to_compose_strings, sort_child_properties_last
+import 'package:backpackr/common_widgets/app_colors.dart';
 import 'package:backpackr/screens/profile_screen/profile_screen.dart';
 import 'package:backpackr/screens/traveling_blogs_screen/traveling_blogs_screen.dart';
 import 'package:backpackr/screens/traveling_blogs_screen/other_travelers_blog_screen.dart';
@@ -10,8 +11,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:permission_handler/permission_handler.dart' as perm;
-import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/app_header.dart';
 import '../waves_screen/waves_screen.dart';
 import '../meetups_screen/meetups_screen.dart';
 import 'package:backpackr/screens/chat_screens/chat_list_screen.dart';
@@ -628,112 +629,53 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildDiscoverHeader() {
-    final double topInset = MediaQuery.of(context).padding.top;
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primary.withOpacity(0.98),
-            AppColors.primary.withOpacity(0.78),
-          ],
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.35),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.fromLTRB(16, topInset + 16, 16, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header row with greeting and profile picture
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (_userName.isNotEmpty)
-                      Text(
-                        'Hi, ' + _userName,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.primaryText,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                        ),
-                      ),
-                    if (_userName.isNotEmpty) const SizedBox(height: 4),
-                  ],
-                ),
-              ),
-              // Profile picture in top right
-              GestureDetector(
-                onTap: () {
-                  // Navigate to profile screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
-                    ),
-                  );
-                },
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.white.withOpacity(0.2),
-
-                  child: Icon(
-                    Icons.person,
-                    size: 24,
-                    color: Colors.white.withOpacity(0.8),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Text(
-            'Discover Travelers',
-            style: AppTextStyles.h3.copyWith(
-              color: AppColors.primaryText,
-              fontWeight: FontWeight.w800,
-              fontSize: 32,
+    return AppHeader(
+      title: 'Discover Travelers',
+      topSubtitle: _userName.isNotEmpty ? 'Hi, ' + _userName : null,
+      fontSize: 32,
+      actions: [
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfileScreen()),
+            );
+          },
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.white.withOpacity(0.2),
+            child: Icon(
+              Icons.person,
+              size: 24,
+              color: Colors.white.withOpacity(0.8),
             ),
           ),
-          const SizedBox(height: 6),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  _setupCompleted && _currentCity.isNotEmpty
-                      ? 'Connect with fellow adventurers in ' + _currentCity
-                      : 'Connect with fellow adventurers',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: Colors.white.withOpacity(0.9),
-                  ),
+        ),
+      ],
+      customBottomContent: Row(
+        children: [
+          Expanded(
+            child: Text(
+              _setupCompleted && _currentCity.isNotEmpty
+                  ? 'Connect with fellow adventurers in ' + _currentCity
+                  : 'Connect with fellow adventurers',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: Colors.white.withOpacity(0.9),
+              ),
+            ),
+          ),
+          if (_setupCompleted && _isLocating)
+            const Padding(
+              padding: EdgeInsets.only(left: 8.0),
+              child: SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
                 ),
               ),
-              if (_setupCompleted && _isLocating)
-                const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 0),
-          // search removed
+            ),
         ],
       ),
     );
