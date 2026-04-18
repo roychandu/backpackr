@@ -326,10 +326,8 @@ class _WavesScreenState extends State<WavesScreen>
                 preferredSize: const Size.fromHeight(0),
                 child: Container(
                   child: TabBar(
-                    padding: EdgeInsets.zero,
                     isScrollable: true,
-                    labelPadding: const EdgeInsets.symmetric(horizontal: 10),
-                    tabAlignment: TabAlignment.start,
+                    tabAlignment: TabAlignment.center,
                     controller: _tabController,
                     labelColor: AppColors.primary,
                     unselectedLabelColor: Colors.white70,
