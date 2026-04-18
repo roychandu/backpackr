@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_to_list_in_spreads, avoid_unnecessary_containers, use_build_context_synchronously, deprecated_member_use, avoid_print
+
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'dart:math' as math;

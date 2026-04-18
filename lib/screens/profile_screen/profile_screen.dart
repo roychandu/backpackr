@@ -3,7 +3,6 @@
 import 'package:backpackr/common_widgets/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
-import 'package:flutter/services.dart';
 import 'package:backpackr/screens/profile_screen/edit_profile.dart';
 import 'package:backpackr/screens/premium_screen/premium_screen.dart';
 import 'package:backpackr/screens/profile_screen/user_setup_screen.dart';
@@ -197,7 +196,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             trailing: const Icon(Icons.star, color: Colors.amber, size: 16),
             onTap: () {
               setState(() => isLoading = true);
-              Provider.of<InAppPurchaseProvider>(context, listen: false).restorePurchases();
+              Provider.of<InAppPurchaseProvider>(
+                context,
+                listen: false,
+              ).restorePurchases();
               setState(() => isLoading = false);
             },
           ),

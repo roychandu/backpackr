@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:backpackr/screens/auth_screen/login_screen.dart';
 import '../../common_widgets/app_colors.dart';
@@ -851,8 +853,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               width: double.infinity,
                               height: 50,
                               child: ElevatedButton.icon(
-                                onPressed:
-                                    _isAnyLoading ? null : _handleGoogleSignIn,
+                                onPressed: _isAnyLoading
+                                    ? null
+                                    : _handleGoogleSignIn,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.googleButton,
                                   foregroundColor: AppColors.googleButtonText,
@@ -881,17 +884,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 label: _isGoogleLoading
                                     ? Text(
                                         'Registering...',
-                                        style:
-                                            AppTextStyles.buttonLarge.copyWith(
-                                          color: AppColors.textPrimary,
-                                        ),
+                                        style: AppTextStyles.buttonLarge
+                                            .copyWith(
+                                              color: AppColors.textPrimary,
+                                            ),
                                       )
                                     : Text(
                                         'Register with Google',
-                                        style:
-                                            AppTextStyles.buttonLarge.copyWith(
-                                          color: AppColors.textPrimary,
-                                        ),
+                                        style: AppTextStyles.buttonLarge
+                                            .copyWith(
+                                              color: AppColors.textPrimary,
+                                            ),
                                       ),
                               ),
                             ),

@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_to_list_in_spreads, deprecated_member_use
+
 import 'package:backpackr/provider/purchase_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

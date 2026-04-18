@@ -1,4 +1,4 @@
-// ignore_for_file: empty_catches
+// ignore_for_file: deprecated_member_use, avoid_print, empty_catches
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';

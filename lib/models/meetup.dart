@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 enum MeetupCategory { work, culture, adventure, food, nightlife, sports, other }
 
 class Meetup {

@@ -784,13 +784,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.19.0"
-  ios_permission:
-    dependency: "direct main"
-    description:
-      path: ios_permission
-      relative: true
-    source: path
-    version: "0.0.1"
   json_annotation:
     dependency: transitive
     description:

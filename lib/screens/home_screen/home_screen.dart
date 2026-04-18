@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, prefer_interpolation_to_compose_strings, sort_child_properties_last
+// ignore_for_file: use_build_context_synchronously, avoid_print, empty_catches, deprecated_member_use, prefer_interpolation_to_compose_strings, sort_child_properties_last
 import 'package:backpackr/screens/profile_screen/profile_screen.dart';
 import 'package:backpackr/screens/traveling_blogs_screen/traveling_blogs_screen.dart';
 import 'package:backpackr/screens/traveling_blogs_screen/other_travelers_blog_screen.dart';

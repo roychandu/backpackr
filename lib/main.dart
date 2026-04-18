@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, empty_catches
+
 import 'package:backpackr/common_widgets/app_colors.dart';
 import 'package:backpackr/provider/purchase_provider.dart';
 import 'package:backpackr/screens/auth_screen/login_screen.dart';
