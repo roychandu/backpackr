@@ -1,4 +1,3 @@
-import 'package:backpackr/backpform/backdpage.dart';
 import 'package:backpackr/common_widgets/app_colors.dart';
 import 'package:backpackr/provider/purchase_provider.dart';
 import 'package:backpackr/screens/auth_screen/login_screen.dart';
@@ -64,7 +63,7 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           navigatorKey: appNavigatorKey,
-          home: BackFormPage(),
+          home: const AppFlowWrapper(),
           routes: {
             '/intro': (context) => const IntroScreen(),
             '/login': (context) => const LoginScreen(),
