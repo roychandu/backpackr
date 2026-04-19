@@ -12,13 +12,15 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-setPortait() {
+import 'package:backpackr/core/app_config.dart';
+
+void setPortait() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 }
 
@@ -28,24 +30,32 @@ void main() async {
   // Load environment variables
   try {
     await dotenv.load(fileName: ".env");
+    debugPrint("✅ .env file loaded successfully");
+    debugPrint("AWS URL: ${AppConfig.awsBaseUrl}");
+    debugPrint("IAP ID: ${AppConfig.premiumProductId}");
   } catch (e) {
-    print("Error loading .env file: $e");
+    print("❌ Error loading .env file: $e");
   }
 
   try {
     await Firebase.initializeApp();
+    debugPrint("🔥 Firebase initialized");
+    
     if (kReleaseMode) {
       FirebaseAppCheck.instance.activate(
         appleProvider: AppleProvider.appAttest,
       );
     }
-  } catch (e) {}
+  } catch (e) {
+    debugPrint("❌ Firebase init error: $e");
+  }
   try {
     await NotificationService.initialize();
     print('Notification service initialized successfully');
   } catch (e) {
     print('Error initializing notification service: $e');
   }
+
   setPortait();
   runApp(const MyApp());
 }
