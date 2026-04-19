@@ -3,13 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:backpackr/core/app_config.dart';
 
 const appLink = "https://apps.apple.com/us/app/idAPPID";
 
 const String subFolderName = "p182";
 
 /// base url for AWS
-final baseUrl = "https://rest.yuvonglobe-app.info/";
+final baseUrl = AppConfig.awsBaseUrl;
 // "https://d1r9c4nksnam33.cloudfront.net/";
 final String baseUrlForUploadPostApi = "${baseUrl}upload";
 final String baseUrlToFetchStaticImage = "$baseUrl$bundleNameToFetchImage";

@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 setPortait() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -23,6 +24,13 @@ setPortait() {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Load environment variables
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    print("Error loading .env file: $e");
+  }
 
   try {
     await Firebase.initializeApp();

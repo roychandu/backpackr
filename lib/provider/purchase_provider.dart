@@ -12,11 +12,11 @@ import 'package:get/get.dart';
 
 /// test ids
 
+import 'package:backpackr/core/app_config.dart';
+
 /// production ids
-const nonConsumableId = kDebugMode
-    ? "com.test.bet"
-    : "com.birtansokullu.preglob";
-const trophiesId = kDebugMode ? "com.backpackr.10006" : "";
+final String nonConsumableId = AppConfig.premiumProductId;
+final String trophiesId = AppConfig.trophiesProductIdTest;
 
 /// nonConsumable  is non consumable
 /// trophies  is consumable

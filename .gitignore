@@ -90,3 +90,6 @@ build/
 
 # Linux related
 build/
+
+# Secrets
+.env
