@@ -497,7 +497,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: AppColors.text3.withOpacity(0.2),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),

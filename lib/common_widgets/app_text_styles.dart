@@ -62,19 +62,19 @@ class AppTextStyles {
   static const TextStyle buttonLarge = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w600,
-    color: Colors.white,
+    color: AppColors.text1,
   );
 
   static const TextStyle buttonMedium = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w600,
-    color: Colors.white,
+    color: AppColors.text1,
   );
 
   static const TextStyle buttonSmall = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w600,
-    color: Colors.white,
+    color: AppColors.text1,
   );
 
   // Caption Styles

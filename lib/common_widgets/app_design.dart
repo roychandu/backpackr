@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_text_styles.dart';
+import 'app_colors.dart';
 
 // Spacing helpers
 Widget gap8() => const SizedBox(height: 8);
@@ -17,7 +18,7 @@ Widget sectionHeader(String title, IconData icon) {
         Text(
           title,
           style: AppTextStyles.h3.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -40,15 +41,15 @@ Widget glassCard({
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Colors.white.withOpacity(0.08),
-          Colors.white.withOpacity(0.04),
+          AppColors.text1.withOpacity(0.08),
+          AppColors.text1.withOpacity(0.04),
         ],
       ),
       borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: Colors.white.withOpacity(0.18), width: 1),
+      border: Border.all(color: AppColors.text1.withOpacity(0.18), width: 1),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.10),
+          color: AppColors.text3.withOpacity(0.10),
           blurRadius: 16,
           offset: const Offset(0, 8),
         ),
@@ -66,7 +67,7 @@ Widget designLabel(String text) {
   return Text(
     text,
     style: AppTextStyles.bodySmall.copyWith(
-      color: Colors.white.withOpacity(0.9),
+      color: AppColors.text1.withOpacity(0.9),
       fontWeight: FontWeight.w600,
     ),
   );
@@ -76,25 +77,25 @@ Widget designLabel(String text) {
 InputDecoration glassInputDecoration(String hint) {
   return InputDecoration(
     hintText: hint,
-    hintStyle: TextStyle(color: Colors.white.withOpacity(0.55)),
+    hintStyle: TextStyle(color: AppColors.text1.withOpacity(0.55)),
     filled: true,
-    fillColor: Colors.white.withOpacity(0.04),
+    fillColor: AppColors.text1.withOpacity(0.04),
     contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: Colors.white.withOpacity(0.22)),
+      borderSide: BorderSide(color: AppColors.text1.withOpacity(0.22)),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.amber, width: 1.2),
+      borderSide: const BorderSide(color: AppColors.highlight, width: 1.2),
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.redAccent),
+      borderSide: const BorderSide(color: AppColors.error),
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.redAccent),
+      borderSide: const BorderSide(color: AppColors.error),
     ),
   );
 }
@@ -114,11 +115,11 @@ Widget designPrimaryButton({
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [Colors.amber, Colors.orange]),
+          gradient: const LinearGradient(colors: [AppColors.highlight, AppColors.cta1]),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.amber.withOpacity(0.28),
+              color: AppColors.highlight.withOpacity(0.28),
               blurRadius: 14,
               offset: const Offset(0, 6),
             ),
@@ -128,12 +129,12 @@ Widget designPrimaryButton({
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white),
+            Icon(icon, color: AppColors.text1),
             const SizedBox(width: 8),
             Text(
               label,
               style: AppTextStyles.bodySmall.copyWith(
-                color: Colors.white,
+                color: AppColors.text1,
                 fontWeight: FontWeight.bold,
               ),
             ),

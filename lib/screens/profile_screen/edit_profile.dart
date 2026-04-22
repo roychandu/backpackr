@@ -529,7 +529,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   height: 120,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.white,
+                                    color: AppColors.text1,
                                     border: Border.all(
                                       color: AppColors.border,
                                       width: 2,
@@ -596,13 +596,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       color: AppColors.primary,
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                        color: Colors.white,
+                                        color: AppColors.text1,
                                         width: 2,
                                       ),
                                     ),
                                     child: const Icon(
                                       Icons.edit,
-                                      color: Colors.white,
+                                      color: AppColors.text1,
                                       size: 16,
                                     ),
                                   ),
@@ -700,7 +700,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         onPressed: _isLoading ? null : _saveProfile,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
+                          foregroundColor: AppColors.text1,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -713,7 +713,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white,
+                                    AppColors.text1,
                                   ),
                                 ),
                               )

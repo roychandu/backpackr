@@ -111,7 +111,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(20),
                 ),
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
+                border: Border.all(color: AppColors.text1.withOpacity(0.1)),
               ),
               child: Column(
                 children: [
@@ -121,7 +121,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                     width: 40,
                     height: 5,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.3),
+                      color: AppColors.text1.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -140,7 +140,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                           ),
                           child: const Icon(
                             Icons.person_add_rounded,
-                            color: Colors.white,
+                            color: AppColors.text1,
                             size: 24,
                           ),
                         ),
@@ -152,14 +152,14 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                               Text(
                                 'Add Participants',
                                 style: AppTextStyles.h4.copyWith(
-                                  color: Colors.white,
+                                  color: AppColors.text1,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Text(
                                 widget.conversation.groupName ?? 'Group',
                                 style: AppTextStyles.bodySmall.copyWith(
-                                  color: Colors.white60,
+                                  color: AppColors.text1.withOpacity(0.60),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -169,9 +169,9 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                         ),
                         IconButton(
                           onPressed: () => Navigator.pop(context),
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.close_rounded,
-                            color: Colors.white70,
+                            color: AppColors.text1.withOpacity(0.70),
                           ),
                         ),
                       ],
@@ -187,7 +187,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                         Text(
                           'Select from mutual connections',
                           style: AppTextStyles.bodyMedium.copyWith(
-                            color: Colors.white70,
+                            color: AppColors.text1.withOpacity(0.70),
                           ),
                         ),
                         const Spacer(),
@@ -203,7 +203,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                           child: Text(
                             '${_selectedParticipants.length} selected',
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: Colors.white,
+                              color: AppColors.text1,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -251,7 +251,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                       color: AppColors.background,
                       border: Border(
                         top: BorderSide(
-                          color: Colors.white.withOpacity(0.1),
+                          color: AppColors.text1.withOpacity(0.1),
                           width: 1,
                         ),
                       ),
@@ -267,14 +267,14 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white,
+                                  color: AppColors.text1,
                                 ),
                               )
                             : const Icon(Icons.person_add_rounded),
                         label: Text(_isAdding ? 'Adding...' : 'Add to Group'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
+                          foregroundColor: AppColors.text1,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
@@ -300,12 +300,12 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(isSelected ? 0.12 : 0.06),
+        color: AppColors.text1.withOpacity(isSelected ? 0.12 : 0.06),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isSelected
               ? AppColors.primary.withOpacity(0.5)
-              : Colors.white.withOpacity(0.1),
+              : AppColors.text1.withOpacity(0.1),
           width: isSelected ? 2 : 1,
         ),
       ),
@@ -323,13 +323,15 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
         title: Text(
           userName,
           style: AppTextStyles.bodyMedium.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.w600,
           ),
         ),
         subtitle: Text(
           'Mutual connection',
-          style: AppTextStyles.bodySmall.copyWith(color: Colors.white60),
+          style: AppTextStyles.bodySmall.copyWith(
+            color: AppColors.text1.withOpacity(0.60),
+          ),
         ),
         secondary: CircleAvatar(
           radius: 20,
@@ -337,7 +339,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
           child: Icon(Icons.person, color: AppColors.primary, size: 20),
         ),
         activeColor: AppColors.primary,
-        checkColor: Colors.white,
+        checkColor: AppColors.text1,
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       ),
     );
@@ -354,13 +356,13 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.06),
+                color: AppColors.text1.withOpacity(0.06),
                 borderRadius: BorderRadius.circular(50),
-                border: Border.all(color: Colors.white.withOpacity(0.15)),
+                border: Border.all(color: AppColors.text1.withOpacity(0.15)),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.person_add_disabled_rounded,
-                color: Colors.white70,
+                color: AppColors.text1.withOpacity(0.70),
                 size: 40,
               ),
             ),
@@ -368,7 +370,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
             Text(
               'All connections already added',
               style: AppTextStyles.h4.copyWith(
-                color: Colors.white,
+                color: AppColors.text1,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -376,7 +378,9 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
             Text(
               'All your mutual connections are already in this group',
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.text1.withOpacity(0.70),
+              ),
             ),
           ],
         ),

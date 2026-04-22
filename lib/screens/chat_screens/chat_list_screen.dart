@@ -36,11 +36,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.text1,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: AppColors.text3.withOpacity(0.08),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -54,7 +54,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             Text(
               label,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: Colors.black87,
+                color: AppColors.text3.withOpacity(0.87),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -102,7 +102,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   Text(
                     'Recent Chats',
                     style: AppTextStyles.h4.copyWith(
-                      color: Colors.white,
+                      color: AppColors.text1,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -153,7 +153,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           Text(
             'Messages',
             style: AppTextStyles.h3.copyWith(
-              color: Colors.white,
+              color: AppColors.text1,
               fontWeight: FontWeight.w800,
               fontSize: 32,
             ),
@@ -162,7 +162,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           Text(
             'Stay connected with fellow travelers',
             style: AppTextStyles.bodyMedium.copyWith(
-              color: Colors.white.withOpacity(0.9),
+              color: AppColors.text1.withOpacity(0.9),
             ),
           ),
         ],
@@ -182,25 +182,29 @@ class _ChatListScreenState extends State<ChatListScreen> {
               height: 120,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Colors.amber, Colors.orange],
+                  colors: [AppColors.highlight, AppColors.cta1],
                 ),
                 borderRadius: BorderRadius.circular(60),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.amber.withOpacity(0.3),
+                    color: AppColors.highlight.withOpacity(0.3),
                     blurRadius: 20,
                     spreadRadius: 5,
                   ),
                 ],
               ),
-              child: const Icon(Icons.message, color: Colors.white, size: 50),
+              child: const Icon(
+                Icons.message,
+                color: AppColors.text1,
+                size: 50,
+              ),
             ),
             const SizedBox(height: 24),
             Text(
               'Please log in to start chatting',
               style: AppTextStyles.h3.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppColors.text1,
                 fontSize: 24,
               ),
             ),
@@ -209,7 +213,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               'Sign in to your account to access\nchat features',
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyLarge.copyWith(
-                color: Colors.white.withOpacity(0.8),
+                color: AppColors.text1.withOpacity(0.8),
                 height: 1.5,
               ),
             ),
@@ -251,12 +255,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(color: Colors.amber),
+          CircularProgressIndicator(color: AppColors.highlight),
           const SizedBox(height: 24),
           Text(
             'Loading conversations...',
             style: AppTextStyles.bodyLarge.copyWith(
-              color: Colors.white.withOpacity(0.8),
+              color: AppColors.text1.withOpacity(0.8),
             ),
           ),
         ],
@@ -276,25 +280,25 @@ class _ChatListScreenState extends State<ChatListScreen> {
               height: 120,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Colors.red, Colors.redAccent],
+                  colors: [AppColors.error, AppColors.error],
                 ),
                 borderRadius: BorderRadius.circular(60),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.red.withOpacity(0.3),
+                    color: AppColors.error.withOpacity(0.3),
                     blurRadius: 20,
                     spreadRadius: 5,
                   ),
                 ],
               ),
-              child: const Icon(Icons.error, color: Colors.white, size: 50),
+              child: const Icon(Icons.error, color: AppColors.text1, size: 50),
             ),
             const SizedBox(height: 24),
             Text(
               'Error loading conversations',
               style: AppTextStyles.h3.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppColors.text1,
                 fontSize: 24,
               ),
             ),
@@ -303,7 +307,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               error,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: Colors.white.withOpacity(0.8),
+                color: AppColors.text1.withOpacity(0.8),
                 height: 1.5,
               ),
             ),
@@ -313,8 +317,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 setState(() {});
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                foregroundColor: Colors.black,
+                backgroundColor: AppColors.highlight,
+                foregroundColor: AppColors.text3,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
@@ -348,7 +352,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               textAlign: TextAlign.center,
               style: AppTextStyles.h3.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppColors.text1,
                 fontSize: 32,
               ),
             ),
@@ -357,7 +361,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               'Connect with fellow travelers and\ncreate group chats',
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyLarge.copyWith(
-                color: Colors.white.withOpacity(0.8),
+                color: AppColors.text1.withOpacity(0.8),
                 height: 1.5,
               ),
             ),
@@ -371,7 +375,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   label: const Text('Create Group'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: AppColors.text1,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
@@ -397,11 +401,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.text1,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: AppColors.text3.withOpacity(0.08),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -419,7 +423,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               backgroundColor: AppColors.primary,
               child: Icon(
                 conversation.isGroup ? Icons.group_rounded : Icons.person,
-                color: Colors.white,
+                color: AppColors.text1,
                 size: conversation.isGroup ? 24 : 20,
               ),
             ),
@@ -434,7 +438,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         child: Text(
                           displayName,
                           style: AppTextStyles.bodyLarge.copyWith(
-                            color: Colors.black87,
+                            color: AppColors.text3.withOpacity(0.87),
                             fontWeight: hasUnread
                                 ? FontWeight.bold
                                 : FontWeight.w700,
@@ -445,8 +449,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       ),
                       Text(
                         _formatTime(conversation.lastMessageTimestamp),
-                        style: const TextStyle(
-                          color: Colors.black45,
+                        style: TextStyle(
+                          color: AppColors.text3.withOpacity(0.45),
                           fontSize: 12,
                         ),
                       ),
@@ -468,7 +472,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       Expanded(
                         child: Text(
                           conversation.lastMessageContent,
-                          style: const TextStyle(color: Colors.black54),
+                          style: TextStyle(
+                            color: AppColors.text3.withOpacity(0.54),
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -477,11 +483,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         const SizedBox(width: 8),
                         CircleAvatar(
                           radius: 12,
-                          backgroundColor: Colors.indigo,
+                          backgroundColor: AppColors.highlight2,
                           child: Text(
                             unreadCount.toString(),
                             style: const TextStyle(
-                              color: Colors.white,
+                              color: AppColors.text1,
                               fontSize: 12,
                             ),
                           ),

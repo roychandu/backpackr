@@ -217,7 +217,7 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
             ),
             child: Row(
               children: [
-                Icon(Icons.send_rounded, color: Colors.white, size: 28),
+                Icon(Icons.send_rounded, color: AppColors.text1, size: 28),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -226,7 +226,7 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
                       Text(
                         'Suggest a Meetup',
                         style: AppTextStyles.h4.copyWith(
-                          color: Colors.white,
+                          color: AppColors.text1,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -234,7 +234,7 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
                       Text(
                         'From organizers near you (200km)',
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: Colors.white.withOpacity(0.9),
+                          color: AppColors.text1.withOpacity(0.9),
                         ),
                       ),
                     ],
@@ -242,7 +242,7 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
                 ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close, color: Colors.white),
+                  icon: const Icon(Icons.close, color: AppColors.text1),
                 ),
               ],
             ),
@@ -288,7 +288,7 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red),
+            Icon(Icons.error_outline, size: 64, color: AppColors.error),
             const SizedBox(height: 16),
             Text(
               'Error',
@@ -309,7 +309,7 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
               label: const Text('Retry'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.text1,
               ),
             ),
           ],
@@ -363,11 +363,11 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.text1,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: AppColors.text3.withOpacity(0.08),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -426,13 +426,13 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
                             Icon(
                               Icons.person_pin_circle,
                               size: 16,
-                              color: Colors.black45,
+                              color: AppColors.text3.withOpacity(0.45),
                             ),
                             const SizedBox(width: 4),
                             Text(
                               '${distance.toStringAsFixed(1)} km',
-                              style: const TextStyle(
-                                color: Colors.black54,
+                              style: TextStyle(
+                                color: AppColors.text3.withOpacity(0.54),
                                 fontSize: 12,
                               ),
                             ),
@@ -446,7 +446,7 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
                 Text(
                   meetup.title,
                   style: AppTextStyles.bodyLarge.copyWith(
-                    color: Colors.black87,
+                    color: AppColors.text3.withOpacity(0.87),
                     fontWeight: FontWeight.w700,
                     fontSize: 18,
                   ),
@@ -454,7 +454,10 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
                 const SizedBox(height: 6),
                 Text(
                   meetup.description,
-                  style: const TextStyle(color: Colors.black54, fontSize: 14),
+                  style: TextStyle(
+                    color: AppColors.text3.withOpacity(0.54),
+                    fontSize: 14,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -463,15 +466,15 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
                   children: [
                     Icon(
                       Icons.event_available,
-                      color: Colors.black38,
+                      color: AppColors.text3.withOpacity(0.38),
                       size: 18,
                     ),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         meetup.formattedDateTime,
-                        style: const TextStyle(
-                          color: Colors.black54,
+                        style: TextStyle(
+                          color: AppColors.text3.withOpacity(0.54),
                           fontSize: 13,
                         ),
                       ),
@@ -481,13 +484,13 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.location_on, color: Colors.black38, size: 18),
+                    Icon(Icons.location_on, color: AppColors.text3.withOpacity(0.38), size: 18),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         meetup.location,
-                        style: const TextStyle(
-                          color: Colors.black54,
+                        style: TextStyle(
+                          color: AppColors.text3.withOpacity(0.54),
                           fontSize: 13,
                         ),
                       ),
@@ -497,12 +500,18 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.group_outlined, color: Colors.black38, size: 18),
+                    Icon(
+                      Icons.group_outlined,
+                      color: AppColors.text3.withOpacity(0.38),
+                      size: 18,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       meetup.capacityDisplay,
                       style: TextStyle(
-                        color: meetup.isFull ? Colors.red : Colors.black54,
+                        color: meetup.isFull
+                            ? AppColors.error
+                            : AppColors.text3.withOpacity(0.54),
                         fontSize: 13,
                         fontWeight: meetup.isFull
                             ? FontWeight.bold
@@ -512,8 +521,8 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
                     const Spacer(),
                     Text(
                       'Hosted by ${meetup.hostName}',
-                      style: const TextStyle(
-                        color: Colors.black45,
+                      style: TextStyle(
+                        color: AppColors.text3.withOpacity(0.45),
                         fontSize: 12,
                       ),
                     ),
@@ -530,19 +539,19 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
   Color _getCategoryColor(MeetupCategory category) {
     switch (category) {
       case MeetupCategory.work:
-        return Colors.indigo;
+        return AppColors.highlight2;
       case MeetupCategory.culture:
-        return Colors.purple;
+        return AppColors.highlight2;
       case MeetupCategory.adventure:
-        return Colors.green;
+        return AppColors.success;
       case MeetupCategory.food:
-        return Colors.orange;
+        return AppColors.cta1;
       case MeetupCategory.nightlife:
-        return Colors.pink;
+        return AppColors.cta1;
       case MeetupCategory.sports:
-        return Colors.blue;
+        return AppColors.info;
       case MeetupCategory.other:
-        return Colors.grey;
+        return AppColors.textSecondary;
     }
   }
 }

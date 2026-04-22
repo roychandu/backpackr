@@ -8,6 +8,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:backpackr/common_widgets/app_colors.dart';
 import 'package:get/get.dart';
 
 /// test ids
@@ -66,7 +67,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               ),
               actions: [
                 CupertinoDialogAction(
-                  child: const Text("OK", style: TextStyle(color: Colors.blue)),
+                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },
@@ -80,7 +81,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               ),
               actions: [
                 TextButton(
-                  child: const Text("OK", style: TextStyle(color: Colors.blue)),
+                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },
@@ -308,7 +309,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               content: const Text("Your purchases are restored."),
               actions: [
                 CupertinoDialogAction(
-                  child: const Text("OK", style: TextStyle(color: Colors.blue)),
+                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },
@@ -320,7 +321,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               content: const Text("Your purchases are restored."),
               actions: [
                 TextButton(
-                  child: const Text("OK", style: TextStyle(color: Colors.blue)),
+                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },
@@ -338,7 +339,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               content: const Text("You have purchased the premium membership."),
               actions: [
                 CupertinoDialogAction(
-                  child: const Text("OK", style: TextStyle(color: Colors.blue)),
+                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },
@@ -350,7 +351,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               content: const Text("You have purchased the premium membership."),
               actions: [
                 TextButton(
-                  child: const Text("OK", style: TextStyle(color: Colors.blue)),
+                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },

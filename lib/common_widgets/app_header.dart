@@ -69,7 +69,7 @@ class AppHeader extends StatelessWidget {
                     ? Text(
                         topSubtitle!,
                         style: AppTextStyles.bodyMedium.copyWith(
-                          color: Colors.white,
+                          color: AppColors.text1,
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
                         ),
@@ -87,7 +87,7 @@ class AppHeader extends StatelessWidget {
           Text(
             title,
             style: AppTextStyles.h3.copyWith(
-              color: Colors.white,
+              color: AppColors.text1,
               fontWeight: FontWeight.w800,
               fontSize: fontSize,
             ),
@@ -98,7 +98,7 @@ class AppHeader extends StatelessWidget {
             Text(
               subtitle!,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: Colors.white.withOpacity(0.9),
+                color: AppColors.text1.withOpacity(0.9),
               ),
             ),
           if (additionalSubtitle != null) ...[
@@ -106,7 +106,7 @@ class AppHeader extends StatelessWidget {
             Text(
               additionalSubtitle!,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: Colors.white.withOpacity(0.9),
+                color: AppColors.text1.withOpacity(0.9),
               ),
             ),
           ],

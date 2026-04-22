@@ -158,7 +158,7 @@ class ErrorHandler {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.success,
         behavior: SnackBarBehavior.floating,
         duration: duration,
       ),
@@ -190,7 +190,7 @@ class ErrorHandler {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.orange,
+        backgroundColor: AppColors.cta1,
         behavior: SnackBarBehavior.floating,
         duration: duration,
       ),

@@ -291,7 +291,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                                   content: Text(
                                     ErrorHandler.getFriendlyErrorMessage(e),
                                   ),
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: AppColors.error,
                                 ),
                               );
                             }
@@ -343,7 +343,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: AppColors.primary,
-              onPrimary: Colors.white,
+              onPrimary: AppColors.text1,
             ),
           ),
           child: child!,
@@ -367,7 +367,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: AppColors.primary,
-              onPrimary: Colors.white,
+              onPrimary: AppColors.text1,
             ),
           ),
           child: child!,
@@ -400,7 +400,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.3),
+                color: AppColors.text1.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -409,7 +409,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
               child: Text(
                 'Select Category',
                 style: AppTextStyles.h4.copyWith(
-                  color: Colors.white,
+                  color: AppColors.text1,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -433,12 +433,12 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? AppColors.primary.withOpacity(0.2)
-                        : Colors.white.withOpacity(0.05),
+                        : AppColors.text1.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: isSelected
                           ? AppColors.primary
-                          : Colors.white.withOpacity(0.1),
+                          : AppColors.text1.withOpacity(0.1),
                       width: isSelected ? 2 : 1,
                     ),
                   ),
@@ -448,14 +448,14 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                         Icons.category_rounded,
                         color: isSelected
                             ? AppColors.primary
-                            : Colors.white.withOpacity(0.7),
+                            : AppColors.text1.withOpacity(0.7),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Text(
                           _getCategoryDisplayName(category),
                           style: AppTextStyles.bodyMedium.copyWith(
-                            color: Colors.white,
+                            color: AppColors.text1,
                             fontWeight: isSelected
                                 ? FontWeight.w600
                                 : FontWeight.normal,
@@ -492,7 +492,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please fill in all required fields correctly'),
-          backgroundColor: Colors.orange,
+          backgroundColor: AppColors.cta1,
           duration: Duration(seconds: 2),
         ),
       );
@@ -551,7 +551,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(ErrorHandler.getFriendlyErrorMessage(e)),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
     }
@@ -569,12 +569,12 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
         elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.text1),
         ),
         title: Text(
           'Create Meetup',
           style: AppTextStyles.h4.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -598,22 +598,22 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                           filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.08),
+                              color: AppColors.text1.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.15),
+                                color: AppColors.text1.withOpacity(0.15),
                               ),
                             ),
                             child: TextFormField(
                               controller: _titleController,
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.white,
+                                color: AppColors.text1,
                               ),
                               decoration: InputDecoration(
                                 hintText:
                                     'Meetup title (e.g., Coffee & Co-working)',
                                 hintStyle: AppTextStyles.bodyMedium.copyWith(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: AppColors.text1.withOpacity(0.5),
                                 ),
                                 prefixIcon: Icon(
                                   Icons.title_rounded,
@@ -648,21 +648,21 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                           filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.08),
+                              color: AppColors.text1.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.15),
+                                color: AppColors.text1.withOpacity(0.15),
                               ),
                             ),
                             child: TextFormField(
                               controller: _descriptionController,
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.white,
+                                color: AppColors.text1,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Tell people about your meetup...',
                                 hintStyle: AppTextStyles.bodyMedium.copyWith(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: AppColors.text1.withOpacity(0.5),
                                 ),
                                 prefixIcon: Icon(
                                   Icons.description_rounded,
@@ -698,10 +698,10 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                             filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.08),
+                                color: AppColors.text1.withOpacity(0.08),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.15),
+                                  color: AppColors.text1.withOpacity(0.15),
                                 ),
                               ),
                               padding: const EdgeInsets.all(16),
@@ -718,7 +718,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                                         _selectedCategory,
                                       ),
                                       style: AppTextStyles.bodyMedium.copyWith(
-                                        color: Colors.white,
+                                        color: AppColors.text1,
                                       ),
                                     ),
                                   ),
@@ -743,10 +743,10 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                             filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.08),
+                                color: AppColors.text1.withOpacity(0.08),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.15),
+                                  color: AppColors.text1.withOpacity(0.15),
                                 ),
                               ),
                               padding: const EdgeInsets.all(16),
@@ -760,7 +760,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                                   Text(
                                     '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
                                     style: AppTextStyles.bodyMedium.copyWith(
-                                      color: Colors.white,
+                                      color: AppColors.text1,
                                     ),
                                   ),
                                 ],
@@ -780,10 +780,10 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                             filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.08),
+                                color: AppColors.text1.withOpacity(0.08),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.15),
+                                  color: AppColors.text1.withOpacity(0.15),
                                 ),
                               ),
                               padding: const EdgeInsets.all(16),
@@ -797,7 +797,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                                   Text(
                                     _selectedTime.format(context),
                                     style: AppTextStyles.bodyMedium.copyWith(
-                                      color: Colors.white,
+                                      color: AppColors.text1,
                                     ),
                                   ),
                                 ],
@@ -815,21 +815,21 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                           filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.08),
+                              color: AppColors.text1.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.15),
+                                color: AppColors.text1.withOpacity(0.15),
                               ),
                             ),
                             child: TextFormField(
                               controller: _locationController,
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.white,
+                                color: AppColors.text1,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Location (e.g., Le Marais, Paris)',
                                 hintStyle: AppTextStyles.bodyMedium.copyWith(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: AppColors.text1.withOpacity(0.5),
                                 ),
                                 prefixIcon: Icon(
                                   Icons.location_on_rounded,
@@ -861,21 +861,21 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                           filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.08),
+                              color: AppColors.text1.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.15),
+                                color: AppColors.text1.withOpacity(0.15),
                               ),
                             ),
                             child: TextFormField(
                               controller: _capacityController,
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.white,
+                                color: AppColors.text1,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Max capacity (2-100)',
                                 hintStyle: AppTextStyles.bodyMedium.copyWith(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: AppColors.text1.withOpacity(0.5),
                                 ),
                                 prefixIcon: Icon(
                                   Icons.group_rounded,
@@ -919,7 +919,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                 color: AppColors.background,
                 border: Border(
                   top: BorderSide(
-                    color: Colors.white.withOpacity(0.1),
+                    color: AppColors.text1.withOpacity(0.1),
                     width: 1,
                   ),
                 ),
@@ -935,14 +935,14 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Colors.white,
+                            color: AppColors.text1,
                           ),
                         )
                       : const Icon(Icons.check_rounded),
                   label: Text(_isCreating ? 'Creating...' : 'Create Meetup'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: AppColors.text1,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),

@@ -61,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: const Text('Profile'),
         backgroundColor: AppColors.background,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.text1,
         elevation: 0,
         leading: IconButton(
           onPressed: () {
@@ -94,12 +94,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           width: double.infinity,
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.06),
+            color: AppColors.text1.withOpacity(0.06),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.15)),
+            border: Border.all(color: AppColors.text1.withOpacity(0.15)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: AppColors.text3.withOpacity(0.2),
                 blurRadius: 16,
                 offset: const Offset(0, 8),
               ),
@@ -130,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ? _userEmail.split('@').first
                           : 'User'),
                 style: AppTextStyles.h3.copyWith(
-                  color: Colors.white,
+                  color: AppColors.text1,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -139,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text(
                   _userEmail,
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: Colors.white70,
+                    color: AppColors.text1.withOpacity(0.70),
                   ),
                 ),
             ],
@@ -156,7 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Text(
           'Settings',
           style: AppTextStyles.h4.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -183,7 +183,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildDivider(),
           _buildSettingsRow(
             'Premium',
-            trailing: const Icon(Icons.star, color: Colors.amber, size: 16),
+            trailing: const Icon(
+              Icons.star,
+              color: AppColors.highlight,
+              size: 16,
+            ),
             onTap: () {
               Navigator.push(
                 context,
@@ -193,7 +197,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           _buildSettingsRow(
             'Restore Purchases',
-            trailing: const Icon(Icons.star, color: Colors.amber, size: 16),
+            trailing: const Icon(
+              Icons.star,
+              color: AppColors.highlight,
+              size: 16,
+            ),
             onTap: () {
               setState(() => isLoading = true);
               Provider.of<InAppPurchaseProvider>(
@@ -224,7 +232,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildDivider(),
           _buildSettingsRow(
             'Sign Out',
-            trailing: const Icon(Icons.logout, color: Colors.red, size: 16),
+            trailing: const Icon(
+              Icons.logout,
+              color: AppColors.error,
+              size: 16,
+            ),
             onTap: _showSignOutDialog,
           ),
         ]),
@@ -234,7 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'Delete Account',
             trailing: const Icon(
               Icons.delete_forever,
-              color: Colors.red,
+              color: AppColors.error,
               size: 16,
             ),
             onTap: _showDeleteAccountDialog,
@@ -251,12 +263,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: AppColors.text1.withOpacity(0.05),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withOpacity(0.12)),
+            border: Border.all(color: AppColors.text1.withOpacity(0.12)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: AppColors.text3.withOpacity(0.15),
                 blurRadius: 12,
                 offset: const Offset(0, 6),
               ),
@@ -284,7 +296,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 title,
                 style: AppTextStyles.bodyLarge.copyWith(
-                  color: Colors.white,
+                  color: AppColors.text1,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -300,7 +312,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       height: 1,
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      color: Colors.white.withOpacity(0.1),
+      color: AppColors.text1.withOpacity(0.1),
     );
   }
 
@@ -317,12 +329,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.08),
+                color: AppColors.text1.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.18)),
+                border: Border.all(color: AppColors.text1.withOpacity(0.18)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
+                    color: AppColors.text3.withOpacity(0.25),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),
@@ -336,15 +348,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const Text(
                     'Sign Out',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.text1,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     'Are you sure you want to sign out?',
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                    style: TextStyle(
+                      color: AppColors.text1.withOpacity(0.70),
+                      fontSize: 14,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -352,9 +367,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(dialogContext),
-                        child: const Text(
+                        child: Text(
                           'Cancel',
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(
+                            color: AppColors.text1.withOpacity(0.70),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -383,7 +400,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                         child: const Text(
                           'Sign Out',
-                          style: TextStyle(color: Colors.redAccent),
+                          style: TextStyle(color: AppColors.error),
                         ),
                       ),
                     ],
@@ -404,18 +421,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppColors.surface,
         title: const Text(
           'Delete Account',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: AppColors.text1),
         ),
-        content: const Text(
+        content: Text(
           'Are you sure you want to delete your account? This action cannot be undone.',
-          style: TextStyle(color: Colors.white70),
+          style: TextStyle(color: AppColors.text1.withOpacity(0.70)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text(
+            child: Text(
               'Cancel',
-              style: TextStyle(color: Colors.white70),
+              style: TextStyle(color: AppColors.text1.withOpacity(0.70)),
             ),
           ),
           TextButton(
@@ -423,7 +440,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.pop(dialogContext);
               await _deleteAccount();
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.error),
+            ),
           ),
         ],
       ),

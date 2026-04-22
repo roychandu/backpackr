@@ -73,7 +73,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: AppColors.primary,
-              onPrimary: Colors.white,
+              onPrimary: AppColors.text1,
             ),
           ),
           child: child!,
@@ -97,7 +97,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: AppColors.primary,
-              onPrimary: Colors.white,
+              onPrimary: AppColors.text1,
             ),
           ),
           child: child!,
@@ -123,7 +123,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please fill in all required fields correctly'),
-          backgroundColor: Colors.orange,
+          backgroundColor: AppColors.cta1,
           duration: Duration(seconds: 2),
         ),
       );
@@ -164,7 +164,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Meetup updated successfully!'),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.success,
         ),
       );
     } catch (e) {
@@ -176,7 +176,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(ErrorHandler.getFriendlyErrorMessage(e)),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
     }
@@ -194,12 +194,12 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
         elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.text1),
         ),
         title: Text(
           'Edit Meetup',
           style: AppTextStyles.h4.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -223,22 +223,22 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
                           filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.08),
+                              color: AppColors.text1.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.15),
+                                color: AppColors.text1.withOpacity(0.15),
                               ),
                             ),
                             child: TextFormField(
                               controller: _titleController,
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.white,
+                                color: AppColors.text1,
                               ),
                               decoration: InputDecoration(
                                 hintText:
                                     'Meetup title (e.g., Coffee & Co-working)',
                                 hintStyle: AppTextStyles.bodyMedium.copyWith(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: AppColors.text1.withOpacity(0.5),
                                 ),
                                 prefixIcon: Icon(
                                   Icons.title_rounded,
@@ -273,21 +273,21 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
                           filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.08),
+                              color: AppColors.text1.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.15),
+                                color: AppColors.text1.withOpacity(0.15),
                               ),
                             ),
                             child: TextFormField(
                               controller: _descriptionController,
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.white,
+                                color: AppColors.text1,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Tell people about your meetup...',
                                 hintStyle: AppTextStyles.bodyMedium.copyWith(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: AppColors.text1.withOpacity(0.5),
                                 ),
                                 prefixIcon: Icon(
                                   Icons.description_rounded,
@@ -323,10 +323,10 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
                             filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.08),
+                                color: AppColors.text1.withOpacity(0.08),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.15),
+                                  color: AppColors.text1.withOpacity(0.15),
                                 ),
                               ),
                               padding: const EdgeInsets.all(16),
@@ -340,7 +340,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
                                   Text(
                                     '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
                                     style: AppTextStyles.bodyMedium.copyWith(
-                                      color: Colors.white,
+                                      color: AppColors.text1,
                                     ),
                                   ),
                                 ],
@@ -360,10 +360,10 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
                             filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.08),
+                                color: AppColors.text1.withOpacity(0.08),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.15),
+                                  color: AppColors.text1.withOpacity(0.15),
                                 ),
                               ),
                               padding: const EdgeInsets.all(16),
@@ -377,7 +377,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
                                   Text(
                                     _selectedTime.format(context),
                                     style: AppTextStyles.bodyMedium.copyWith(
-                                      color: Colors.white,
+                                      color: AppColors.text1,
                                     ),
                                   ),
                                 ],
@@ -395,21 +395,21 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
                           filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.08),
+                              color: AppColors.text1.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.15),
+                                color: AppColors.text1.withOpacity(0.15),
                               ),
                             ),
                             child: TextFormField(
                               controller: _locationController,
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.white,
+                                color: AppColors.text1,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Location (e.g., Le Marais, Paris)',
                                 hintStyle: AppTextStyles.bodyMedium.copyWith(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: AppColors.text1.withOpacity(0.5),
                                 ),
                                 prefixIcon: Icon(
                                   Icons.location_on_rounded,
@@ -441,21 +441,21 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
                           filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.08),
+                              color: AppColors.text1.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.15),
+                                color: AppColors.text1.withOpacity(0.15),
                               ),
                             ),
                             child: TextFormField(
                               controller: _capacityController,
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.white,
+                                color: AppColors.text1,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Max capacity (2-100)',
                                 hintStyle: AppTextStyles.bodyMedium.copyWith(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: AppColors.text1.withOpacity(0.5),
                                 ),
                                 prefixIcon: Icon(
                                   Icons.group_rounded,
@@ -503,7 +503,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
                 color: AppColors.background,
                 border: Border(
                   top: BorderSide(
-                    color: Colors.white.withOpacity(0.1),
+                    color: AppColors.text1.withOpacity(0.1),
                     width: 1,
                   ),
                 ),
@@ -519,14 +519,14 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Colors.white,
+                            color: AppColors.text1,
                           ),
                         )
                       : const Icon(Icons.check_rounded),
                   label: Text(_isUpdating ? 'Updating...' : 'Update Meetup'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: AppColors.text1,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),

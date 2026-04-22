@@ -145,14 +145,14 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: AppColors.text1.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: IconButton(
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(
                     Icons.arrow_back_ios_new,
-                    color: Colors.white,
+                    color: AppColors.text1,
                     size: 20,
                   ),
                   tooltip: 'Back',
@@ -162,13 +162,13 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
               const Spacer(),
               Text(
                 "Traveler's Blogs",
-                style: AppTextStyles.h3.copyWith(color: Colors.white),
+                style: AppTextStyles.h3.copyWith(color: AppColors.text1),
               ),
               const Spacer(),
               // User avatar circle
               CircleAvatar(
                 radius: 24,
-                backgroundColor: Colors.white.withOpacity(0.2),
+                backgroundColor: AppColors.text1.withOpacity(0.2),
                 backgroundImage:
                     widget.avatarUrl != null && widget.avatarUrl!.isNotEmpty
                     ? CachedNetworkImageProvider(widget.avatarUrl!)
@@ -179,7 +179,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                             ? widget.userName[0].toUpperCase()
                             : 'U',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppColors.text1,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
@@ -195,12 +195,12 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
+                  color: AppColors.text1.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: const Icon(
                   Icons.article_rounded,
-                  color: Colors.white,
+                  color: AppColors.text1,
                   size: 28,
                 ),
               ),
@@ -212,7 +212,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                     Text(
                       widget.userName,
                       style: AppTextStyles.h3.copyWith(
-                        color: Colors.white,
+                        color: AppColors.text1,
                         fontWeight: FontWeight.w800,
                         fontSize: 26,
                       ),
@@ -237,10 +237,10 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.12),
+              color: AppColors.text1.withOpacity(0.12),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withOpacity(0.25),
+                color: AppColors.text1.withOpacity(0.25),
                 width: 1,
               ),
             ),
@@ -254,7 +254,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                     value: _userBlogs.first.destination,
                   ),
                   const SizedBox(height: 10),
-                  Divider(color: Colors.white.withOpacity(0.2), height: 1),
+                  Divider(color: AppColors.text1.withOpacity(0.2), height: 1),
                   const SizedBox(height: 10),
                 ],
                 // Current Location
@@ -266,7 +266,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                     value: widget.currentLocation!,
                   ),
                   const SizedBox(height: 10),
-                  Divider(color: Colors.white.withOpacity(0.2), height: 1),
+                  Divider(color: AppColors.text1.withOpacity(0.2), height: 1),
                   const SizedBox(height: 10),
                 ],
                 // Next Destination
@@ -278,7 +278,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                     value: widget.destinations!.first,
                   ),
                   const SizedBox(height: 10),
-                  Divider(color: Colors.white.withOpacity(0.2), height: 1),
+                  Divider(color: AppColors.text1.withOpacity(0.2), height: 1),
                   const SizedBox(height: 10),
                 ],
                 // Stories count
@@ -287,12 +287,12 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: AppColors.text1.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(
                         Icons.auto_stories,
-                        color: Colors.white,
+                        color: AppColors.text1,
                         size: 16,
                       ),
                     ),
@@ -300,7 +300,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                     Text(
                       '${_userBlogs.length} ${_userBlogs.length == 1 ? 'Travel Story' : 'Travel Stories'}',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: Colors.white,
+                        color: AppColors.text1,
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),
@@ -312,21 +312,21 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: AppColors.text1.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
                         children: [
                           const Icon(
                             Icons.travel_explore,
-                            color: Colors.white,
+                            color: AppColors.text1,
                             size: 14,
                           ),
                           const SizedBox(width: 6),
                           Text(
                             'Explorer',
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: Colors.white,
+                              color: AppColors.text1,
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
@@ -350,13 +350,15 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
         padding: const EdgeInsets.all(32.0),
         child: Column(
           children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const Icon(Icons.error_outline, size: 64, color: AppColors.error),
             const SizedBox(height: 16),
             Text('Error loading blogs', style: AppTextStyles.h4),
             const SizedBox(height: 8),
             Text(
               _errorMessage ?? 'Something went wrong',
-              style: AppTextStyles.bodyMedium.copyWith(color: Colors.black54),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.text3.withOpacity(0.54),
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -366,7 +368,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
               label: const Text('Retry'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.text1,
               ),
             ),
           ],
@@ -423,10 +425,10 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
+            color: AppColors.text1.withOpacity(0.15),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, color: Colors.white, size: 16),
+          child: Icon(icon, color: AppColors.text1, size: 16),
         ),
         const SizedBox(width: 10),
         Expanded(
@@ -436,7 +438,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
               Text(
                 label,
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: Colors.white.withOpacity(0.7),
+                  color: AppColors.text1.withOpacity(0.7),
                   fontSize: 11,
                 ),
               ),
@@ -444,7 +446,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
               Text(
                 value,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.white,
+                  color: AppColors.text1,
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
                 ),
@@ -583,7 +585,7 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: AppColors.text3.withOpacity(0.08),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -613,17 +615,17 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                             fit: BoxFit.cover,
                             width: double.infinity,
                             placeholder: (context, url) => Container(
-                              color: Colors.grey[200],
+                              color: AppColors.textSecondary.withOpacity(0.3),
                               child: const Center(
                                 child: CircularProgressIndicator(),
                               ),
                             ),
                             errorWidget: (context, url, error) => Container(
-                              color: Colors.grey[300],
+                              color: AppColors.textSecondary.withOpacity(0.4),
                               child: const Icon(
                                 Icons.image_not_supported,
                                 size: 50,
-                                color: Colors.grey,
+                                color: AppColors.textSecondary,
                               ),
                             ),
                           );
@@ -648,7 +650,7 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                             decoration: BoxDecoration(
                               color: _currentImageIndex == index
                                   ? AppColors.primary
-                                  : Colors.white.withOpacity(0.5),
+                                  : AppColors.text1.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
@@ -666,13 +668,13 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.6),
+                          color: AppColors.text3.withOpacity(0.6),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           '${_currentImageIndex + 1}/${widget.blog.imageUrls.length}',
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppColors.text1,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
@@ -713,14 +715,14 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                             Text(
                               widget.blog.author,
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.black87,
+                                color: AppColors.text3.withOpacity(0.87),
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                             Text(
                               _formatDate(widget.blog.dateCreated),
                               style: AppTextStyles.bodySmall.copyWith(
-                                color: Colors.black45,
+                                color: AppColors.text3.withOpacity(0.45),
                               ),
                             ),
                           ],
@@ -734,7 +736,7 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                   Text(
                     widget.blog.title,
                     style: AppTextStyles.bodyLarge.copyWith(
-                      color: Colors.black87,
+                      color: AppColors.text3.withOpacity(0.87),
                       fontWeight: FontWeight.w700,
                       fontSize: 20,
                     ),
@@ -746,7 +748,10 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                     widget.blog.content,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.black54, fontSize: 14),
+                    style: TextStyle(
+                      color: AppColors.text3.withOpacity(0.54),
+                      fontSize: 14,
+                    ),
                   ),
                   const SizedBox(height: 12),
 
@@ -765,33 +770,33 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                   // Bottom row with location and distance
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.location_on,
                         size: 16,
-                        color: Colors.black38,
+                        color: AppColors.text3.withOpacity(0.38),
                       ),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           '${widget.blog.startPlace} → ${widget.blog.destination}',
-                          style: const TextStyle(
-                            color: Colors.black54,
+                          style: TextStyle(
+                            color: AppColors.text3.withOpacity(0.54),
                             fontSize: 13,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(width: 8),
-                      const Icon(
+                      Icon(
                         Icons.social_distance_rounded,
                         size: 16,
-                        color: Colors.black38,
+                        color: AppColors.text3.withOpacity(0.38),
                       ),
                       const SizedBox(width: 4),
                       Text(
                         widget.blog.distance,
-                        style: const TextStyle(
-                          color: Colors.black54,
+                        style: TextStyle(
+                          color: AppColors.text3.withOpacity(0.54),
                           fontSize: 13,
                         ),
                       ),
@@ -801,48 +806,48 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                   // Travel dates row
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.calendar_today,
                         size: 16,
-                        color: Colors.black38,
+                        color: AppColors.text3.withOpacity(0.38),
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       Text(
                         _formatTravelDate(widget.blog.startDate),
-                        style: const TextStyle(
-                          color: Colors.black54,
+                        style: TextStyle(
+                          color: AppColors.text3.withOpacity(0.54),
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       if (widget.blog.endDate != null) ...[
                         const SizedBox(width: 8),
-                        const Icon(
+                        Icon(
                           Icons.arrow_forward,
                           size: 12,
-                          color: Colors.black38,
+                          color: AppColors.text3.withOpacity(0.38),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           _formatTravelDate(widget.blog.endDate!),
-                          style: const TextStyle(
-                            color: Colors.black54,
+                          style: TextStyle(
+                            color: AppColors.text3.withOpacity(0.54),
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                       const Spacer(),
-                      const Icon(
+                      Icon(
                         Icons.schedule,
                         size: 16,
-                        color: Colors.black38,
+                        color: AppColors.text3.withOpacity(0.38),
                       ),
                       const SizedBox(width: 4),
                       Text(
                         widget.blog.duration,
-                        style: const TextStyle(
-                          color: Colors.black54,
+                        style: TextStyle(
+                          color: AppColors.text3.withOpacity(0.54),
                           fontSize: 13,
                         ),
                       ),

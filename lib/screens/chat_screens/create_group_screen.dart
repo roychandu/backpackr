@@ -59,7 +59,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         const SnackBar(
           behavior: SnackBarBehavior.floating,
           content: Text('Please enter a group name'),
-          backgroundColor: Colors.orange,
+          backgroundColor: AppColors.cta1,
         ),
       );
       return;
@@ -70,7 +70,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         const SnackBar(
           behavior: SnackBarBehavior.floating,
           content: Text('Please select at least 2 participants'),
-          backgroundColor: Colors.orange,
+          backgroundColor: AppColors.cta1,
         ),
       );
       return;
@@ -120,12 +120,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.text1,
         elevation: 0,
         title: Text(
           'Create Group Chat',
           style: AppTextStyles.h4.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -137,7 +137,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           child: Container(
             decoration: BoxDecoration(
               color: AppColors.background.withOpacity(0.95),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
+              border: Border.all(color: AppColors.text1.withOpacity(0.1)),
             ),
             child: Column(
               children: [
@@ -152,21 +152,21 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.08),
+                          color: AppColors.text1.withOpacity(0.08),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.15),
+                            color: AppColors.text1.withOpacity(0.15),
                           ),
                         ),
                         child: TextField(
                           controller: _groupNameController,
                           style: AppTextStyles.bodyMedium.copyWith(
-                            color: Colors.white,
+                            color: AppColors.text1,
                           ),
                           decoration: InputDecoration(
                             hintText: 'Group name',
                             hintStyle: AppTextStyles.bodyMedium.copyWith(
-                              color: Colors.white.withOpacity(0.5),
+                              color: AppColors.text1.withOpacity(0.5),
                             ),
                             prefixIcon: Icon(
                               Icons.people_rounded,
@@ -194,7 +194,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       Text(
                         'Select participants',
                         style: AppTextStyles.bodyMedium.copyWith(
-                          color: Colors.white70,
+                          color: AppColors.text1.withOpacity(0.70),
                         ),
                       ),
                       const Spacer(),
@@ -210,7 +210,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         child: Text(
                           '${_selectedParticipants.length} selected',
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: Colors.white,
+                            color: AppColors.text1,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -257,7 +257,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     color: AppColors.background,
                     border: Border(
                       top: BorderSide(
-                        color: Colors.white.withOpacity(0.1),
+                        color: AppColors.text1.withOpacity(0.1),
                         width: 1,
                       ),
                     ),
@@ -273,14 +273,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Colors.white,
+                                color: AppColors.text1,
                               ),
                             )
                           : const Icon(Icons.check_rounded),
                       label: Text(_isCreating ? 'Creating...' : 'Create Group'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.text1,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
@@ -305,12 +305,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(isSelected ? 0.12 : 0.06),
+        color: AppColors.text1.withOpacity(isSelected ? 0.12 : 0.06),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isSelected
               ? AppColors.primary.withOpacity(0.5)
-              : Colors.white.withOpacity(0.1),
+              : AppColors.text1.withOpacity(0.1),
           width: isSelected ? 2 : 1,
         ),
       ),
@@ -328,13 +328,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         title: Text(
           userName,
           style: AppTextStyles.bodyMedium.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.w600,
           ),
         ),
         subtitle: Text(
           'Mutual connection',
-          style: AppTextStyles.bodySmall.copyWith(color: Colors.white60),
+          style: AppTextStyles.bodySmall.copyWith(color: AppColors.text1.withOpacity(0.60)),
         ),
         secondary: CircleAvatar(
           radius: 20,
@@ -342,7 +342,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           child: Icon(Icons.person, color: AppColors.primary, size: 20),
         ),
         activeColor: AppColors.primary,
-        checkColor: Colors.white,
+        checkColor: AppColors.text1,
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       ),
     );
@@ -359,13 +359,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.06),
+                color: AppColors.text1.withOpacity(0.06),
                 borderRadius: BorderRadius.circular(50),
-                border: Border.all(color: Colors.white.withOpacity(0.15)),
+                border: Border.all(color: AppColors.text1.withOpacity(0.15)),
               ),
               child: Icon(
                 Icons.people_outline_rounded,
-                color: Colors.white70,
+                color: AppColors.text1.withOpacity(0.70),
                 size: 40,
               ),
             ),
@@ -373,7 +373,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             Text(
               'No mutual connections yet',
               style: AppTextStyles.h4.copyWith(
-                color: Colors.white,
+                color: AppColors.text1,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -381,7 +381,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             Text(
               'Connect with travelers by sending waves first',
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
+              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text1.withOpacity(0.70)),
             ),
           ],
         ),

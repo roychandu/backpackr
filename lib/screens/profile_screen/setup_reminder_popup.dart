@@ -23,18 +23,18 @@ class SetupReminderPopup extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.white.withOpacity(0.25),
-                  Colors.white.withOpacity(0.15),
+                  AppColors.text1.withOpacity(0.25),
+                  AppColors.text1.withOpacity(0.15),
                 ],
               ),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Colors.white.withOpacity(0.3),
+                color: AppColors.text1.withOpacity(0.3),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: AppColors.text3.withOpacity(0.1),
                   blurRadius: 30,
                   offset: const Offset(0, 15),
                 ),
@@ -52,7 +52,7 @@ class SetupReminderPopup extends StatelessWidget {
                       topRight: Radius.circular(20),
                     ),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.2),
+                      color: AppColors.text1.withOpacity(0.2),
                       width: 1,
                     ),
                   ),
@@ -65,11 +65,11 @@ class SetupReminderPopup extends StatelessWidget {
                             Text(
                               'Complete Your Profile',
                               style: AppTextStyles.bodyLarge.copyWith(
-                                color: Colors.white,
+                                color: AppColors.text1,
                                 fontWeight: FontWeight.bold,
                                 shadows: [
                                   Shadow(
-                                    color: Colors.black.withOpacity(0.3),
+                                    color: AppColors.text3.withOpacity(0.3),
                                     offset: const Offset(0, 1),
                                     blurRadius: 2,
                                   ),
@@ -79,11 +79,11 @@ class SetupReminderPopup extends StatelessWidget {
                             Text(
                               'Help others discover you!',
                               style: AppTextStyles.bodySmall.copyWith(
-                                color: Colors.white,
+                                color: AppColors.text1,
                                 fontWeight: FontWeight.w600,
                                 shadows: [
                                   Shadow(
-                                    color: Colors.black.withOpacity(0.2),
+                                    color: AppColors.text3.withOpacity(0.2),
                                     offset: const Offset(0, 1),
                                     blurRadius: 1,
                                   ),
@@ -105,11 +105,11 @@ class SetupReminderPopup extends StatelessWidget {
                       Text(
                         'Create your travel profile to connect with other travelers and share your adventures!',
                         style: AppTextStyles.bodyMedium.copyWith(
-                          color: Colors.white,
+                          color: AppColors.text1,
                           fontWeight: FontWeight.w600,
                           shadows: [
                             Shadow(
-                              color: Colors.black.withOpacity(0.4),
+                              color: AppColors.text3.withOpacity(0.4),
                               offset: const Offset(0, 1),
                               blurRadius: 2,
                             ),
@@ -155,8 +155,8 @@ class SetupReminderPopup extends StatelessWidget {
                                   onPressed: () =>
                                       Navigator.of(context).pop(false),
                                   style: TextButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: Colors.white.withOpacity(
+                                    foregroundColor: AppColors.text1,
+                                    backgroundColor: AppColors.text1.withOpacity(
                                       0.2,
                                     ),
                                     padding: const EdgeInsets.symmetric(
@@ -165,7 +165,7 @@ class SetupReminderPopup extends StatelessWidget {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                       side: BorderSide(
-                                        color: Colors.white.withOpacity(0.3),
+                                        color: AppColors.text1.withOpacity(0.3),
                                         width: 1,
                                       ),
                                     ),
@@ -176,7 +176,7 @@ class SetupReminderPopup extends StatelessWidget {
                                       fontWeight: FontWeight.w600,
                                       shadows: [
                                         Shadow(
-                                          color: Colors.black.withOpacity(0.2),
+                                          color: AppColors.text3.withOpacity(0.2),
                                           offset: const Offset(0, 1),
                                           blurRadius: 1,
                                         ),
@@ -218,7 +218,7 @@ class SetupReminderPopup extends StatelessWidget {
                                         Navigator.of(context).pop(true),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.transparent,
-                                      foregroundColor: Colors.white,
+                                      foregroundColor: AppColors.text1,
                                       shadowColor: Colors.transparent,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
@@ -231,11 +231,11 @@ class SetupReminderPopup extends StatelessWidget {
                                     child: Text(
                                       'Setup Profile',
                                       style: AppTextStyles.bodyMedium.copyWith(
-                                        color: Colors.white,
+                                        color: AppColors.text1,
                                         fontWeight: FontWeight.w700,
                                         shadows: [
                                           Shadow(
-                                            color: Colors.black.withOpacity(
+                                            color: AppColors.text3.withOpacity(
                                               0.2,
                                             ),
                                             offset: const Offset(0, 1),
@@ -276,7 +276,7 @@ class SetupReminderPopup extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: Colors.white.withOpacity(0.4),
+              color: AppColors.text1.withOpacity(0.4),
               width: 1.5,
             ),
             boxShadow: [
@@ -287,7 +287,7 @@ class SetupReminderPopup extends StatelessWidget {
               ),
             ],
           ),
-          child: Icon(icon, color: Colors.white, size: 24),
+          child: Icon(icon, color: AppColors.text1, size: 24),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -297,11 +297,11 @@ class SetupReminderPopup extends StatelessWidget {
               Text(
                 title,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.white,
+                  color: AppColors.text1,
                   fontWeight: FontWeight.w700,
                   shadows: [
                     Shadow(
-                      color: Colors.black.withOpacity(0.3),
+                      color: AppColors.text3.withOpacity(0.3),
                       offset: const Offset(0, 1),
                       blurRadius: 1,
                     ),
@@ -311,11 +311,11 @@ class SetupReminderPopup extends StatelessWidget {
               Text(
                 subtitle,
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: Colors.white,
+                  color: AppColors.text1,
                   fontWeight: FontWeight.w500,
                   shadows: [
                     Shadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: AppColors.text3.withOpacity(0.2),
                       offset: const Offset(0, 1),
                       blurRadius: 1,
                     ),

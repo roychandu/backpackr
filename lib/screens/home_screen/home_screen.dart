@@ -267,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen>
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
+              foregroundColor: AppColors.text1,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -333,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen>
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
+              foregroundColor: AppColors.text1,
             ),
             child: const Text('Open Settings'),
           ),
@@ -569,7 +569,7 @@ class _HomeScreenState extends State<HomeScreen>
                     padding: EdgeInsets.zero,
                     labelPadding: EdgeInsets.zero,
                     labelColor: AppColors.primary,
-                    unselectedLabelColor: Colors.white70,
+                    unselectedLabelColor: AppColors.text1.withOpacity(0.70),
                     indicatorColor: AppColors.primary,
                     indicatorWeight: 3,
                     indicatorSize: TabBarIndicatorSize.tab,
@@ -643,11 +643,11 @@ class _HomeScreenState extends State<HomeScreen>
           },
           child: CircleAvatar(
             radius: 20,
-            backgroundColor: Colors.white.withOpacity(0.2),
+            backgroundColor: AppColors.text1.withOpacity(0.2),
             child: Icon(
               Icons.person,
               size: 24,
-              color: Colors.white.withOpacity(0.8),
+              color: AppColors.text1.withOpacity(0.8),
             ),
           ),
         ),
@@ -660,7 +660,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ? 'Connect with fellow adventurers in ' + _currentCity
                   : 'Connect with fellow adventurers',
               style: AppTextStyles.bodyMedium.copyWith(
-                color: Colors.white.withOpacity(0.9),
+                color: AppColors.text1.withOpacity(0.9),
               ),
             ),
           ),
@@ -672,7 +672,7 @@ class _HomeScreenState extends State<HomeScreen>
                 height: 16,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: Colors.white,
+                  color: AppColors.text1,
                 ),
               ),
             ),
@@ -1019,7 +1019,7 @@ class _HomeScreenState extends State<HomeScreen>
             Text(
               'No travelers nearby',
               style: AppTextStyles.h4.copyWith(
-                color: Colors.white,
+                color: AppColors.text1,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -1027,7 +1027,9 @@ class _HomeScreenState extends State<HomeScreen>
             Text(
               'Try broadening your search or check back later',
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.text1.withOpacity(0.70),
+              ),
             ),
           ],
         ),
@@ -1065,7 +1067,7 @@ class _HomeScreenState extends State<HomeScreen>
               content: Text(
                 'This is a demo profile. Connect with real travelers to view their blogs!',
               ),
-              backgroundColor: Colors.blue,
+              backgroundColor: AppColors.info,
             ),
           );
         } else {
@@ -1073,7 +1075,7 @@ class _HomeScreenState extends State<HomeScreen>
             const SnackBar(
               behavior: SnackBarBehavior.floating,
               content: Text('Unable to find traveler information'),
-              backgroundColor: Colors.orange,
+              backgroundColor: AppColors.cta1,
             ),
           );
         }
@@ -1082,11 +1084,11 @@ class _HomeScreenState extends State<HomeScreen>
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.text1,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: AppColors.text3.withOpacity(0.08),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -1101,11 +1103,11 @@ class _HomeScreenState extends State<HomeScreen>
                   children: [
                     CircleAvatar(
                       radius: 22,
-                      backgroundColor: Colors.grey.shade200,
+                      backgroundColor: AppColors.surface,
                       child: (t.avatarUrl == null || t.avatarUrl!.isEmpty)
                           ? const Icon(
                               Icons.person,
-                              color: Colors.grey,
+                              color: AppColors.textSecondary,
                               size: 28,
                             )
                           : null,
@@ -1121,9 +1123,9 @@ class _HomeScreenState extends State<HomeScreen>
                         width: 10,
                         height: 10,
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: AppColors.success,
                           borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: Colors.white, width: 2),
+                          border: Border.all(color: AppColors.text1, width: 2),
                         ),
                       ),
                     ),
@@ -1134,7 +1136,7 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Text(
                     t.displayName, // Removed age display since it's not stored in profile
                     style: AppTextStyles.h4.copyWith(
-                      color: Colors.black87,
+                      color: AppColors.text3.withOpacity(0.87),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -1149,11 +1151,7 @@ class _HomeScreenState extends State<HomeScreen>
                         value: 'block',
                         child: Row(
                           children: const [
-                            Icon(
-                              Icons.block,
-                              color: Colors.redAccent,
-                              size: 18,
-                            ),
+                            Icon(Icons.block, color: AppColors.error, size: 18),
                             SizedBox(width: 8),
                             Text('Block user'),
                           ],
@@ -1165,7 +1163,7 @@ class _HomeScreenState extends State<HomeScreen>
                           children: const [
                             Icon(
                               Icons.flag_outlined,
-                              color: Colors.amber,
+                              color: AppColors.highlight,
                               size: 18,
                             ),
                             SizedBox(width: 8),
@@ -1181,12 +1179,18 @@ class _HomeScreenState extends State<HomeScreen>
             const SizedBox(height: 10),
             Text(
               t.bio,
-              style: AppTextStyles.bodyMedium.copyWith(color: Colors.black54),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.text3.withOpacity(0.54),
+              ),
             ),
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.location_on, size: 18, color: Colors.black45),
+                Icon(
+                  Icons.location_on,
+                  size: 18,
+                  color: AppColors.text3.withOpacity(0.45),
+                ),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
@@ -1194,7 +1198,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ? t.currentLocation
                         : 'Location not set',
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: Colors.black54,
+                      color: AppColors.text3.withOpacity(0.54),
                     ),
                   ),
                 ),
@@ -1205,7 +1209,7 @@ class _HomeScreenState extends State<HomeScreen>
               Text(
                 'Next: ${t.destinations.first.city}',
                 style: const TextStyle(
-                  color: Colors.indigo,
+                  color: AppColors.highlight2,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -1246,7 +1250,7 @@ class _HomeScreenState extends State<HomeScreen>
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: const [
-            Icon(Icons.block, color: Colors.redAccent),
+            Icon(Icons.block, color: AppColors.error),
             SizedBox(width: 8),
             Text('Block this traveler'),
           ],
@@ -1265,8 +1269,8 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.redAccent,
-              foregroundColor: Colors.white,
+              backgroundColor: AppColors.error,
+              foregroundColor: AppColors.text1,
             ),
             onPressed: () async {
               Navigator.pop(context);
@@ -1277,7 +1281,7 @@ class _HomeScreenState extends State<HomeScreen>
                     const SnackBar(
                       behavior: SnackBarBehavior.floating,
                       content: Text('Please log in to hide travelers'),
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.error,
                     ),
                   );
                   return;
@@ -1297,7 +1301,7 @@ class _HomeScreenState extends State<HomeScreen>
                     content: Text(
                       'User blocked. You will not see their profile.',
                     ),
-                    backgroundColor: Colors.green,
+                    backgroundColor: AppColors.success,
                   ),
                 );
               } catch (e) {
@@ -1305,7 +1309,7 @@ class _HomeScreenState extends State<HomeScreen>
                   SnackBar(
                     behavior: SnackBarBehavior.floating,
                     content: Text('Failed to hide: $e'),
-                    backgroundColor: Colors.red,
+                    backgroundColor: AppColors.error,
                   ),
                 );
               }
@@ -1327,7 +1331,7 @@ class _HomeScreenState extends State<HomeScreen>
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: const [
-            Icon(Icons.flag_outlined, color: Colors.amber),
+            Icon(Icons.flag_outlined, color: AppColors.highlight),
             SizedBox(width: 8),
             Text('Report user'),
           ],
@@ -1358,8 +1362,8 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.amber,
-              foregroundColor: Colors.black,
+              backgroundColor: AppColors.highlight,
+              foregroundColor: AppColors.text3,
             ),
             onPressed: () async {
               final reason = reasonCtrl.text.trim();
@@ -1372,7 +1376,7 @@ class _HomeScreenState extends State<HomeScreen>
                     const SnackBar(
                       behavior: SnackBarBehavior.floating,
                       content: Text('Please log in to report users'),
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.error,
                     ),
                   );
                   return;
@@ -1391,7 +1395,7 @@ class _HomeScreenState extends State<HomeScreen>
                   const SnackBar(
                     behavior: SnackBarBehavior.floating,
                     content: Text('User reported. Thank you for the feedback.'),
-                    backgroundColor: Colors.green,
+                    backgroundColor: AppColors.success,
                   ),
                 );
               } catch (e) {
@@ -1399,7 +1403,7 @@ class _HomeScreenState extends State<HomeScreen>
                   SnackBar(
                     behavior: SnackBarBehavior.floating,
                     content: Text('Failed to report: $e'),
-                    backgroundColor: Colors.red,
+                    backgroundColor: AppColors.error,
                   ),
                 );
               }
@@ -1434,7 +1438,7 @@ class _HomeScreenState extends State<HomeScreen>
           label: const Text('Complete Profile to Connect'),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
+            foregroundColor: AppColors.text1,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1463,13 +1467,13 @@ class _HomeScreenState extends State<HomeScreen>
             height: 16,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.text1),
             ),
           ),
           label: const Text('Checking...'),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
+            foregroundColor: AppColors.text1,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1493,8 +1497,8 @@ class _HomeScreenState extends State<HomeScreen>
           icon: const Icon(Icons.chat_bubble, size: 18),
           label: const Text('Mutual Connection'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.teal,
-            foregroundColor: Colors.white,
+            backgroundColor: AppColors.highlight2,
+            foregroundColor: AppColors.text1,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1512,10 +1516,10 @@ class _HomeScreenState extends State<HomeScreen>
           icon: const Icon(Icons.schedule, size: 18),
           label: const Text('Wave Pending'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.orange,
-            foregroundColor: Colors.white,
-            disabledBackgroundColor: Colors.orange,
-            disabledForegroundColor: Colors.white,
+            backgroundColor: AppColors.cta1,
+            foregroundColor: AppColors.text1,
+            disabledBackgroundColor: AppColors.cta1,
+            disabledForegroundColor: AppColors.text1,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1533,10 +1537,10 @@ class _HomeScreenState extends State<HomeScreen>
           icon: const Icon(Icons.block, size: 18),
           label: const Text('Wave Ignored'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey,
-            foregroundColor: Colors.white,
-            disabledBackgroundColor: Colors.grey,
-            disabledForegroundColor: Colors.white,
+            backgroundColor: AppColors.textSecondary,
+            foregroundColor: AppColors.text1,
+            disabledBackgroundColor: AppColors.textSecondary,
+            disabledForegroundColor: AppColors.text1,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1558,7 +1562,7 @@ class _HomeScreenState extends State<HomeScreen>
           label: const Text('Send Wave'),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
+            foregroundColor: AppColors.text1,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1655,7 +1659,7 @@ class _HomeScreenState extends State<HomeScreen>
     } catch (e) {
       print('Failed to start chat: ${e.toString()}');
       if (mounted) {
-        _showSnackBar('Failed to open chat: ${e.toString()}', Colors.red);
+        _showSnackBar('Failed to open chat: ${e.toString()}', AppColors.error);
       }
     }
   }
@@ -1670,7 +1674,7 @@ class _HomeScreenState extends State<HomeScreen>
       // Get user ID from Firebase Auth
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) {
-        _showSnackBar('Please log in to send waves', Colors.red);
+        _showSnackBar('Please log in to send waves', AppColors.error);
         return;
       }
 
@@ -1681,14 +1685,14 @@ class _HomeScreenState extends State<HomeScreen>
       if (receiverId == null || isDummy) {
         _showSnackBar(
           'This is a demo profile. Connect with real travelers to send waves!',
-          Colors.blue,
+          AppColors.info,
         );
         return;
       }
 
       // Don't allow sending waves to yourself
       if (currentUser.uid == receiverId) {
-        _showSnackBar('You cannot send a wave to yourself', Colors.orange);
+        _showSnackBar('You cannot send a wave to yourself', AppColors.cta1);
         return;
       }
 
@@ -1701,7 +1705,7 @@ class _HomeScreenState extends State<HomeScreen>
         // Get the traveler's user ID from our mapping
         final receiverId = _travelerIdMap[traveler.displayName];
         if (receiverId == null) {
-          _showSnackBar('Unable to find traveler ID', Colors.red);
+          _showSnackBar('Unable to find traveler ID', AppColors.error);
           return;
         }
 
@@ -1726,7 +1730,7 @@ class _HomeScreenState extends State<HomeScreen>
       }
     } catch (e) {
       print('Failed to send wave: $e');
-      _showSnackBar('Failed to send wave: ${e.toString()}', Colors.red);
+      _showSnackBar('Failed to send wave: ${e.toString()}', AppColors.error);
     }
   }
 
@@ -1755,12 +1759,12 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.3),
+                  color: AppColors.text1.withOpacity(0.3),
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: AppColors.text3.withOpacity(0.1),
                     blurRadius: 30,
                     offset: const Offset(0, 15),
                   ),
@@ -1778,7 +1782,7 @@ class _HomeScreenState extends State<HomeScreen>
                         topRight: Radius.circular(20),
                       ),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
+                        color: AppColors.text1.withOpacity(0.2),
                         width: 1,
                       ),
                     ),
@@ -1795,7 +1799,7 @@ class _HomeScreenState extends State<HomeScreen>
                             ),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.4),
+                              color: AppColors.text1.withOpacity(0.4),
                               width: 1.5,
                             ),
                             boxShadow: [
@@ -1808,7 +1812,7 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                           child: const Icon(
                             Icons.waving_hand,
-                            color: Colors.white,
+                            color: AppColors.text1,
                             size: 24,
                           ),
                         ),
@@ -1820,11 +1824,11 @@ class _HomeScreenState extends State<HomeScreen>
                               Text(
                                 'Send Wave',
                                 style: AppTextStyles.bodyLarge.copyWith(
-                                  color: Colors.white,
+                                  color: AppColors.text1,
                                   fontWeight: FontWeight.bold,
                                   shadows: [
                                     Shadow(
-                                      color: Colors.black.withOpacity(0.3),
+                                      color: AppColors.text3.withOpacity(0.3),
                                       offset: const Offset(0, 1),
                                       blurRadius: 2,
                                     ),
@@ -1834,11 +1838,11 @@ class _HomeScreenState extends State<HomeScreen>
                               Text(
                                 'Connect with fellow traveler',
                                 style: AppTextStyles.bodySmall.copyWith(
-                                  color: Colors.white,
+                                  color: AppColors.text1,
                                   fontWeight: FontWeight.w600,
                                   shadows: [
                                     Shadow(
-                                      color: Colors.black.withOpacity(0.2),
+                                      color: AppColors.text3.withOpacity(0.2),
                                       offset: const Offset(0, 1),
                                       blurRadius: 1,
                                     ),
@@ -1859,10 +1863,10 @@ class _HomeScreenState extends State<HomeScreen>
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
+                            color: AppColors.text1.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.3),
+                              color: AppColors.text1.withOpacity(0.3),
                               width: 1,
                             ),
                           ),
@@ -1871,17 +1875,17 @@ class _HomeScreenState extends State<HomeScreen>
                             maxLines: 4,
                             maxLength: 200,
                             style: AppTextStyles.bodyMedium.copyWith(
-                              color: Colors.white,
+                              color: AppColors.text1,
                             ),
                             decoration: InputDecoration(
                               hintText: 'Add a personal message...',
                               hintStyle: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.white.withOpacity(0.7),
+                                color: AppColors.text1.withOpacity(0.7),
                               ),
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.all(16),
                               counterStyle: AppTextStyles.bodySmall.copyWith(
-                                color: Colors.white.withOpacity(0.6),
+                                color: AppColors.text1.withOpacity(0.6),
                               ),
                             ),
                           ),
@@ -1903,17 +1907,18 @@ class _HomeScreenState extends State<HomeScreen>
                                     onPressed: () =>
                                         Navigator.of(context).pop(null),
                                     style: TextButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      backgroundColor: Colors.white.withOpacity(
-                                        0.2,
-                                      ),
+                                      foregroundColor: AppColors.text1,
+                                      backgroundColor: AppColors.text1
+                                          .withOpacity(0.2),
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 14,
                                       ),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         side: BorderSide(
-                                          color: Colors.white.withOpacity(0.3),
+                                          color: AppColors.text1.withOpacity(
+                                            0.3,
+                                          ),
                                           width: 1,
                                         ),
                                       ),
@@ -1924,7 +1929,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         fontWeight: FontWeight.w600,
                                         shadows: [
                                           Shadow(
-                                            color: Colors.black.withOpacity(
+                                            color: AppColors.text3.withOpacity(
                                               0.2,
                                             ),
                                             offset: const Offset(0, 1),
@@ -1972,7 +1977,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       ).pop(controller.text.trim()),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Colors.white,
+                                        foregroundColor: AppColors.text1,
                                         shadowColor: Colors.transparent,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
@@ -1992,11 +1997,11 @@ class _HomeScreenState extends State<HomeScreen>
                                         'Send Wave',
                                         style: AppTextStyles.bodyMedium
                                             .copyWith(
-                                              color: Colors.white,
+                                              color: AppColors.text1,
                                               fontWeight: FontWeight.w700,
                                               shadows: [
                                                 Shadow(
-                                                  color: Colors.black
+                                                  color: AppColors.text3
                                                       .withOpacity(0.2),
                                                   offset: const Offset(0, 1),
                                                   blurRadius: 1,
@@ -2051,14 +2056,14 @@ class _HomeScreenState extends State<HomeScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.indigo.withOpacity(0.06),
+        color: AppColors.highlight2.withOpacity(0.06),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.indigo.withOpacity(0.2)),
+        border: Border.all(color: AppColors.highlight2.withOpacity(0.2)),
       ),
       child: Text(
         label,
         style: const TextStyle(
-          color: Colors.indigo,
+          color: AppColors.highlight2,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -2152,7 +2157,7 @@ class _HomeScreenState extends State<HomeScreen>
               height: 20,
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.orange,
+                color: AppColors.cta1,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AppColors.background, width: 1.5),
               ),
@@ -2160,7 +2165,7 @@ class _HomeScreenState extends State<HomeScreen>
               child: Text(
                 wavesCount > 99 ? '99+' : wavesCount.toString(),
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppColors.text1,
                   fontSize: 8,
                   fontWeight: FontWeight.bold,
                 ),
@@ -2186,7 +2191,7 @@ class _HomeScreenState extends State<HomeScreen>
               height: 20,
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.amber,
+                color: AppColors.highlight,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AppColors.background, width: 1.5),
               ),
@@ -2194,7 +2199,7 @@ class _HomeScreenState extends State<HomeScreen>
               child: Text(
                 requestsCount > 99 ? '99+' : requestsCount.toString(),
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppColors.text1,
                   fontSize: 8,
                   fontWeight: FontWeight.bold,
                 ),
@@ -2220,7 +2225,7 @@ class _HomeScreenState extends State<HomeScreen>
               height: 20,
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.red,
+                color: AppColors.error,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AppColors.background, width: 1.5),
               ),
@@ -2228,7 +2233,7 @@ class _HomeScreenState extends State<HomeScreen>
               child: Text(
                 unreadCount > 99 ? '99+' : unreadCount.toString(),
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppColors.text1,
                   fontSize: 8,
                   fontWeight: FontWeight.bold,
                 ),

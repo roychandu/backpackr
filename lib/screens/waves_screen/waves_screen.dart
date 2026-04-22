@@ -99,7 +99,7 @@ class _WavesScreenState extends State<WavesScreen>
             content: Text(
               'Wave accepted! You can now chat with ${wave.senderName}',
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.success,
           ),
         );
       }
@@ -119,7 +119,7 @@ class _WavesScreenState extends State<WavesScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Wave ignored'),
-            backgroundColor: Colors.orange,
+            backgroundColor: AppColors.cta1,
           ),
         );
       }
@@ -144,12 +144,12 @@ class _WavesScreenState extends State<WavesScreen>
             filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.08),
+                color: AppColors.text1.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.18)),
+                border: Border.all(color: AppColors.text1.withOpacity(0.18)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
+                    color: AppColors.text3.withOpacity(0.25),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),
@@ -163,7 +163,7 @@ class _WavesScreenState extends State<WavesScreen>
                   const Text(
                     'Delete Wave',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.text1,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -171,7 +171,10 @@ class _WavesScreenState extends State<WavesScreen>
                   const SizedBox(height: 8),
                   Text(
                     'Are you sure you want to delete the wave sent to ${wave.receiverName}?',
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    style: TextStyle(
+                      color: AppColors.text1.withOpacity(0.70),
+                      fontSize: 14,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -179,9 +182,11 @@ class _WavesScreenState extends State<WavesScreen>
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(dialogContext, false),
-                        child: const Text(
+                        child: Text(
                           'Cancel',
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(
+                            color: AppColors.text1.withOpacity(0.70),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -189,7 +194,7 @@ class _WavesScreenState extends State<WavesScreen>
                         onPressed: () => Navigator.pop(dialogContext, true),
                         child: const Text(
                           'Delete',
-                          style: TextStyle(color: Colors.redAccent),
+                          style: TextStyle(color: AppColors.error),
                         ),
                       ),
                     ],
@@ -213,7 +218,7 @@ class _WavesScreenState extends State<WavesScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Wave deleted successfully'),
-            backgroundColor: Colors.blue,
+            backgroundColor: AppColors.info,
           ),
         );
 
@@ -331,7 +336,7 @@ class _WavesScreenState extends State<WavesScreen>
                     tabAlignment: TabAlignment.center,
                     controller: _tabController,
                     labelColor: AppColors.primary,
-                    unselectedLabelColor: Colors.white70,
+                    unselectedLabelColor: AppColors.text1.withOpacity(0.70),
                     indicatorColor: AppColors.primary,
                     indicatorWeight: 3,
                     labelStyle: AppTextStyles.bodyMedium.copyWith(
@@ -403,12 +408,14 @@ class _WavesScreenState extends State<WavesScreen>
           Icon(
             Icons.error_outline,
             size: 64,
-            color: Colors.red.withOpacity(0.7),
+            color: AppColors.error.withOpacity(0.7),
           ),
           const SizedBox(height: 16),
           Text(
             _errorMessage,
-            style: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.text1.withOpacity(0.70),
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
@@ -416,7 +423,7 @@ class _WavesScreenState extends State<WavesScreen>
             onPressed: _loadWaves,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
+              foregroundColor: AppColors.text1,
             ),
             child: const Text('Retry'),
           ),
@@ -552,7 +559,7 @@ class _WavesScreenState extends State<WavesScreen>
                           child: Text(
                             otherUserName,
                             style: AppTextStyles.bodyLarge.copyWith(
-                              color: Colors.black87,
+                              color: AppColors.text3.withOpacity(0.87),
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -562,14 +569,16 @@ class _WavesScreenState extends State<WavesScreen>
                     const SizedBox(height: 2),
                     Text(
                       otherUserLocation,
-                      style: const TextStyle(color: Colors.black45),
+                      style: TextStyle(
+                        color: AppColors.text3.withOpacity(0.45),
+                      ),
                     ),
                     if (wave.message != null && wave.message!.isNotEmpty) ...[
                       const SizedBox(height: 8),
                       Text(
                         wave.message!,
-                        style: const TextStyle(
-                          color: Colors.black45,
+                        style: TextStyle(
+                          color: AppColors.text3.withOpacity(0.45),
                           fontStyle: FontStyle.italic,
                         ),
                       ),
@@ -582,11 +591,14 @@ class _WavesScreenState extends State<WavesScreen>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     if (wave.isVerified)
-                      const Icon(Icons.verified_rounded, color: Colors.teal),
+                      const Icon(
+                        Icons.verified_rounded,
+                        color: AppColors.highlight2,
+                      ),
                     const SizedBox(height: 8),
                     Text(
                       wave.timeAgo,
-                      style: const TextStyle(color: Colors.teal),
+                      style: const TextStyle(color: AppColors.highlight2),
                     ),
                   ],
                 ),
@@ -601,7 +613,7 @@ class _WavesScreenState extends State<WavesScreen>
               onPressed: () => _startChat(wave),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.text1,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -644,7 +656,7 @@ class _WavesScreenState extends State<WavesScreen>
                           child: Text(
                             wave.senderName,
                             style: AppTextStyles.bodyLarge.copyWith(
-                              color: Colors.black87,
+                              color: AppColors.text3.withOpacity(0.87),
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -654,7 +666,9 @@ class _WavesScreenState extends State<WavesScreen>
                     const SizedBox(height: 2),
                     Text(
                       wave.senderLocation,
-                      style: const TextStyle(color: Colors.black45),
+                      style: TextStyle(
+                        color: AppColors.text3.withOpacity(0.45),
+                      ),
                     ),
                   ],
                 ),
@@ -664,11 +678,14 @@ class _WavesScreenState extends State<WavesScreen>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     if (wave.isVerified)
-                      const Icon(Icons.verified_rounded, color: Colors.teal),
+                      const Icon(
+                        Icons.verified_rounded,
+                        color: AppColors.highlight2,
+                      ),
                     const SizedBox(height: 8),
                     Text(
                       wave.timeAgo,
-                      style: const TextStyle(color: Colors.teal),
+                      style: const TextStyle(color: AppColors.highlight2),
                     ),
                   ],
                 ),
@@ -684,8 +701,8 @@ class _WavesScreenState extends State<WavesScreen>
                   icon: const Icon(Icons.verified_rounded),
                   label: const Text('Accept'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.highlight2,
+                    foregroundColor: AppColors.text1,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -700,8 +717,8 @@ class _WavesScreenState extends State<WavesScreen>
                   icon: const Icon(Icons.close),
                   label: const Text('Ignore'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.black54,
-                    side: BorderSide(color: Colors.black.withOpacity(0.2)),
+                    foregroundColor: AppColors.text3.withOpacity(0.54),
+                    side: BorderSide(color: AppColors.text3.withOpacity(0.2)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -751,7 +768,7 @@ class _WavesScreenState extends State<WavesScreen>
                               child: Text(
                                 wave.receiverName,
                                 style: AppTextStyles.bodyLarge.copyWith(
-                                  color: Colors.black87,
+                                  color: AppColors.text3.withOpacity(0.87),
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -799,16 +816,18 @@ class _WavesScreenState extends State<WavesScreen>
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.location_on,
                               size: 16,
-                              color: Colors.black38,
+                              color: AppColors.text3.withOpacity(0.38),
                             ),
                             const SizedBox(width: 6),
                             Expanded(
                               child: Text(
                                 wave.receiverLocation,
-                                style: const TextStyle(color: Colors.black54),
+                                style: TextStyle(
+                                  color: AppColors.text3.withOpacity(0.54),
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -820,10 +839,10 @@ class _WavesScreenState extends State<WavesScreen>
                             padding: const EdgeInsets.only(top: 8),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.indigo.withOpacity(0.04),
+                                color: AppColors.highlight2.withOpacity(0.04),
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                  color: Colors.indigo.withOpacity(0.12),
+                                  color: AppColors.highlight2.withOpacity(0.12),
                                 ),
                               ),
                               padding: const EdgeInsets.all(10),
@@ -833,14 +852,16 @@ class _WavesScreenState extends State<WavesScreen>
                                   const Icon(
                                     Icons.message_rounded,
                                     size: 16,
-                                    color: Colors.indigo,
+                                    color: AppColors.highlight2,
                                   ),
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       wave.message!,
-                                      style: const TextStyle(
-                                        color: Colors.black54,
+                                      style: TextStyle(
+                                        color: AppColors.text3.withOpacity(
+                                          0.54,
+                                        ),
                                         fontStyle: FontStyle.italic,
                                       ),
                                       maxLines: 2,
@@ -870,8 +891,10 @@ class _WavesScreenState extends State<WavesScreen>
                       icon: const Icon(Icons.person_outline),
                       label: const Text('View Profile'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.black87,
-                        side: BorderSide(color: Colors.black.withOpacity(0.15)),
+                        foregroundColor: AppColors.text3.withOpacity(0.87),
+                        side: BorderSide(
+                          color: AppColors.text3.withOpacity(0.15),
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -887,7 +910,7 @@ class _WavesScreenState extends State<WavesScreen>
                         label: const Text('Message'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
+                          foregroundColor: AppColors.text1,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -906,12 +929,12 @@ class _WavesScreenState extends State<WavesScreen>
                         icon: const Icon(Icons.cancel_outlined, size: 18),
                         label: const Text('Cancel'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
-                          foregroundColor: Colors.white,
-                          disabledBackgroundColor: Colors.redAccent.withOpacity(
+                          backgroundColor: AppColors.error,
+                          foregroundColor: AppColors.text1,
+                          disabledBackgroundColor: AppColors.error.withOpacity(
                             0.4,
                           ),
-                          disabledForegroundColor: Colors.white,
+                          disabledForegroundColor: AppColors.text1,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -924,15 +947,18 @@ class _WavesScreenState extends State<WavesScreen>
               const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.access_time_rounded,
-                    color: Colors.black38,
+                    color: AppColors.text3.withOpacity(0.38),
                     size: 16,
                   ),
                   const SizedBox(width: 6),
                   Text(
                     wave.timeAgo,
-                    style: const TextStyle(color: Colors.black45, fontSize: 12),
+                    style: TextStyle(
+                      color: AppColors.text3.withOpacity(0.45),
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
@@ -947,7 +973,7 @@ class _WavesScreenState extends State<WavesScreen>
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.08),
+                    color: AppColors.error.withOpacity(0.08),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -974,13 +1000,13 @@ class _WavesScreenState extends State<WavesScreen>
   Color _getStatusColor(WaveStatus status) {
     switch (status) {
       case WaveStatus.accepted:
-        return Colors.green;
+        return AppColors.success;
       case WaveStatus.ignored:
-        return Colors.orange;
+        return AppColors.cta1;
       case WaveStatus.expired:
-        return Colors.red;
+        return AppColors.error;
       default:
-        return Colors.amber;
+        return AppColors.highlight;
     }
   }
 
@@ -1000,11 +1026,11 @@ class _WavesScreenState extends State<WavesScreen>
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.text1,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: AppColors.text3.withOpacity(0.08),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -1037,7 +1063,7 @@ class _WavesScreenState extends State<WavesScreen>
       child: Text(
         letter.toUpperCase(),
         style: const TextStyle(
-          color: Colors.white,
+          color: AppColors.text1,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -1063,7 +1089,7 @@ class _WavesScreenState extends State<WavesScreen>
             child: Text(
               'No waves yet',
               style: AppTextStyles.h4.copyWith(
-                color: Colors.white,
+                color: AppColors.text1,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -1073,7 +1099,9 @@ class _WavesScreenState extends State<WavesScreen>
             child: Text(
               'Start connecting with fellow travelers by sending waves!',
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.text1.withOpacity(0.70),
+              ),
             ),
           ),
         ],

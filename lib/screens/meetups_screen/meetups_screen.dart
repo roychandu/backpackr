@@ -204,7 +204,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Join request sent for "${meetup.title}"!'),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.success,
         ),
       );
 
@@ -216,7 +216,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(ErrorHandler.getFriendlyErrorMessage(e)),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
     }
@@ -231,7 +231,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Join request cancelled for "${meetup.title}"'),
-          backgroundColor: Colors.orange,
+          backgroundColor: AppColors.cta1,
         ),
       );
 
@@ -243,7 +243,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(ErrorHandler.getFriendlyErrorMessage(e)),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
     }
@@ -312,7 +312,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                     tabAlignment: TabAlignment.start,
                     controller: _tabController,
                     labelColor: AppColors.primary,
-                    unselectedLabelColor: Colors.white70,
+                    unselectedLabelColor: AppColors.text1.withOpacity(0.70),
                     indicatorColor: AppColors.primary,
                     indicatorWeight: 3,
                     labelStyle: AppTextStyles.bodyMedium.copyWith(
@@ -400,7 +400,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
               onPressed: _showCreateMeetupDialog,
               backgroundColor: AppColors.primary,
               shape: const CircleBorder(),
-              child: const Icon(Icons.add, color: Colors.white),
+              child: const Icon(Icons.add, color: AppColors.text1),
             )
           : null,
     );
@@ -440,7 +440,8 @@ class _MeetupsScreenState extends State<MeetupsScreen>
     return AppHeader(
       title: 'Meetups',
       subtitle: 'Join or create amazing experiences',
-      additionalSubtitle: '${_myMeetups.length + _allMeetups.length} upcoming events',
+      additionalSubtitle:
+          '${_myMeetups.length + _allMeetups.length} upcoming events',
     );
   }
 
@@ -452,13 +453,15 @@ class _MeetupsScreenState extends State<MeetupsScreen>
           padding: const EdgeInsets.all(32.0),
           child: Column(
             children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const Icon(Icons.error_outline, size: 64, color: AppColors.error),
               const SizedBox(height: 16),
               Text('Error loading meetups', style: AppTextStyles.h4),
               const SizedBox(height: 8),
               Text(
                 _errorMessage ?? 'Something went wrong',
-                style: AppTextStyles.bodyMedium.copyWith(color: Colors.black54),
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.text3.withOpacity(0.54),
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -468,7 +471,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                 label: const Text('Retry'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppColors.text1,
                 ),
               ),
             ],
@@ -527,7 +530,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                 label: Text(idx == 0 ? 'Create your Meetup' : 'Create Meetup'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppColors.text1,
                 ),
               ),
             ],
@@ -552,7 +555,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Meetup created successfully!'),
-                backgroundColor: Colors.green,
+                backgroundColor: AppColors.success,
               ),
             );
           },
@@ -602,7 +605,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                 children: [
                   Icon(
                     Icons.notifications_active,
-                    color: Colors.amber,
+                    color: AppColors.highlight,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
@@ -647,42 +650,42 @@ class _MeetupsScreenState extends State<MeetupsScreen>
 
                 switch (type) {
                   case 'approved':
-                    bgColor = Colors.green.withOpacity(0.1);
-                    iconColor = Colors.green;
+                    bgColor = AppColors.success.withOpacity(0.1);
+                    iconColor = AppColors.success;
                     icon = Icons.check_circle_rounded;
                     message = 'Your request to join "$title" was approved!';
                     break;
                   case 'rejected':
-                    bgColor = Colors.red.withOpacity(0.1);
-                    iconColor = Colors.red;
+                    bgColor = AppColors.error.withOpacity(0.1);
+                    iconColor = AppColors.error;
                     icon = Icons.cancel_rounded;
                     message = 'Your request to join "$title" was declined';
                     break;
                   case 'removed':
-                    bgColor = Colors.orange.withOpacity(0.1);
-                    iconColor = Colors.orange;
+                    bgColor = AppColors.cta1.withOpacity(0.1);
+                    iconColor = AppColors.cta1;
                     icon = Icons.person_remove_rounded;
                     message = 'You were removed from "$title"';
                     break;
                   case 'new_request':
-                    bgColor = Colors.blue.withOpacity(0.1);
-                    iconColor = Colors.blue;
+                    bgColor = AppColors.info.withOpacity(0.1);
+                    iconColor = AppColors.info;
                     icon = Icons.person_add_rounded;
                     final requesterName =
                         notification['requesterName'] as String? ?? 'Someone';
                     message = '$requesterName requested to join "$title"';
                     break;
                   case 'attendee_left':
-                    bgColor = Colors.orange.withOpacity(0.1);
-                    iconColor = Colors.orange;
+                    bgColor = AppColors.cta1.withOpacity(0.1);
+                    iconColor = AppColors.cta1;
                     icon = Icons.exit_to_app_rounded;
                     final attendeeName =
                         notification['attendeeName'] as String? ?? 'Someone';
                     message = '$attendeeName left "$title"';
                     break;
                   case 'request_cancelled':
-                    bgColor = Colors.grey.withOpacity(0.1);
-                    iconColor = Colors.grey;
+                    bgColor = AppColors.textSecondary.withOpacity(0.1);
+                    iconColor = AppColors.textSecondary;
                     icon = Icons.cancel_outlined;
                     final cancelledName =
                         notification['requesterName'] as String? ?? 'Someone';
@@ -690,8 +693,8 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                         '$cancelledName cancelled their request for "$title"';
                     break;
                   default:
-                    bgColor = Colors.grey.withOpacity(0.1);
-                    iconColor = Colors.grey;
+                    bgColor = AppColors.textSecondary.withOpacity(0.1);
+                    iconColor = AppColors.textSecondary;
                     icon = Icons.info_rounded;
                     message = 'Update about "$title"';
                 }
@@ -705,14 +708,14 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                   background: Container(
                     margin: const EdgeInsets.only(bottom: 12),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: AppColors.error,
                       borderRadius: BorderRadius.circular(14),
                     ),
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 20),
                     child: const Icon(
                       Icons.delete_rounded,
-                      color: Colors.white,
+                      color: AppColors.text1,
                     ),
                   ),
                   child: GestureDetector(
@@ -737,7 +740,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text('Meetup not found'),
-                                    backgroundColor: Colors.red,
+                                    backgroundColor: AppColors.error,
                                   ),
                                 );
                               }
@@ -763,7 +766,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                               color: iconColor,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Icon(icon, color: Colors.white, size: 20),
+                            child: Icon(icon, color: AppColors.text1, size: 20),
                           ),
                           const SizedBox(width: 14),
                           Expanded(
@@ -850,11 +853,11 @@ class _MeetupsScreenState extends State<MeetupsScreen>
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.text1,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: AppColors.text3.withOpacity(0.08),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -885,7 +888,10 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: PopupMenuButton<String>(
-                      icon: const Icon(Icons.more_horiz, color: Colors.black54),
+                      icon: Icon(
+                        Icons.more_horiz,
+                        color: AppColors.text3.withOpacity(0.54),
+                      ),
                       onSelected: (value) {
                         if (value == 'report') {
                           _onReportUser(meetup);
@@ -898,17 +904,20 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                           value: 'report',
                           child: Row(
                             children: [
-                              Icon(Icons.flag_outlined, color: Colors.red),
+                              Icon(Icons.flag_outlined, color: AppColors.error),
                               SizedBox(width: 10),
                               Text('Report user'),
                             ],
                           ),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'block',
                           child: Row(
                             children: [
-                              Icon(Icons.block, color: Colors.black87),
+                              Icon(
+                                Icons.block,
+                                color: AppColors.text3.withOpacity(0.87),
+                              ),
                               SizedBox(width: 10),
                               Text('Block user'),
                             ],
@@ -917,12 +926,17 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                       ],
                     ),
                   ),
-                const Icon(Icons.group_outlined, color: Colors.black45),
+                Icon(
+                  Icons.group_outlined,
+                  color: AppColors.text3.withOpacity(0.45),
+                ),
                 const SizedBox(width: 4),
                 Text(
                   meetup.capacityDisplay,
                   style: TextStyle(
-                    color: isFull ? Colors.red : Colors.black45,
+                    color: isFull
+                        ? AppColors.error
+                        : AppColors.text3.withOpacity(0.45),
                     fontWeight: isFull ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
@@ -932,7 +946,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
             Text(
               meetup.title,
               style: AppTextStyles.bodyLarge.copyWith(
-                color: Colors.black87,
+                color: AppColors.text3.withOpacity(0.87),
                 fontWeight: FontWeight.w700,
                 fontSize: 20,
               ),
@@ -940,23 +954,22 @@ class _MeetupsScreenState extends State<MeetupsScreen>
             const SizedBox(height: 6),
             Text(
               meetup.description,
-              style: const TextStyle(color: Colors.black54),
+              style: TextStyle(color: AppColors.text3.withOpacity(0.54)),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(
-                  Icons.event_available,
-                  color: Colors.black38,
-                  size: 20,
-                ),
+                Icon(Icons.event_available, color: AppColors.text3.withOpacity(0.38), size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     meetup.formattedDateTime,
-                    style: const TextStyle(color: Colors.black54, fontSize: 13),
+                    style: TextStyle(
+                      color: AppColors.text3.withOpacity(0.54),
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],
@@ -964,12 +977,15 @@ class _MeetupsScreenState extends State<MeetupsScreen>
             const SizedBox(height: 8),
             Row(
               children: [
-                const Icon(Icons.location_on, color: Colors.black38, size: 20),
+                Icon(Icons.location_on, color: AppColors.text3.withOpacity(0.38), size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     meetup.location,
-                    style: const TextStyle(color: Colors.black54, fontSize: 13),
+                    style: TextStyle(
+                      color: AppColors.text3.withOpacity(0.54),
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],
@@ -994,7 +1010,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.amber.withOpacity(0.2),
+                      color: AppColors.highlight.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Text(
@@ -1002,7 +1018,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
-                        color: Colors.amber,
+                        color: AppColors.highlight,
                       ),
                     ),
                   ),
@@ -1026,19 +1042,19 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                     : () => _requestToJoinMeetup(meetup),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isAttending
-                      ? Colors.grey
+                      ? AppColors.textSecondary
                       : isPast
-                      ? Colors.grey
+                      ? AppColors.textSecondary
                       : hasPendingRequest
-                      ? Colors.orange
+                      ? AppColors.cta1
                       : AppColors.primary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppColors.text1,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                   elevation: 0,
-                  disabledBackgroundColor: Colors.grey[300],
-                  disabledForegroundColor: Colors.grey[600],
+                  disabledBackgroundColor: AppColors.textSecondary.withOpacity(0.4),
+                  disabledForegroundColor: AppColors.textSecondary,
                 ),
                 child: Text(
                   isHost
@@ -1121,7 +1137,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
         const SnackBar(
           content: Text('User reported. Thank you for the feedback.'),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.orange,
+          backgroundColor: AppColors.cta1,
         ),
       );
     } catch (e) {
@@ -1130,7 +1146,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
         SnackBar(
           behavior: SnackBarBehavior.floating,
           content: Text(ErrorHandler.getFriendlyErrorMessage(e)),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
     }
@@ -1177,7 +1193,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
         const SnackBar(
           content: Text('User blocked. You will not see their meetups.'),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.success,
         ),
       );
     } catch (e) {
@@ -1186,7 +1202,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
         SnackBar(
           behavior: SnackBarBehavior.floating,
           content: Text(ErrorHandler.getFriendlyErrorMessage(e)),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
     }
@@ -1201,7 +1217,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Left "${meetup.title}"'),
-          backgroundColor: Colors.orange,
+          backgroundColor: AppColors.cta1,
         ),
       );
 
@@ -1213,7 +1229,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(ErrorHandler.getFriendlyErrorMessage(e)),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
     }
@@ -1222,19 +1238,19 @@ class _MeetupsScreenState extends State<MeetupsScreen>
   Color _getCategoryColor(MeetupCategory category) {
     switch (category) {
       case MeetupCategory.work:
-        return Colors.indigo;
+        return AppColors.highlight2;
       case MeetupCategory.culture:
-        return Colors.purple;
+        return AppColors.highlight2;
       case MeetupCategory.adventure:
-        return Colors.green;
+        return AppColors.success;
       case MeetupCategory.food:
-        return Colors.orange;
+        return AppColors.cta1;
       case MeetupCategory.nightlife:
-        return Colors.pink;
+        return AppColors.cta1;
       case MeetupCategory.sports:
-        return Colors.blue;
+        return AppColors.info;
       case MeetupCategory.other:
-        return Colors.grey;
+        return AppColors.textSecondary;
     }
   }
 

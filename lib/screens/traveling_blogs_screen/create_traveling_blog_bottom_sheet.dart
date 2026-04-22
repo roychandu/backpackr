@@ -303,7 +303,7 @@ class _CreateTravelingBlogBottomSheetState
                                   content: Text(
                                     ErrorHandler.getFriendlyErrorMessage(e),
                                   ),
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: AppColors.error,
                                 ),
                               );
                             }
@@ -404,7 +404,7 @@ class _CreateTravelingBlogBottomSheetState
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: AppColors.primary,
-              onPrimary: Colors.white,
+              onPrimary: AppColors.text1,
             ),
           ),
           child: child!,
@@ -428,7 +428,7 @@ class _CreateTravelingBlogBottomSheetState
       _sheetMessenger.currentState?.showSnackBar(
         const SnackBar(
           content: Text('Please select start date first'),
-          backgroundColor: Colors.orange,
+          backgroundColor: AppColors.cta1,
           duration: Duration(seconds: 2),
         ),
       );
@@ -445,7 +445,7 @@ class _CreateTravelingBlogBottomSheetState
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: AppColors.primary,
-              onPrimary: Colors.white,
+              onPrimary: AppColors.text1,
             ),
           ),
           child: child!,
@@ -481,7 +481,7 @@ class _CreateTravelingBlogBottomSheetState
       _sheetMessenger.currentState?.showSnackBar(
         SnackBar(
           content: Text('Error picking images: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
     }
@@ -506,7 +506,7 @@ class _CreateTravelingBlogBottomSheetState
       _sheetMessenger.currentState?.showSnackBar(
         SnackBar(
           content: Text('Error taking photo: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
     }
@@ -782,7 +782,7 @@ class _CreateTravelingBlogBottomSheetState
       _sheetMessenger.currentState?.showSnackBar(
         const SnackBar(
           content: Text('Please fill in all required fields correctly'),
-          backgroundColor: Colors.orange,
+          backgroundColor: AppColors.cta1,
           duration: Duration(seconds: 2),
         ),
       );
@@ -793,7 +793,7 @@ class _CreateTravelingBlogBottomSheetState
       _sheetMessenger.currentState?.showSnackBar(
         const SnackBar(
           content: Text('Please add at least one photo'),
-          backgroundColor: Colors.orange,
+          backgroundColor: AppColors.cta1,
           duration: Duration(seconds: 2),
         ),
       );
@@ -804,7 +804,7 @@ class _CreateTravelingBlogBottomSheetState
       _sheetMessenger.currentState?.showSnackBar(
         const SnackBar(
           content: Text('Please select the journey start date'),
-          backgroundColor: Colors.orange,
+          backgroundColor: AppColors.cta1,
           duration: Duration(seconds: 2),
         ),
       );
@@ -856,7 +856,7 @@ class _CreateTravelingBlogBottomSheetState
       _sheetMessenger.currentState?.showSnackBar(
         const SnackBar(
           content: Text('Blog created successfully!'),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.success,
           duration: Duration(milliseconds: 1200),
           behavior: SnackBarBehavior.floating,
         ),
@@ -880,7 +880,7 @@ class _CreateTravelingBlogBottomSheetState
       _sheetMessenger.currentState?.showSnackBar(
         SnackBar(
           content: Text(ErrorHandler.getFriendlyErrorMessage(e)),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.error,
         ),
       );
     }
@@ -913,7 +913,9 @@ class _CreateTravelingBlogBottomSheetState
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(20),
                       ),
-                      border: Border.all(color: Colors.white.withOpacity(0.1)),
+                      border: Border.all(
+                        color: AppColors.text1.withOpacity(0.1),
+                      ),
                     ),
                     child: Column(
                       children: [
@@ -923,7 +925,7 @@ class _CreateTravelingBlogBottomSheetState
                           width: 40,
                           height: 5,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.3),
+                            color: AppColors.text1.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
@@ -942,7 +944,7 @@ class _CreateTravelingBlogBottomSheetState
                                 ),
                                 child: const Icon(
                                   Icons.article_rounded,
-                                  color: Colors.white,
+                                  color: AppColors.text1,
                                   size: 24,
                                 ),
                               ),
@@ -951,16 +953,16 @@ class _CreateTravelingBlogBottomSheetState
                                 child: Text(
                                   'Create Travel Blog',
                                   style: AppTextStyles.h4.copyWith(
-                                    color: Colors.white,
+                                    color: AppColors.text1,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                               IconButton(
                                 onPressed: () => Navigator.pop(context),
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.close_rounded,
-                                  color: Colors.white70,
+                                  color: AppColors.text1.withOpacity(0.70),
                                 ),
                               ),
                             ],
@@ -982,7 +984,7 @@ class _CreateTravelingBlogBottomSheetState
                                   Text(
                                     'Travel Photos',
                                     style: AppTextStyles.bodyMedium.copyWith(
-                                      color: Colors.white,
+                                      color: AppColors.text1,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -998,12 +1000,14 @@ class _CreateTravelingBlogBottomSheetState
                                           vertical: 20,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.08),
+                                          color: AppColors.text1.withOpacity(
+                                            0.08,
+                                          ),
                                           borderRadius: BorderRadius.circular(
                                             12,
                                           ),
                                           border: Border.all(
-                                            color: Colors.white.withOpacity(
+                                            color: AppColors.text1.withOpacity(
                                               0.15,
                                             ),
                                             width: 2,
@@ -1024,7 +1028,8 @@ class _CreateTravelingBlogBottomSheetState
                                               'Add Travel Photos',
                                               style: AppTextStyles.bodyMedium
                                                   .copyWith(
-                                                    color: Colors.white70,
+                                                    color: AppColors.text1
+                                                        .withOpacity(0.70),
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                             ),
@@ -1033,7 +1038,8 @@ class _CreateTravelingBlogBottomSheetState
                                               '${_selectedImages.length}/6 photos added',
                                               style: AppTextStyles.bodySmall
                                                   .copyWith(
-                                                    color: Colors.white54,
+                                                    color: AppColors.text1
+                                                        .withOpacity(0.54),
                                                     fontSize: 12,
                                                   ),
                                             ),
@@ -1083,13 +1089,14 @@ class _CreateTravelingBlogBottomSheetState
                                                         const EdgeInsets.all(4),
                                                     decoration:
                                                         const BoxDecoration(
-                                                          color: Colors.red,
+                                                          color:
+                                                              AppColors.error,
                                                           shape:
                                                               BoxShape.circle,
                                                         ),
                                                     child: const Icon(
                                                       Icons.close,
-                                                      color: Colors.white,
+                                                      color: AppColors.text1,
                                                       size: 16,
                                                     ),
                                                   ),
@@ -1226,12 +1233,14 @@ class _CreateTravelingBlogBottomSheetState
                                       ),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.08),
+                                          color: AppColors.text1.withOpacity(
+                                            0.08,
+                                          ),
                                           borderRadius: BorderRadius.circular(
                                             16,
                                           ),
                                           border: Border.all(
-                                            color: Colors.white.withOpacity(
+                                            color: AppColors.text1.withOpacity(
                                               0.15,
                                             ),
                                           ),
@@ -1257,7 +1266,7 @@ class _CreateTravelingBlogBottomSheetState
                                                     style: AppTextStyles
                                                         .bodySmall
                                                         .copyWith(
-                                                          color: Colors.white
+                                                          color: AppColors.text1
                                                               .withOpacity(0.7),
                                                           fontSize: 11,
                                                         ),
@@ -1273,11 +1282,11 @@ class _CreateTravelingBlogBottomSheetState
                                                                       null ||
                                                                   _endDate ==
                                                                       null)
-                                                              ? Colors.white
+                                                              ? AppColors.text1
                                                                     .withOpacity(
                                                                       0.5,
                                                                     )
-                                                              : Colors.white,
+                                                              : AppColors.text1,
                                                           fontWeight:
                                                               FontWeight.w600,
                                                         ),
@@ -1287,9 +1296,8 @@ class _CreateTravelingBlogBottomSheetState
                                             ),
                                             Icon(
                                               Icons.info_outline,
-                                              color: Colors.white.withOpacity(
-                                                0.5,
-                                              ),
+                                              color: AppColors.text1
+                                                  .withOpacity(0.5),
                                               size: 18,
                                             ),
                                           ],
@@ -1320,7 +1328,7 @@ class _CreateTravelingBlogBottomSheetState
                             color: AppColors.background,
                             border: Border(
                               top: BorderSide(
-                                color: Colors.white.withOpacity(0.1),
+                                color: AppColors.text1.withOpacity(0.1),
                                 width: 1,
                               ),
                             ),
@@ -1340,14 +1348,14 @@ class _CreateTravelingBlogBottomSheetState
                                           height: 20,
                                           child: CircularProgressIndicator(
                                             strokeWidth: 2,
-                                            color: Colors.white,
+                                            color: AppColors.text1,
                                           ),
                                         ),
                                         const SizedBox(width: 12),
                                         const Text(
                                           'Creating...',
                                           style: TextStyle(
-                                            color: Colors.white,
+                                            color: AppColors.text1,
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -1365,7 +1373,7 @@ class _CreateTravelingBlogBottomSheetState
                                     ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
-                                foregroundColor: Colors.white,
+                                foregroundColor: AppColors.text1,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25),
                                 ),
@@ -1401,17 +1409,17 @@ class _CreateTravelingBlogBottomSheetState
         filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.08),
+            color: AppColors.text1.withOpacity(0.08),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withOpacity(0.15)),
+            border: Border.all(color: AppColors.text1.withOpacity(0.15)),
           ),
           child: TextFormField(
             controller: controller,
-            style: AppTextStyles.bodyMedium.copyWith(color: Colors.white),
+            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text1),
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: AppTextStyles.bodyMedium.copyWith(
-                color: Colors.white.withOpacity(0.5),
+                color: AppColors.text1.withOpacity(0.5),
               ),
               prefixIcon: Icon(icon, color: AppColors.primary),
               border: InputBorder.none,
@@ -1441,9 +1449,9 @@ class _CreateTravelingBlogBottomSheetState
         filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.08),
+            color: AppColors.text1.withOpacity(0.08),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withOpacity(0.15)),
+            border: Border.all(color: AppColors.text1.withOpacity(0.15)),
           ),
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -1457,8 +1465,8 @@ class _CreateTravelingBlogBottomSheetState
                       : label,
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: date != null
-                        ? Colors.white
-                        : Colors.white.withOpacity(0.5),
+                        ? AppColors.text1
+                        : AppColors.text1.withOpacity(0.5),
                   ),
                 ),
               ),

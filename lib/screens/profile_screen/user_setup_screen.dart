@@ -619,8 +619,8 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
         backgroundColor: AppColors.background,
         elevation: 0,
         title: const Text('Complete Your Profile'),
-        foregroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.white),
+        foregroundColor: AppColors.text1,
+        iconTheme: const IconThemeData(color: AppColors.text1),
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
@@ -659,16 +659,16 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
                         padding: const EdgeInsets.all(12),
                         margin: const EdgeInsets.only(bottom: 16),
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.1),
+                          color: AppColors.error.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: Colors.red.withOpacity(0.3),
+                            color: AppColors.error.withOpacity(0.3),
                           ),
                         ),
                         child: Text(
                           _errorMessage,
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: Colors.red,
+                            color: AppColors.error,
                           ),
                         ),
                       ),
@@ -690,7 +690,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
               onPressed: _isSaving ? null : _saveProfile,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.text1,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -702,13 +702,13 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.text1),
                       ),
                     )
                   : Text(
                       'Save Profile',
                       style: AppTextStyles.bodyLarge.copyWith(
-                        color: Colors.white,
+                        color: AppColors.text1,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -726,7 +726,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
         Text(
           'Profile Photo',
           style: AppTextStyles.bodyLarge.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -771,7 +771,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
         Center(
           child: Text(
             'Tap to add photo',
-            style: AppTextStyles.bodySmall.copyWith(color: Colors.white70),
+            style: AppTextStyles.bodySmall.copyWith(color: AppColors.text1.withOpacity(0.70)),
           ),
         ),
       ],
@@ -785,24 +785,24 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
         Text(
           'User Name',
           style: AppTextStyles.bodyLarge.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.w600,
           ),
         ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: AppColors.text1.withOpacity(0.05),
             borderRadius: BorderRadius.circular(12),
           ),
           child: TextFormField(
             controller: _userNameController,
             enabled: false,
-            style: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
+            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text1.withOpacity(0.70)),
             decoration: InputDecoration(
               hintText: 'Loading user name...',
               hintStyle: AppTextStyles.bodyMedium.copyWith(
-                color: Colors.white54,
+                color: AppColors.text1.withOpacity(0.54),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -810,15 +810,15 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.white.withOpacity(0.20)),
+                borderSide: BorderSide(color: AppColors.text1.withOpacity(0.20)),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.white.withOpacity(0.20)),
+                borderSide: BorderSide(color: AppColors.text1.withOpacity(0.20)),
               ),
               suffixIcon: Icon(
                 Icons.person,
-                color: Colors.white.withOpacity(0.6),
+                color: AppColors.text1.withOpacity(0.6),
                 size: 20,
               ),
               contentPadding: const EdgeInsets.symmetric(
@@ -831,7 +831,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
         const SizedBox(height: 4),
         Text(
           'This is your display name from your account',
-          style: AppTextStyles.bodySmall.copyWith(color: Colors.white54),
+          style: AppTextStyles.bodySmall.copyWith(color: AppColors.text1.withOpacity(0.54)),
         ),
       ],
     );
@@ -844,7 +844,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
         Text(
           'Bio',
           style: AppTextStyles.bodyLarge.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -853,26 +853,26 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
           controller: _bioController,
           maxLines: 3,
           maxLength: 120,
-          style: AppTextStyles.bodyMedium.copyWith(color: Colors.white),
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text1),
           decoration: InputDecoration(
             hintText: 'Tell us about your travel vibe!',
-            hintStyle: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
+            hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.text1.withOpacity(0.70)),
             filled: true,
-            fillColor: Colors.white.withOpacity(0.10),
+            fillColor: AppColors.text1.withOpacity(0.10),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.20)),
+              borderSide: BorderSide(color: AppColors.text1.withOpacity(0.20)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: AppColors.primary, width: 1.5),
             ),
             counterStyle: AppTextStyles.bodySmall.copyWith(
-              color: Colors.white54,
+              color: AppColors.text1.withOpacity(0.54),
             ),
           ),
           validator: (value) {
@@ -893,7 +893,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
         Text(
           'Current Location',
           style: AppTextStyles.bodyLarge.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -903,21 +903,21 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
           child: AbsorbPointer(
             child: TextFormField(
               controller: _locationController,
-              style: AppTextStyles.bodyMedium.copyWith(color: Colors.white),
+              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text1),
               decoration: InputDecoration(
                 hintText: 'Tap to fetch your current city',
                 hintStyle: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.white70,
+                  color: AppColors.text1.withOpacity(0.70),
                 ),
                 filled: true,
-                fillColor: Colors.white.withOpacity(0.10),
+                fillColor: AppColors.text1.withOpacity(0.10),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.white.withOpacity(0.20)),
+                  borderSide: BorderSide(color: AppColors.text1.withOpacity(0.20)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -946,7 +946,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
         const SizedBox(height: 8),
         Text(
           'Popular cities: ${_popularCities.take(5).join(', ')}',
-          style: AppTextStyles.bodySmall.copyWith(color: Colors.white54),
+          style: AppTextStyles.bodySmall.copyWith(color: AppColors.text1.withOpacity(0.54)),
         ),
       ],
     );
@@ -959,7 +959,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
         Text(
           'Next Destinations (up to 3)',
           style: AppTextStyles.bodyLarge.copyWith(
-            color: Colors.white,
+            color: AppColors.text1,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -971,14 +971,14 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
             Expanded(
               child: TextFormField(
                 controller: _destinationController,
-                style: AppTextStyles.bodyMedium.copyWith(color: Colors.white),
+                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text1),
                 decoration: InputDecoration(
                   hintText: 'City name',
                   hintStyle: AppTextStyles.bodyMedium.copyWith(
-                    color: Colors.white70,
+                    color: AppColors.text1.withOpacity(0.70),
                   ),
                   filled: true,
-                  fillColor: Colors.white.withOpacity(0.10),
+                  fillColor: AppColors.text1.withOpacity(0.10),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -986,7 +986,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                      color: Colors.white.withOpacity(0.20),
+                      color: AppColors.text1.withOpacity(0.20),
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -1017,7 +1017,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
+                  color: AppColors.text1.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -1032,7 +1032,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
               onPressed: _addDestination,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.text1,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -1062,7 +1062,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
+                color: AppColors.text1.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -1071,7 +1071,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
                     child: Text(
                       '${dest['city']} - ${dest['date']}',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: Colors.white,
+                        color: AppColors.text1,
                       ),
                     ),
                   ),
@@ -1079,7 +1079,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
                     onPressed: () => _removeDestination(index),
                     icon: const Icon(
                       Icons.remove_circle,
-                      color: Colors.red,
+                      color: AppColors.error,
                       size: 20,
                     ),
                   ),
@@ -1102,7 +1102,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
             Text(
               'Travel Tags',
               style: AppTextStyles.bodyLarge.copyWith(
-                color: Colors.white,
+                color: AppColors.text1,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -1128,18 +1128,18 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.primary
-                      : Colors.white.withOpacity(0.18),
+                      : AppColors.text1.withOpacity(0.18),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: isSelected
                         ? AppColors.primary
-                        : Colors.white.withOpacity(0.40),
+                        : AppColors.text1.withOpacity(0.40),
                   ),
                 ),
                 child: Text(
                   tag,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: isSelected ? Colors.white : Colors.white,
+                    color: isSelected ? AppColors.text1 : AppColors.text1,
                     fontWeight: isSelected
                         ? FontWeight.w600
                         : FontWeight.normal,

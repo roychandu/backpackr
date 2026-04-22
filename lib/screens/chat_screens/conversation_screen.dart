@@ -74,7 +74,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
     return AppBar(
       automaticallyImplyLeading: false,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+        icon: const Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: AppColors.text1,
+        ),
         onPressed: () => Navigator.of(context).maybePop(),
       ),
       title: Row(
@@ -96,7 +99,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 Text(
                   _otherUserName,
                   style: AppTextStyles.bodyLarge.copyWith(
-                    color: Colors.white,
+                    color: AppColors.text1,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
@@ -107,7 +110,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   Text(
                     '${widget.conversation.participantCount} participants',
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: Colors.white70,
+                      color: AppColors.text1.withOpacity(0.70),
                       fontSize: 12,
                     ),
                   ),
@@ -117,12 +120,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ],
       ),
       backgroundColor: AppColors.background,
-      foregroundColor: Colors.white,
+      foregroundColor: AppColors.text1,
       elevation: 0,
       actions: [
         IconButton(
           onPressed: _showUserOptions,
-          icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
+          icon: const Icon(Icons.more_vert_rounded, color: AppColors.text1),
         ),
       ],
     );
@@ -188,12 +191,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error, color: Colors.red, size: 64),
+            const Icon(Icons.error, color: AppColors.error, size: 64),
             const SizedBox(height: 16),
             Text(
               'Error loading messages',
               style: AppTextStyles.bodyLarge.copyWith(
-                color: Colors.white,
+                color: AppColors.text1,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -202,7 +205,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
               error,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: Colors.white.withOpacity(0.8),
+                color: AppColors.text1.withOpacity(0.8),
               ),
             ),
           ],
@@ -222,9 +225,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.06),
+                color: AppColors.text1.withOpacity(0.06),
                 borderRadius: BorderRadius.circular(60),
-                border: Border.all(color: Colors.white.withOpacity(0.15)),
+                border: Border.all(color: AppColors.text1.withOpacity(0.15)),
               ),
               child: Icon(
                 Icons.message_rounded,
@@ -238,14 +241,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
               textAlign: TextAlign.center,
               style: AppTextStyles.h4.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppColors.text1,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'Start the conversation with $_otherUserName',
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.text1.withOpacity(0.70),
+              ),
             ),
           ],
         ),
@@ -259,14 +264,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
         margin: const EdgeInsets.symmetric(vertical: 8),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: AppColors.text1.withOpacity(0.1),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
+          border: Border.all(color: AppColors.text1.withOpacity(0.2)),
         ),
         child: Text(
           message.content,
           style: AppTextStyles.bodySmall.copyWith(
-            color: Colors.white.withOpacity(0.7),
+            color: AppColors.text1.withOpacity(0.7),
             fontStyle: FontStyle.italic,
           ),
         ),
@@ -300,7 +305,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
               decoration: BoxDecoration(
                 color: isCurrentUser
                     ? AppColors.primary
-                    : Colors.white.withOpacity(0.08),
+                    : AppColors.text1.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(20).copyWith(
                   bottomLeft: isCurrentUser
                       ? const Radius.circular(20)
@@ -312,11 +317,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 border: Border.all(
                   color: isCurrentUser
                       ? AppColors.primary.withOpacity(0.5)
-                      : Colors.white.withOpacity(0.15),
+                      : AppColors.text1.withOpacity(0.15),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: AppColors.text3.withOpacity(0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -340,7 +345,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   Text(
                     message.content,
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: Colors.white,
+                      color: AppColors.text1,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -348,7 +353,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   Text(
                     _formatMessageTime(message.timestamp),
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: Colors.white.withOpacity(0.7),
+                      color: AppColors.text1.withOpacity(0.7),
                       fontSize: 10,
                     ),
                   ),
@@ -375,7 +380,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
       decoration: BoxDecoration(
         color: AppColors.background,
         border: Border(
-          top: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
+          top: BorderSide(color: AppColors.text1.withOpacity(0.1), width: 1),
         ),
       ),
       child: Row(
@@ -387,19 +392,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.08),
+                    color: AppColors.text1.withOpacity(0.08),
                     borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: Colors.white.withOpacity(0.15)),
+                    border: Border.all(
+                      color: AppColors.text1.withOpacity(0.15),
+                    ),
                   ),
                   child: TextField(
                     controller: _messageController,
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: Colors.white,
+                      color: AppColors.text1,
                     ),
                     decoration: InputDecoration(
                       hintText: 'Type a message...',
                       hintStyle: AppTextStyles.bodyMedium.copyWith(
-                        color: Colors.white.withOpacity(0.5),
+                        color: AppColors.text1.withOpacity(0.5),
                       ),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
@@ -437,7 +444,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 onTap: _sendMessage,
                 child: const Icon(
                   Icons.send_rounded,
-                  color: Colors.white,
+                  color: AppColors.text1,
                   size: 22,
                 ),
               ),
@@ -493,8 +500,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
         }) {
           return Container(
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.06),
-              border: Border.all(color: Colors.white.withOpacity(0.15)),
+              color: AppColors.text1.withOpacity(0.06),
+              border: Border.all(color: AppColors.text1.withOpacity(0.15)),
               borderRadius: BorderRadius.circular(14),
             ),
             padding: const EdgeInsets.all(14),
@@ -510,7 +517,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         gradient: LinearGradient(colors: [color, color]),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(icon, color: Colors.white),
+                      child: Icon(icon, color: AppColors.text1),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -520,7 +527,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           Text(
                             title,
                             style: const TextStyle(
-                              color: Colors.white,
+                              color: AppColors.text1,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -528,7 +535,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           Text(
                             subtitle,
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.75),
+                              color: AppColors.text1.withOpacity(0.75),
                               fontSize: 12,
                             ),
                           ),
@@ -545,7 +552,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         onPressed: onPrimary,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: color,
-                          foregroundColor: Colors.white,
+                          foregroundColor: AppColors.text1,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -602,7 +609,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(20),
                     ),
-                    border: Border.all(color: Colors.white.withOpacity(0.1)),
+                    border: Border.all(color: AppColors.text1.withOpacity(0.1)),
                   ),
                   child: Column(
                     children: [
@@ -611,7 +618,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         width: 40,
                         height: 5,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.3),
+                          color: AppColors.text1.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -628,7 +635,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               ),
                               child: const Icon(
                                 Icons.settings_rounded,
-                                color: Colors.white,
+                                color: AppColors.text1,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -641,7 +648,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                         ? 'Group Options'
                                         : 'Conversation Options',
                                     style: const TextStyle(
-                                      color: Colors.white,
+                                      color: AppColors.text1,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -650,7 +657,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   Text(
                                     _otherUserName,
                                     style: TextStyle(
-                                      color: Colors.white.withOpacity(0.7),
+                                      color: AppColors.text1.withOpacity(0.7),
                                       fontSize: 12,
                                     ),
                                     overflow: TextOverflow.ellipsis,
@@ -692,7 +699,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                     title: 'Add New Traveler',
                                     subtitle:
                                         'Add more mutual connections to this group',
-                                    color: Colors.green,
+                                    color: AppColors.success,
                                     primaryLabel: 'Add',
                                     onPrimary: () {
                                       Navigator.pop(context);
@@ -708,7 +715,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   title: 'Leave Group',
                                   subtitle:
                                       'You will no longer receive messages from this group.',
-                                  color: Colors.orange,
+                                  color: AppColors.cta1,
                                   primaryLabel: 'Leave',
                                   onPrimary: () {
                                     Navigator.pop(context);
@@ -723,7 +730,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   title: 'Block User',
                                   subtitle:
                                       'Prevent $_otherUserName from messaging you in the future.',
-                                  color: Colors.red,
+                                  color: AppColors.error,
                                   primaryLabel: 'Block',
                                   onPrimary: () {
                                     Navigator.pop(context);
@@ -742,7 +749,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 subtitle: widget.conversation.isGroup
                                     ? 'Remove this group from your chat list.'
                                     : 'Remove this conversation from your inbox. This cannot be undone.',
-                                color: Colors.redAccent,
+                                color: AppColors.error,
                                 primaryLabel: 'Delete',
                                 onPrimary: () {
                                   Navigator.pop(context);
@@ -779,12 +786,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
             filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.08),
+                color: AppColors.text1.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.18)),
+                border: Border.all(color: AppColors.text1.withOpacity(0.18)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
+                    color: AppColors.text3.withOpacity(0.25),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),
@@ -798,7 +805,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   const Text(
                     'Block User',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.text1,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -806,7 +813,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   const SizedBox(height: 8),
                   Text(
                     'Are you sure you want to block $_otherUserName? You won\'t be able to receive messages from them.',
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    style: TextStyle(
+                      color: AppColors.text1.withOpacity(0.70),
+                      fontSize: 14,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -814,9 +824,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(dialogContext),
-                        child: const Text(
+                        child: Text(
                           'Cancel',
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(
+                            color: AppColors.text1.withOpacity(0.70),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -827,7 +839,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         },
                         child: const Text(
                           'Block',
-                          style: TextStyle(color: Colors.red),
+                          style: TextStyle(color: AppColors.error),
                         ),
                       ),
                     ],
@@ -860,12 +872,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
             filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.08),
+                color: AppColors.text1.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.18)),
+                border: Border.all(color: AppColors.text1.withOpacity(0.18)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
+                    color: AppColors.text3.withOpacity(0.25),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),
@@ -879,7 +891,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   Text(
                     title,
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: AppColors.text1,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -887,7 +899,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   const SizedBox(height: 8),
                   Text(
                     message,
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    style: TextStyle(
+                      color: AppColors.text1.withOpacity(0.70),
+                      fontSize: 14,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -895,9 +910,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(dialogContext),
-                        child: const Text(
+                        child: Text(
                           'Cancel',
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(
+                            color: AppColors.text1.withOpacity(0.70),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -908,7 +925,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         },
                         child: const Text(
                           'Delete',
-                          style: TextStyle(color: Colors.redAccent),
+                          style: TextStyle(color: AppColors.error),
                         ),
                       ),
                     ],
@@ -930,7 +947,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           SnackBar(
             behavior: SnackBarBehavior.floating,
             content: Text('$_otherUserName has been blocked'),
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.success,
           ),
         );
         Navigator.of(context).pop();
@@ -941,7 +958,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           SnackBar(
             behavior: SnackBarBehavior.floating,
             content: Text('Error blocking user: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
           ),
         );
       }
@@ -961,7 +978,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           SnackBar(
             behavior: SnackBarBehavior.floating,
             content: Text('Error deleting conversation: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
           ),
         );
       }
@@ -991,7 +1008,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(20),
                     ),
-                    border: Border.all(color: Colors.white.withOpacity(0.1)),
+                    border: Border.all(color: AppColors.text1.withOpacity(0.1)),
                   ),
                   child: Column(
                     children: [
@@ -1000,7 +1017,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         width: 40,
                         height: 5,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.3),
+                          color: AppColors.text1.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -1017,7 +1034,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               ),
                               child: const Icon(
                                 Icons.people_rounded,
-                                color: Colors.white,
+                                color: AppColors.text1,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -1025,16 +1042,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               child: Text(
                                 'Group Participants',
                                 style: AppTextStyles.h4.copyWith(
-                                  color: Colors.white,
+                                  color: AppColors.text1,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                             IconButton(
                               onPressed: () => Navigator.pop(context),
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.close_rounded,
-                                color: Colors.white70,
+                                color: AppColors.text1.withOpacity(0.70),
                               ),
                             ),
                           ],
@@ -1066,10 +1083,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             return Container(
                               margin: const EdgeInsets.only(bottom: 8),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.06),
+                                color: AppColors.text1.withOpacity(0.06),
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.1),
+                                  color: AppColors.text1.withOpacity(0.1),
                                 ),
                               ),
                               child: ListTile(
@@ -1086,7 +1103,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   participantName +
                                       (isCurrentUser ? ' (You)' : ''),
                                   style: AppTextStyles.bodyMedium.copyWith(
-                                    color: Colors.white,
+                                    color: AppColors.text1,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -1128,12 +1145,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
             filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.08),
+                color: AppColors.text1.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.18)),
+                border: Border.all(color: AppColors.text1.withOpacity(0.18)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
+                    color: AppColors.text3.withOpacity(0.25),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),
@@ -1147,7 +1164,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   const Text(
                     'Leave Group',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.text1,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -1155,7 +1172,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   const SizedBox(height: 8),
                   Text(
                     'Are you sure you want to leave "$_otherUserName"? You will no longer receive messages from this group.',
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    style: TextStyle(
+                      color: AppColors.text1.withOpacity(0.70),
+                      fontSize: 14,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -1163,9 +1183,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(dialogContext),
-                        child: const Text(
+                        child: Text(
                           'Cancel',
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(
+                            color: AppColors.text1.withOpacity(0.70),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -1176,7 +1198,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         },
                         child: const Text(
                           'Leave',
-                          style: TextStyle(color: Colors.orange),
+                          style: TextStyle(color: AppColors.cta1),
                         ),
                       ),
                     ],
@@ -1206,7 +1228,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('You have left the group'),
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.success,
           ),
         );
       }
@@ -1216,7 +1238,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to leave group: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
           ),
         );
       }

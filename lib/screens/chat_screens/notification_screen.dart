@@ -120,10 +120,10 @@ class _NotificationScreenState extends State<NotificationScreen>
                 scale: _pulseAnimation.value,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: AppColors.text1.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.2),
+                      color: AppColors.text1.withOpacity(0.2),
                       width: 1,
                     ),
                   ),
@@ -131,7 +131,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(
                       Icons.arrow_back_ios_new,
-                      color: Colors.white,
+                      color: AppColors.text1,
                       size: 20,
                     ),
                   ),
@@ -153,7 +153,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                       Text(
                         'Notifications',
                         style: AppTextStyles.h4.copyWith(
-                          color: Colors.white,
+                          color: AppColors.text1,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -161,7 +161,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                         child: Text(
                           '${_notifications.where((n) => !n.isRead).length} unread',
                           style: AppTextStyles.bodyMedium.copyWith(
-                            color: Colors.white.withOpacity(0.7),
+                            color: AppColors.text1.withOpacity(0.7),
                           ),
                         ),
                       ),
@@ -174,16 +174,16 @@ class _NotificationScreenState extends State<NotificationScreen>
           // Mark all as read button
           Container(
             decoration: BoxDecoration(
-              color: Colors.amber.withOpacity(0.2),
+              color: AppColors.highlight.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.amber.withOpacity(0.3),
+                color: AppColors.highlight.withOpacity(0.3),
                 width: 1,
               ),
             ),
             child: IconButton(
               onPressed: _markAllAsRead,
-              icon: const Icon(Icons.done_all, color: Colors.amber, size: 20),
+              icon: const Icon(Icons.done_all, color: AppColors.highlight, size: 20),
               tooltip: 'Mark all as read',
             ),
           ),
@@ -215,8 +215,8 @@ class _NotificationScreenState extends State<NotificationScreen>
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
                           colors: [
-                            Colors.amber.withOpacity(0.3),
-                            Colors.orange.withOpacity(0.1),
+                            AppColors.highlight.withOpacity(0.3),
+                            AppColors.cta1.withOpacity(0.1),
                             Colors.transparent,
                           ],
                         ),
@@ -234,7 +234,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: Colors.amber.withOpacity(
+                                    color: AppColors.highlight.withOpacity(
                                       0.3 * (1 - _rippleAnimation.value),
                                     ),
                                     width: 2,
@@ -250,11 +250,11 @@ class _NotificationScreenState extends State<NotificationScreen>
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               gradient: const LinearGradient(
-                                colors: [Colors.amber, Colors.orange],
+                                colors: [AppColors.highlight, AppColors.cta1],
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.amber.withOpacity(0.3),
+                                  color: AppColors.highlight.withOpacity(0.3),
                                   blurRadius: 20,
                                   spreadRadius: 5,
                                 ),
@@ -262,7 +262,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                             ),
                             child: const Icon(
                               Icons.notifications_outlined,
-                              color: Colors.white,
+                              color: AppColors.text1,
                               size: 30,
                             ),
                           ),
@@ -276,7 +276,7 @@ class _NotificationScreenState extends State<NotificationScreen>
               Text(
                 'All caught up!',
                 style: AppTextStyles.h3.copyWith(
-                  color: Colors.white,
+                  color: AppColors.text1,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -284,7 +284,7 @@ class _NotificationScreenState extends State<NotificationScreen>
               Text(
                 'You have no new notifications',
                 style: AppTextStyles.bodyLarge.copyWith(
-                  color: Colors.white.withOpacity(0.7),
+                  color: AppColors.text1.withOpacity(0.7),
                 ),
               ),
             ],
@@ -327,20 +327,20 @@ class _NotificationScreenState extends State<NotificationScreen>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withOpacity(0.1),
-                    Colors.white.withOpacity(0.05),
+                    AppColors.text1.withOpacity(0.1),
+                    AppColors.text1.withOpacity(0.05),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: notification.isRead
-                      ? Colors.white.withOpacity(0.1)
+                      ? AppColors.text1.withOpacity(0.1)
                       : notification.color.withOpacity(0.3),
                   width: notification.isRead ? 1 : 2,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: AppColors.text3.withOpacity(0.1),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -392,7 +392,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                                 ),
                                 child: Icon(
                                   notification.icon,
-                                  color: Colors.white,
+                                  color: AppColors.text1,
                                   size: 24,
                                 ),
                               ),
@@ -411,7 +411,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                                     child: Text(
                                       notification.title,
                                       style: AppTextStyles.bodyMedium.copyWith(
-                                        color: Colors.white,
+                                        color: AppColors.text1,
                                         fontWeight: notification.isRead
                                             ? FontWeight.w500
                                             : FontWeight.bold,
@@ -441,7 +441,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                               Text(
                                 notification.message,
                                 style: AppTextStyles.bodySmall.copyWith(
-                                  color: Colors.white.withOpacity(0.8),
+                                  color: AppColors.text1.withOpacity(0.8),
                                 ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -451,14 +451,14 @@ class _NotificationScreenState extends State<NotificationScreen>
                                 children: [
                                   Icon(
                                     Icons.access_time,
-                                    color: Colors.white.withOpacity(0.5),
+                                    color: AppColors.text1.withOpacity(0.5),
                                     size: 14,
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
                                     _formatTime(notification.time),
                                     style: AppTextStyles.bodySmall.copyWith(
-                                      color: Colors.white.withOpacity(0.5),
+                                      color: AppColors.text1.withOpacity(0.5),
                                       fontSize: 12,
                                     ),
                                   ),

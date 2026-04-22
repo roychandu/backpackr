@@ -177,13 +177,13 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
       leading: Container(
         margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.2),
+          color: AppColors.text1.withOpacity(0.2),
           shape: BoxShape.circle,
         ),
         child: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Colors.white,
+            color: AppColors.text1,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -195,13 +195,13 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
             margin: const EdgeInsets.only(right: 10),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.6),
+              color: AppColors.text3.withOpacity(0.6),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Text(
               '${_currentImageIndex + 1}/${widget.blog.imageUrls.length}',
               style: const TextStyle(
-                color: Colors.white,
+                color: AppColors.text1,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -223,17 +223,17 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                     imageUrl: widget.blog.imageUrls[index],
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
-                      color: Colors.grey[200],
+                      color: AppColors.textSecondary.withOpacity(0.3),
                       child: const Center(
-                        child: CircularProgressIndicator(color: Colors.white),
+                        child: CircularProgressIndicator(color: AppColors.text1),
                       ),
                     ),
                     errorWidget: (context, url, error) => Container(
-                      color: Colors.grey[300],
+                      color: AppColors.textSecondary.withOpacity(0.4),
                       child: const Icon(
                         Icons.image_not_supported,
                         size: 50,
-                        color: Colors.white,
+                        color: AppColors.text1,
                       ),
                     ),
                   );
@@ -246,7 +246,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                   child: Icon(
                     Icons.image_outlined,
                     size: 80,
-                    color: Colors.white,
+                    color: AppColors.text1,
                   ),
                 ),
               ),
@@ -257,7 +257,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                  colors: [Colors.transparent, AppColors.text3.withOpacity(0.7)],
                 ),
               ),
             ),
@@ -278,8 +278,8 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                       height: 8,
                       decoration: BoxDecoration(
                         color: _currentImageIndex == index
-                            ? Colors.white
-                            : Colors.white.withOpacity(0.5),
+                            ? AppColors.text1
+                            : AppColors.text1.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -300,7 +300,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Colors.white, Colors.white.withOpacity(0.95)],
+          colors: [AppColors.text1, AppColors.text1.withOpacity(0.95)],
         ),
         boxShadow: [
           BoxShadow(
@@ -319,7 +319,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: AppColors.text1.withOpacity(0.2),
                 width: 1,
               ),
               borderRadius: BorderRadius.circular(24),
@@ -435,7 +435,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                   ),
                   child: const Icon(
                     Icons.route_rounded,
-                    color: Colors.white,
+                    color: AppColors.text1,
                     size: 24,
                   ),
                 ),
@@ -472,7 +472,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
+                color: AppColors.text1.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: AppColors.primary.withOpacity(0.1),
@@ -489,7 +489,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                           icon: Icons.social_distance_rounded,
                           label: 'Distance',
                           value: widget.blog.distance,
-                          color: Colors.blue,
+                          color: AppColors.info,
                         ),
                       ),
                       Container(
@@ -502,7 +502,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                           icon: Icons.schedule_rounded,
                           label: 'Duration',
                           value: widget.blog.duration,
-                          color: Colors.green,
+                          color: AppColors.success,
                         ),
                       ),
                     ],
@@ -523,7 +523,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                           icon: Icons.calendar_today_rounded,
                           label: 'Start Date',
                           value: _formatTravelDate(widget.blog.startDate),
-                          color: Colors.orange,
+                          color: AppColors.cta1,
                         ),
                       ),
                       if (widget.blog.endDate != null) ...[
@@ -537,7 +537,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                             icon: Icons.event_rounded,
                             label: 'End Date',
                             value: _formatTravelDate(widget.blog.endDate!),
-                            color: Colors.purple,
+                            color: AppColors.highlight2,
                           ),
                         ),
                       ],
@@ -605,7 +605,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
           Text(
             'Tags',
             style: AppTextStyles.h4.copyWith(
-              color: Colors.white,
+              color: AppColors.text1,
               fontWeight: FontWeight.w700,
               fontSize: 18,
             ),
@@ -642,7 +642,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
       child: Text(
         tag,
         style: const TextStyle(
-          color: Colors.white,
+          color: AppColors.text1,
           fontWeight: FontWeight.w600,
           fontSize: 12,
         ),

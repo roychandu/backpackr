@@ -46,7 +46,7 @@ class EulaHelper {
                         child: Text(
                           'End User License Agreement',
                           style: AppTextStyles.h3.copyWith(
-                            color: Colors.white,
+                            color: AppColors.text1,
                             fontWeight: FontWeight.bold,
                           ),
                           maxLines: 2,
@@ -104,7 +104,7 @@ class EulaHelper {
                               onPressed: () => Navigator.of(context).pop(true),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
-                                foregroundColor: Colors.white,
+                                foregroundColor: AppColors.text1,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -115,7 +115,7 @@ class EulaHelper {
                               child: Text(
                                 'Accept',
                                 style: AppTextStyles.buttonLarge.copyWith(
-                                  color: Colors.white,
+                                  color: AppColors.text1,
                                 ),
                               ),
                             ),
@@ -144,7 +144,7 @@ class EulaHelper {
             SnackBar(
               behavior: SnackBarBehavior.floating,
               content: Text('Failed to save EULA acceptance: $e'),
-              backgroundColor: Colors.red,
+              backgroundColor: AppColors.error,
             ),
           );
         }
