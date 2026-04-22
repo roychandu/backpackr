@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../services/theme_service.dart';
 
 class AppColors {
   // Graceful fallback helper so tests or instances where Get isn't ready don't throw
   static bool get _isDark {
     try {
-      return Get.isDarkMode;
+      return ThemeService.to.isDarkMode.value;
     } catch (_) {
-      return true; // Default behavior
+      try {
+        return Get.isDarkMode;
+      } catch (_) {
+        return false; // Default behavior
+      }
     }
   }
 
