@@ -23,10 +23,10 @@ class AppColors {
   static const Color highlight2 = Color(0xFFC558FE); // #C558FE
 
   // Backgrounds
-  static Color get mainBackground => _isDark ? const Color(0xFF131313) : const Color(0xFFFFFFFF);
+  static Color get mainBackground => _isDark ? const Color(0xFF131313) : const Color(0xFFF7F7F7);
   static Color get background2 => _isDark ? const Color(0xFF383838) : const Color(0xFFF0F0F0);
   static Color get cardBackground => _isDark ? const Color(0xFF242424) : const Color(0xFFFFFFFF);
-  static Color get textFieldBackground => _isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF5F5F5);
+  static Color get textFieldBackground => _isDark ? const Color(0xFF2A2A2A) : const Color(0xFFFFFFFF);
 
   static Color get background => mainBackground;
   static Color get surface => background2;
@@ -34,7 +34,7 @@ class AppColors {
   // Text Colors
   static Color get text1 => _isDark ? const Color(0xFFFFFFFF) : const Color(0xFF131313);
   static Color get text2 => _isDark ? const Color(0xFFDDD9D9) : const Color(0xFF5A5A5A);
-  static Color get text3 => const Color(0xFF000000); // specifically "black for light surfaces" in original code
+  static Color get text3 => _isDark ? const Color(0xFFFFFFFF) : const Color(0xFF000000); // originally specifically black used for content
 
   // Standard generic text roles
   static Color get textPrimary => _isDark ? const Color(0xFFFFFFFF) : const Color(0xFF1A1A1A);

@@ -850,7 +850,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.text1,
+          color: AppColors.cardBackground,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
