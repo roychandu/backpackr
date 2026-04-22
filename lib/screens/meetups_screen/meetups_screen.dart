@@ -15,6 +15,7 @@ import '../../utils/error_handler.dart';
 import 'create_meetup_screen.dart';
 import 'meetup_details_screen.dart';
 import '../../common_widgets/app_header.dart';
+import '../../common_widgets/sliver_tab_delegate.dart';
 
 class MeetupsScreen extends StatefulWidget {
   const MeetupsScreen({super.key});
@@ -291,30 +292,26 @@ class _MeetupsScreenState extends State<MeetupsScreen>
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(context),
-                  const SizedBox(height: 16),
-                  _buildNotificationsSection(),
-                ],
+                children: [_buildHeader(context), _buildNotificationsSection()],
               ),
             ),
-            SliverAppBar(
+            SliverPersistentHeader(
               pinned: true,
-              floating: false,
-              backgroundColor: AppColors.background,
-              automaticallyImplyLeading: false,
-              elevation: 0,
-              bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(0),
+              delegate: SliverTabDelegate(
                 child: Container(
+                  width: double.infinity,
+                  color: AppColors.background,
                   child: TabBar(
                     isScrollable: true,
                     tabAlignment: TabAlignment.start,
                     controller: _tabController,
                     labelColor: AppColors.primary,
+                    padding: EdgeInsets.zero,
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 16.0),
                     unselectedLabelColor: AppColors.text1.withOpacity(0.70),
                     indicatorColor: AppColors.primary,
                     indicatorWeight: 3,
+                    indicatorSize: TabBarIndicatorSize.label,
                     labelStyle: AppTextStyles.bodyMedium.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,

@@ -13,6 +13,7 @@ import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:permission_handler/permission_handler.dart' as perm;
 import '../../common_widgets/app_text_styles.dart';
 import '../../common_widgets/app_header.dart';
+import '../../common_widgets/sliver_tab_delegate.dart';
 import '../waves_screen/waves_screen.dart';
 import '../meetups_screen/meetups_screen.dart';
 import 'package:backpackr/screens/chat_screens/chat_list_screen.dart';
@@ -548,54 +549,52 @@ class _TravelersScreenState extends State<TravelersScreen>
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
           SliverToBoxAdapter(child: _buildDiscoverHeader()),
-          SliverAppBar(
+          SliverPersistentHeader(
             pinned: true,
-            floating: false,
-            backgroundColor: AppColors.background,
-            automaticallyImplyLeading: false,
-            toolbarHeight: 1,
-            elevation: 0,
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(kTextTabBarHeight),
-              child: SafeArea(
-                top: false,
-                bottom: false,
-                child: Container(
-                  width: double.infinity,
-                  color: AppColors.background,
-                  child: TabBar(
-                    controller: _travelersTabController,
-                    isScrollable: false,
-                    padding: EdgeInsets.zero,
-                    labelPadding: EdgeInsets.zero,
-                    labelColor: AppColors.primary,
-                    unselectedLabelColor: AppColors.text1.withOpacity(0.70),
-                    indicatorColor: AppColors.primary,
-                    indicatorWeight: 3,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    tabs: const [
-                      Tab(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.people_alt_rounded, size: 20),
-                            SizedBox(width: 8),
-                            Text('All Travelers'),
-                          ],
-                        ),
-                      ),
-                      Tab(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.location_on_rounded, size: 20),
-                            SizedBox(width: 8),
-                            Text('Near Travelers'),
-                          ],
-                        ),
-                      ),
-                    ],
+            delegate: SliverTabDelegate(
+              child: Container(
+                width: double.infinity,
+                color: AppColors.background,
+                child: TabBar(
+                  controller: _travelersTabController,
+                  isScrollable: false,
+                  padding: EdgeInsets.zero,
+                  labelPadding: EdgeInsets.zero,
+                  labelColor: AppColors.primary,
+                  unselectedLabelColor: AppColors.text1.withOpacity(0.70),
+                  indicatorColor: AppColors.primary,
+                  indicatorWeight: 3,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  labelStyle: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
                   ),
+                  unselectedLabelStyle: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 16,
+                  ),
+                  tabs: const [
+                    Tab(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.people_alt_rounded, size: 20),
+                          SizedBox(width: 8),
+                          Text('All Travelers'),
+                        ],
+                      ),
+                    ),
+                    Tab(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.location_on_rounded, size: 20),
+                          SizedBox(width: 8),
+                          Text('Near Travelers'),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -5,13 +5,14 @@ import 'dart:ui' as ui;
 import 'dart:math' as math;
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/app_header.dart';
+import '../../common_widgets/sliver_tab_delegate.dart';
 import '../../models/wave.dart';
 import '../../services/wave_service.dart';
 import '../../services/chat_service.dart';
 import '../../utils/error_handler.dart';
 import '../chat_screens/conversation_screen.dart';
 import '../traveling_blogs_screen/other_travelers_blog_screen.dart';
-import '../../common_widgets/app_header.dart';
 
 class WavesScreen extends StatefulWidget {
   const WavesScreen({super.key});
@@ -322,23 +323,23 @@ class _WavesScreenState extends State<WavesScreen>
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverToBoxAdapter(child: _buildHeader(context)),
-            SliverAppBar(
+            SliverPersistentHeader(
               pinned: true,
-              floating: false,
-              backgroundColor: AppColors.background,
-              automaticallyImplyLeading: false,
-              elevation: 0,
-              bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(0),
+              delegate: SliverTabDelegate(
                 child: Container(
+                  width: double.infinity,
+                  color: AppColors.background,
                   child: TabBar(
                     isScrollable: true,
                     tabAlignment: TabAlignment.center,
                     controller: _tabController,
                     labelColor: AppColors.primary,
+                    padding: EdgeInsets.zero,
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 16.0),
                     unselectedLabelColor: AppColors.text1.withOpacity(0.70),
                     indicatorColor: AppColors.primary,
                     indicatorWeight: 3,
+                    indicatorSize: TabBarIndicatorSize.label,
                     labelStyle: AppTextStyles.bodyMedium.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
