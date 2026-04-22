@@ -633,25 +633,6 @@ class _TravelersScreenState extends State<TravelersScreen>
       title: 'Discover Travelers',
       topSubtitle: _userName.isNotEmpty ? 'Hi, ' + _userName : null,
       fontSize: 32,
-      actions: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
-            );
-          },
-          child: CircleAvatar(
-            radius: 20,
-            backgroundColor: AppColors.text1.withOpacity(0.2),
-            child: Icon(
-              Icons.person,
-              size: 24,
-              color: AppColors.text1.withOpacity(0.8),
-            ),
-          ),
-        ),
-      ],
       customBottomContent: Row(
         children: [
           Expanded(

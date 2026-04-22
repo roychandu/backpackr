@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/app_header.dart';
 import '../../models/conversation.dart';
 import '../../services/chat_service.dart';
 import '../../services/user_setup_service.dart';
@@ -122,51 +123,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   Widget _buildHeader() {
-    final double topInset = MediaQuery.of(context).padding.top;
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primary.withOpacity(0.98),
-            AppColors.primary.withOpacity(0.78),
-          ],
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.35),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.fromLTRB(16, topInset + 16, 16, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Messages',
-            style: AppTextStyles.h3.copyWith(
-              color: AppColors.text1,
-              fontWeight: FontWeight.w800,
-              fontSize: 32,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Stay connected with fellow travelers',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.text1.withOpacity(0.9),
-            ),
-          ),
-        ],
-      ),
+    return const AppHeader(
+      title: 'Messages',
+      subtitle: 'Stay connected with fellow travelers',
+      fontSize: 32,
     );
   }
 

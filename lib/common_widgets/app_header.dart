@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 
+import '../screens/profile_screen/profile_screen.dart';
+
 class AppHeader extends StatelessWidget {
   final String title;
   final String? topSubtitle;
@@ -12,6 +14,7 @@ class AppHeader extends StatelessWidget {
   final double? fontSize;
   final double horizontalPadding;
   final double bottomPadding;
+  final bool showProfileAvatar;
 
   const AppHeader({
     super.key,
@@ -24,6 +27,7 @@ class AppHeader extends StatelessWidget {
     this.fontSize = 28,
     this.horizontalPadding = 16,
     this.bottomPadding = 20,
+    this.showProfileAvatar = true,
   });
 
   @override
@@ -63,34 +67,61 @@ class AppHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: topSubtitle != null
-                    ? Text(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (topSubtitle != null) ...[
+                      Text(
                         topSubtitle!,
                         style: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.text1,
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
                         ),
-                      )
-                    : const SizedBox.shrink(),
+                      ),
+                      const SizedBox(height: 4),
+                    ],
+                    Text(
+                      title,
+                      style: AppTextStyles.h3.copyWith(
+                        color: AppColors.text1,
+                        fontWeight: FontWeight.w800,
+                        fontSize: fontSize,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               if (actions != null && actions!.isNotEmpty)
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: actions!,
                 ),
+              if (showProfileAvatar)
+                Padding(
+                  padding: EdgeInsets.only(left: (actions != null && actions!.isNotEmpty) ? 12 : 0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.white.withOpacity(0.2), // Explicit contrast color against Orange gradient
+                      child: Icon(
+                        Icons.person,
+                        size: 24,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
             ],
-          ),
-          if (topSubtitle != null) const SizedBox(height: 4),
-          Text(
-            title,
-            style: AppTextStyles.h3.copyWith(
-              color: AppColors.text1,
-              fontWeight: FontWeight.w800,
-              fontSize: fontSize,
-            ),
           ),
           if (subtitle != null || additionalSubtitle != null || customBottomContent != null)
             const SizedBox(height: 6),
