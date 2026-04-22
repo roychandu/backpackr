@@ -222,8 +222,8 @@ class _WavesScreenState extends State<WavesScreen>
           ),
         );
 
-        // Notify parent widget (HomeScreen) to refresh wave status
-        _notifyHomeScreenRefresh();
+        // Notify parent widget (TravelersScreen) to refresh wave status
+        _notifyTravelersScreenRefresh();
       }
     } catch (e) {
       print('Failed to delete wave: ${e.toString()}');
@@ -233,8 +233,8 @@ class _WavesScreenState extends State<WavesScreen>
     }
   }
 
-  /// Notify HomeScreen to refresh wave status tracking
-  void _notifyHomeScreenRefresh() {
+  /// Notify TravelersScreen to refresh wave status tracking
+  void _notifyTravelersScreenRefresh() {
     // Use a callback or event system to notify parent
     // For now, we'll use a simple approach by triggering a rebuild
     // In a more complex app, you might use Provider, Riverpod, or EventBus

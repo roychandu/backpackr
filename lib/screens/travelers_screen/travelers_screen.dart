@@ -26,17 +26,17 @@ import '../../services/traveler_service.dart';
 import '../../models/user_profile.dart';
 import 'dart:math' as math;
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class TravelersScreen extends StatefulWidget {
+  const TravelersScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<TravelersScreen> createState() => _TravelersScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
+class _TravelersScreenState extends State<TravelersScreen>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  late TabController _homeTabController;
+  late TabController _travelersTabController;
   String _currentCity = '';
   bool _isLocating = false;
   bool _isLoadingTravelers = false;
@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    _homeTabController = TabController(length: 2, vsync: this);
+    _travelersTabController = TabController(length: 2, vsync: this);
 
     // Add listener to search controller for reactive UI updates
     // removed search listener
@@ -201,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     UserSetupService.dispose();
-    _homeTabController.dispose();
+    _travelersTabController.dispose();
     _setupPollTimer?.cancel();
     super.dispose();
   }
@@ -529,7 +529,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildBody() {
     switch (_selectedIndex) {
       case 0:
-        return _buildHomeScreen(); // Travelers
+        return _buildTravelersScreen(); // Travelers
       case 1:
         return const WavesScreen();
       case 2:
@@ -539,11 +539,11 @@ class _HomeScreenState extends State<HomeScreen>
       case 4:
         return const TravelingBlogsScreen();
       default:
-        return _buildHomeScreen();
+        return _buildTravelersScreen();
     }
   }
 
-  Widget _buildHomeScreen() {
+  Widget _buildTravelersScreen() {
     return NestedScrollView(
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
@@ -564,7 +564,7 @@ class _HomeScreenState extends State<HomeScreen>
                   width: double.infinity,
                   color: AppColors.background,
                   child: TabBar(
-                    controller: _homeTabController,
+                    controller: _travelersTabController,
                     isScrollable: false,
                     padding: EdgeInsets.zero,
                     labelPadding: EdgeInsets.zero,
@@ -603,7 +603,7 @@ class _HomeScreenState extends State<HomeScreen>
         ];
       },
       body: TabBarView(
-        controller: _homeTabController,
+        controller: _travelersTabController,
         children: [
           RefreshIndicator(
             onRefresh: () async {

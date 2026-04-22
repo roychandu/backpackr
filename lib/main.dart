@@ -3,7 +3,7 @@
 import 'package:backpackr/common_widgets/app_colors.dart';
 import 'package:backpackr/provider/purchase_provider.dart';
 import 'package:backpackr/screens/auth_screen/login_screen.dart';
-import 'package:backpackr/screens/home_screen/home_screen.dart';
+import 'package:backpackr/screens/travelers_screen/travelers_screen.dart';
 import 'package:backpackr/screens/intro_screen/intro_screen.dart';
 import 'package:backpackr/services/app_flow_service.dart';
 import 'package:backpackr/services/auth_service.dart';
@@ -104,7 +104,7 @@ class MyApp extends StatelessWidget {
           routes: {
             '/intro': (context) => const IntroScreen(),
             '/login': (context) => const LoginScreen(),
-            '/home': (context) => const HomeScreen(),
+            '/home': (context) => const TravelersScreen(),
           },
         ),
       ),
@@ -138,7 +138,7 @@ class _AppFlowWrapperState extends State<AppFlowWrapper> {
         if (snapshot.hasData && snapshot.data != null) {
           // User is logged in - always go to home screen
           // Business setup will be checked when user tries to create an invoice
-          return const HomeScreen();
+          return const TravelersScreen();
         } else {
           // User is not logged in - check if they've seen intro
           return FutureBuilder<bool>(
