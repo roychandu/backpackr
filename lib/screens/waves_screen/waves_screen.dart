@@ -160,7 +160,7 @@ class _WavesScreenState extends State<WavesScreen>
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Delete Wave',
                     style: TextStyle(
                       color: AppColors.text1,
@@ -192,7 +192,7 @@ class _WavesScreenState extends State<WavesScreen>
                       const SizedBox(width: 8),
                       TextButton(
                         onPressed: () => Navigator.pop(dialogContext, true),
-                        child: const Text(
+                        child: Text(
                           'Delete',
                           style: TextStyle(color: AppColors.error),
                         ),
@@ -216,7 +216,7 @@ class _WavesScreenState extends State<WavesScreen>
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Wave deleted successfully'),
             backgroundColor: AppColors.info,
           ),
@@ -598,7 +598,7 @@ class _WavesScreenState extends State<WavesScreen>
                     const SizedBox(height: 8),
                     Text(
                       wave.timeAgo,
-                      style: const TextStyle(color: AppColors.highlight2),
+                      style: TextStyle(color: AppColors.highlight2),
                     ),
                   ],
                 ),
@@ -685,7 +685,7 @@ class _WavesScreenState extends State<WavesScreen>
                     const SizedBox(height: 8),
                     Text(
                       wave.timeAgo,
-                      style: const TextStyle(color: AppColors.highlight2),
+                      style: TextStyle(color: AppColors.highlight2),
                     ),
                   ],
                 ),
@@ -1062,10 +1062,7 @@ class _WavesScreenState extends State<WavesScreen>
       backgroundColor: AppColors.primary,
       child: Text(
         letter.toUpperCase(),
-        style: const TextStyle(
-          color: AppColors.text1,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(color: AppColors.text1, fontWeight: FontWeight.bold),
       ),
     );
   }

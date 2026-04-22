@@ -476,7 +476,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -738,7 +738,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             elevation: 0,
                           ),
                           icon: _isAppleLoading
-                              ? const SizedBox(
+                              ? SizedBox(
                                   height: 20,
                                   width: 20,
                                   child: CircularProgressIndicator(
@@ -748,7 +748,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                 )
-                              : const Icon(
+                              : Icon(
                                   Icons.apple,
                                   color: AppColors.text2,
                                   size: 24,

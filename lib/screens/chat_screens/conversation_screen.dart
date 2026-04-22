@@ -74,10 +74,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     return AppBar(
       automaticallyImplyLeading: false,
       leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: AppColors.text1,
-        ),
+        icon: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.text1),
         onPressed: () => Navigator.of(context).maybePop(),
       ),
       title: Row(
@@ -125,7 +122,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
       actions: [
         IconButton(
           onPressed: _showUserOptions,
-          icon: const Icon(Icons.more_vert_rounded, color: AppColors.text1),
+          icon: Icon(Icons.more_vert_rounded, color: AppColors.text1),
         ),
       ],
     );
@@ -191,7 +188,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error, color: AppColors.error, size: 64),
+            Icon(Icons.error, color: AppColors.error, size: 64),
             const SizedBox(height: 16),
             Text(
               'Error loading messages',
@@ -442,7 +439,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(25),
                 onTap: _sendMessage,
-                child: const Icon(
+                child: Icon(
                   Icons.send_rounded,
                   color: AppColors.text1,
                   size: 22,
@@ -526,7 +523,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         children: [
                           Text(
                             title,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.text1,
                               fontWeight: FontWeight.bold,
                             ),
@@ -633,7 +630,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 color: AppColors.primary,
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.settings_rounded,
                                 color: AppColors.text1,
                               ),
@@ -647,7 +644,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                     widget.conversation.isGroup
                                         ? 'Group Options'
                                         : 'Conversation Options',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: AppColors.text1,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -802,7 +799,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Block User',
                     style: TextStyle(
                       color: AppColors.text1,
@@ -837,7 +834,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           Navigator.pop(dialogContext);
                           _blockUser();
                         },
-                        child: const Text(
+                        child: Text(
                           'Block',
                           style: TextStyle(color: AppColors.error),
                         ),
@@ -890,7 +887,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.text1,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -923,7 +920,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           Navigator.pop(dialogContext);
                           _deleteConversation();
                         },
-                        child: const Text(
+                        child: Text(
                           'Delete',
                           style: TextStyle(color: AppColors.error),
                         ),
@@ -1032,7 +1029,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 color: AppColors.primary,
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.people_rounded,
                                 color: AppColors.text1,
                               ),
@@ -1161,7 +1158,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Leave Group',
                     style: TextStyle(
                       color: AppColors.text1,
@@ -1226,7 +1223,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         // Navigate back to chat list
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('You have left the group'),
             backgroundColor: AppColors.success,
           ),

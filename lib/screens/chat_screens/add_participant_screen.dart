@@ -138,7 +138,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                             color: AppColors.primary,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.person_add_rounded,
                             color: AppColors.text1,
                             size: 24,
@@ -216,7 +216,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                   // Available connections list
                   Expanded(
                     child: _isLoading
-                        ? const Center(
+                        ? Center(
                             child: CircularProgressIndicator(
                               color: AppColors.primary,
                             ),
@@ -262,7 +262,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
                       child: ElevatedButton.icon(
                         onPressed: _isAdding ? null : _addSelectedParticipants,
                         icon: _isAdding
-                            ? const SizedBox(
+                            ? SizedBox(
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(

@@ -3,88 +3,88 @@ import 'app_colors.dart';
 
 class AppTextStyles {
   // Heading Styles
-  static const TextStyle h1 = TextStyle(
+  static TextStyle get h1 => TextStyle(
     fontSize: 32,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
   );
 
-  static const TextStyle h2 = TextStyle(
+  static TextStyle get h2 => TextStyle(
     fontSize: 28,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
   );
 
-  static const TextStyle h3 = TextStyle(
+  static TextStyle get h3 => TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
   );
 
-  static const TextStyle h4 = TextStyle(
+  static TextStyle get h4 => TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
   );
 
-  static const TextStyle h5 = TextStyle(
+  static TextStyle get h5 => TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
   );
 
-  static const TextStyle h6 = TextStyle(
+  static TextStyle get h6 => TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
   );
 
   // Body Text Styles
-  static const TextStyle bodyLarge = TextStyle(
+  static TextStyle get bodyLarge => TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.normal,
     color: AppColors.primaryLight,
   );
 
-  static const TextStyle bodyMedium = TextStyle(
+  static TextStyle get bodyMedium => TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
   );
 
-  static const TextStyle bodySmall = TextStyle(
+  static TextStyle get bodySmall => TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.normal,
     color: AppColors.textSecondary,
   );
 
   // Button Text Styles
-  static const TextStyle buttonLarge = TextStyle(
+  static TextStyle get buttonLarge => TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: AppColors.text1,
   );
 
-  static const TextStyle buttonMedium = TextStyle(
+  static TextStyle get buttonMedium => TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w600,
     color: AppColors.text1,
   );
 
-  static const TextStyle buttonSmall = TextStyle(
+  static TextStyle get buttonSmall => TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w600,
     color: AppColors.text1,
   );
 
   // Caption Styles
-  static const TextStyle caption = TextStyle(
+  static TextStyle get caption => TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.normal,
     color: AppColors.textSecondary,
   );
 
-  static const TextStyle overline = TextStyle(
+  static TextStyle get overline => TextStyle(
     fontSize: 10,
     fontWeight: FontWeight.normal,
     color: AppColors.textSecondary,

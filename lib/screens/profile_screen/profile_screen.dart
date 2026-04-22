@@ -9,8 +9,10 @@ import 'package:backpackr/screens/profile_screen/user_setup_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:backpackr/provider/purchase_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import '../../common_widgets/app_colors.dart';
 import '../../services/auth_service.dart';
+import '../../services/theme_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -164,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _buildSettingsCard([
           _buildSettingsRow(
             'Edit Profile',
-            trailing: const Icon(
+            trailing: Icon(
               Icons.arrow_forward_ios,
               color: AppColors.primaryText,
               size: 16,
@@ -179,6 +181,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _loadProfileData();
               });
             },
+          ),
+          _buildDivider(),
+          Obx(
+            () => _buildSettingsRow(
+              'Dark Mode',
+              trailing: Switch(
+                value: ThemeService.to.isDarkMode.value,
+                onChanged: (val) {
+                  ThemeService.to.switchTheme();
+                },
+                activeColor: AppColors.primary,
+              ),
+              onTap: () {
+                ThemeService.to.switchTheme();
+              },
+            ),
           ),
           _buildDivider(),
           _buildSettingsRow(
@@ -214,7 +232,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildDivider(),
           _buildSettingsRow(
             'Complete Profile Setup',
-            trailing: const Icon(
+            trailing: Icon(
               Icons.person_add,
               color: AppColors.primary,
               size: 16,
@@ -232,11 +250,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildDivider(),
           _buildSettingsRow(
             'Sign Out',
-            trailing: const Icon(
-              Icons.logout,
-              color: AppColors.error,
-              size: 16,
-            ),
+            trailing: Icon(Icons.logout, color: AppColors.error, size: 16),
             onTap: _showSignOutDialog,
           ),
         ]),
@@ -244,7 +258,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _buildSettingsCard([
           _buildSettingsRow(
             'Delete Account',
-            trailing: const Icon(
+            trailing: Icon(
               Icons.delete_forever,
               color: AppColors.error,
               size: 16,
@@ -345,7 +359,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Sign Out',
                     style: TextStyle(
                       color: AppColors.text1,
@@ -398,7 +412,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }
                           }
                         },
-                        child: const Text(
+                        child: Text(
                           'Sign Out',
                           style: TextStyle(color: AppColors.error),
                         ),
@@ -419,10 +433,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text(
-          'Delete Account',
-          style: TextStyle(color: AppColors.text1),
-        ),
+        title: Text('Delete Account', style: TextStyle(color: AppColors.text1)),
         content: Text(
           'Are you sure you want to delete your account? This action cannot be undone.',
           style: TextStyle(color: AppColors.text1.withOpacity(0.70)),
@@ -440,10 +451,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.pop(dialogContext);
               await _deleteAccount();
             },
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: AppColors.error),
-            ),
+            child: Text('Delete', style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),

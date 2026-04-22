@@ -67,7 +67,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               ),
               actions: [
                 CupertinoDialogAction(
-                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
+                  child: Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },
@@ -81,7 +81,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               ),
               actions: [
                 TextButton(
-                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
+                  child: Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },
@@ -309,7 +309,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               content: const Text("Your purchases are restored."),
               actions: [
                 CupertinoDialogAction(
-                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
+                  child: Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },
@@ -321,7 +321,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               content: const Text("Your purchases are restored."),
               actions: [
                 TextButton(
-                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
+                  child: Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },
@@ -339,7 +339,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               content: const Text("You have purchased the premium membership."),
               actions: [
                 CupertinoDialogAction(
-                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
+                  child: Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },
@@ -351,7 +351,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
               content: const Text("You have purchased the premium membership."),
               actions: [
                 TextButton(
-                  child: const Text("OK", style: TextStyle(color: AppColors.info)),
+                  child: Text("OK", style: TextStyle(color: AppColors.info)),
                   onPressed: () {
                     Get.back();
                   },

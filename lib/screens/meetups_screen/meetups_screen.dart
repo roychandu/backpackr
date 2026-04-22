@@ -400,7 +400,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
               onPressed: _showCreateMeetupDialog,
               backgroundColor: AppColors.primary,
               shape: const CircleBorder(),
-              child: const Icon(Icons.add, color: AppColors.text1),
+              child: Icon(Icons.add, color: AppColors.text1),
             )
           : null,
     );
@@ -453,7 +453,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
           padding: const EdgeInsets.all(32.0),
           child: Column(
             children: [
-              const Icon(Icons.error_outline, size: 64, color: AppColors.error),
+              Icon(Icons.error_outline, size: 64, color: AppColors.error),
               const SizedBox(height: 16),
               Text('Error loading meetups', style: AppTextStyles.h4),
               const SizedBox(height: 8),
@@ -553,7 +553,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
           onMeetupCreated: () {
             _loadMeetups();
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
+              SnackBar(
                 content: Text('Meetup created successfully!'),
                 backgroundColor: AppColors.success,
               ),
@@ -713,10 +713,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                     ),
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 20),
-                    child: const Icon(
-                      Icons.delete_rounded,
-                      color: AppColors.text1,
-                    ),
+                    child: Icon(Icons.delete_rounded, color: AppColors.text1),
                   ),
                   child: GestureDetector(
                     onTap: type == 'new_request'
@@ -738,7 +735,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
+                                  SnackBar(
                                     content: Text('Meetup not found'),
                                     backgroundColor: AppColors.error,
                                   ),
@@ -900,7 +897,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'report',
                           child: Row(
                             children: [
@@ -961,7 +958,11 @@ class _MeetupsScreenState extends State<MeetupsScreen>
             const SizedBox(height: 12),
             Row(
               children: [
-                Icon(Icons.event_available, color: AppColors.text3.withOpacity(0.38), size: 20),
+                Icon(
+                  Icons.event_available,
+                  color: AppColors.text3.withOpacity(0.38),
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -977,7 +978,11 @@ class _MeetupsScreenState extends State<MeetupsScreen>
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.location_on, color: AppColors.text3.withOpacity(0.38), size: 20),
+                Icon(
+                  Icons.location_on,
+                  color: AppColors.text3.withOpacity(0.38),
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -1053,7 +1058,9 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   elevation: 0,
-                  disabledBackgroundColor: AppColors.textSecondary.withOpacity(0.4),
+                  disabledBackgroundColor: AppColors.textSecondary.withOpacity(
+                    0.4,
+                  ),
                   disabledForegroundColor: AppColors.textSecondary,
                 ),
                 child: Text(
@@ -1190,7 +1197,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text('User blocked. You will not see their meetups.'),
           behavior: SnackBarBehavior.floating,
           backgroundColor: AppColors.success,

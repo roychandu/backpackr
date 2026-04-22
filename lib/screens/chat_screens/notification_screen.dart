@@ -129,7 +129,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                   ),
                   child: IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.arrow_back_ios_new,
                       color: AppColors.text1,
                       size: 20,
@@ -183,7 +183,7 @@ class _NotificationScreenState extends State<NotificationScreen>
             ),
             child: IconButton(
               onPressed: _markAllAsRead,
-              icon: const Icon(Icons.done_all, color: AppColors.highlight, size: 20),
+              icon: Icon(Icons.done_all, color: AppColors.highlight, size: 20),
               tooltip: 'Mark all as read',
             ),
           ),
@@ -260,7 +260,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                                 ),
                               ],
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.notifications_outlined,
                               color: AppColors.text1,
                               size: 30,

@@ -181,10 +181,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
           shape: BoxShape.circle,
         ),
         child: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: AppColors.text1,
-          ),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.text1),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -200,7 +197,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
             ),
             child: Text(
               '${_currentImageIndex + 1}/${widget.blog.imageUrls.length}',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.text1,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -224,13 +221,15 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
                       color: AppColors.textSecondary.withOpacity(0.3),
-                      child: const Center(
-                        child: CircularProgressIndicator(color: AppColors.text1),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.text1,
+                        ),
                       ),
                     ),
                     errorWidget: (context, url, error) => Container(
                       color: AppColors.textSecondary.withOpacity(0.4),
-                      child: const Icon(
+                      child: Icon(
                         Icons.image_not_supported,
                         size: 50,
                         color: AppColors.text1,
@@ -242,7 +241,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
             else
               Container(
                 color: AppColors.primary,
-                child: const Center(
+                child: Center(
                   child: Icon(
                     Icons.image_outlined,
                     size: 80,
@@ -257,7 +256,10 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, AppColors.text3.withOpacity(0.7)],
+                  colors: [
+                    Colors.transparent,
+                    AppColors.text3.withOpacity(0.7),
+                  ],
                 ),
               ),
             ),
@@ -433,7 +435,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
                       ),
                     ],
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.route_rounded,
                     color: AppColors.text1,
                     size: 24,
@@ -641,7 +643,7 @@ class _TravelingBlogDetailsScreenState extends State<TravelingBlogDetailsScreen>
       ),
       child: Text(
         tag,
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.text1,
           fontWeight: FontWeight.w600,
           fontSize: 12,

@@ -569,7 +569,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
         elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.text1),
+          icon: Icon(Icons.arrow_back_ios_new, color: AppColors.text1),
         ),
         title: Text(
           'Create Meetup',
@@ -930,7 +930,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                 child: ElevatedButton.icon(
                   onPressed: _isCreating ? null : _createMeetup,
                   icon: _isCreating
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(

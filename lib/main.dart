@@ -8,6 +8,7 @@ import 'package:backpackr/screens/intro_screen/intro_screen.dart';
 import 'package:backpackr/services/app_flow_service.dart';
 import 'package:backpackr/services/auth_service.dart';
 import 'package:backpackr/services/notification_service.dart';
+import 'package:backpackr/services/theme_service.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,9 @@ void main() async {
     print('Error initializing notification service: $e');
   }
 
+  // Initialize Theme Service
+  await Get.putAsync(() => ThemeService().init());
+
   setPortait();
   runApp(const MyApp());
 }
@@ -79,9 +83,22 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Backpackr',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: AppColors.primary,
+              brightness: Brightness.light,
+            ),
+            scaffoldBackgroundColor: const Color(0xFFFFFFFF),
             useMaterial3: true,
           ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: AppColors.primary,
+              brightness: Brightness.dark,
+            ),
+            scaffoldBackgroundColor: const Color(0xFF131313),
+            useMaterial3: true,
+          ),
+          themeMode: ThemeService.to.theme,
           navigatorKey: appNavigatorKey,
           home: const AppFlowWrapper(),
           routes: {

@@ -193,11 +193,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.message,
-                color: AppColors.text1,
-                size: 50,
-              ),
+              child: Icon(Icons.message, color: AppColors.text1, size: 50),
             ),
             const SizedBox(height: 24),
             Text(
@@ -279,7 +275,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   colors: [AppColors.error, AppColors.error],
                 ),
                 borderRadius: BorderRadius.circular(60),
@@ -291,7 +287,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   ),
                 ],
               ),
-              child: const Icon(Icons.error, color: AppColors.text1, size: 50),
+              child: Icon(Icons.error, color: AppColors.text1, size: 50),
             ),
             const SizedBox(height: 24),
             Text(
@@ -486,7 +482,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           backgroundColor: AppColors.highlight2,
                           child: Text(
                             unreadCount.toString(),
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.text1,
                               fontSize: 12,
                             ),

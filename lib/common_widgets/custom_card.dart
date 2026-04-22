@@ -31,7 +31,7 @@ class CustomCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(borderRadius),
         side: showBorder
-            ? const BorderSide(color: AppColors.border, width: 1)
+            ? BorderSide(color: AppColors.border, width: 1)
             : BorderSide.none,
       ),
       color: backgroundColor ?? AppColors.cardBackground,

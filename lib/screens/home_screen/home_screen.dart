@@ -665,7 +665,7 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           if (_setupCompleted && _isLocating)
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(left: 8.0),
               child: SizedBox(
                 width: 16,
@@ -1062,7 +1062,7 @@ class _HomeScreenState extends State<HomeScreen>
           );
         } else if (isDummy) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               behavior: SnackBarBehavior.floating,
               content: Text(
                 'This is a demo profile. Connect with real travelers to view their blogs!',
@@ -1072,7 +1072,7 @@ class _HomeScreenState extends State<HomeScreen>
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               behavior: SnackBarBehavior.floating,
               content: Text('Unable to find traveler information'),
               backgroundColor: AppColors.cta1,
@@ -1105,7 +1105,7 @@ class _HomeScreenState extends State<HomeScreen>
                       radius: 22,
                       backgroundColor: AppColors.surface,
                       child: (t.avatarUrl == null || t.avatarUrl!.isEmpty)
-                          ? const Icon(
+                          ? Icon(
                               Icons.person,
                               color: AppColors.textSecondary,
                               size: 28,
@@ -1150,7 +1150,7 @@ class _HomeScreenState extends State<HomeScreen>
                       PopupMenuItem<String>(
                         value: 'block',
                         child: Row(
-                          children: const [
+                          children: [
                             Icon(Icons.block, color: AppColors.error, size: 18),
                             SizedBox(width: 8),
                             Text('Block user'),
@@ -1249,7 +1249,7 @@ class _HomeScreenState extends State<HomeScreen>
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
-          children: const [
+          children: [
             Icon(Icons.block, color: AppColors.error),
             SizedBox(width: 8),
             Text('Block this traveler'),
@@ -1278,7 +1278,7 @@ class _HomeScreenState extends State<HomeScreen>
                 final currentUser = FirebaseAuth.instance.currentUser;
                 if (currentUser == null) {
                   messenger.showSnackBar(
-                    const SnackBar(
+                    SnackBar(
                       behavior: SnackBarBehavior.floating,
                       content: Text('Please log in to hide travelers'),
                       backgroundColor: AppColors.error,
@@ -1296,7 +1296,7 @@ class _HomeScreenState extends State<HomeScreen>
                   _applyFilters();
                 });
                 messenger.showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                     behavior: SnackBarBehavior.floating,
                     content: Text(
                       'User blocked. You will not see their profile.',
@@ -1373,7 +1373,7 @@ class _HomeScreenState extends State<HomeScreen>
                 final currentUser = FirebaseAuth.instance.currentUser;
                 if (currentUser == null) {
                   messenger.showSnackBar(
-                    const SnackBar(
+                    SnackBar(
                       behavior: SnackBarBehavior.floating,
                       content: Text('Please log in to report users'),
                       backgroundColor: AppColors.error,
@@ -1392,7 +1392,7 @@ class _HomeScreenState extends State<HomeScreen>
                   _applyFilters();
                 });
                 messenger.showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                     behavior: SnackBarBehavior.floating,
                     content: Text('User reported. Thank you for the feedback.'),
                     backgroundColor: AppColors.success,
@@ -1462,7 +1462,7 @@ class _HomeScreenState extends State<HomeScreen>
         height: 48,
         child: ElevatedButton.icon(
           onPressed: null,
-          icon: const SizedBox(
+          icon: SizedBox(
             width: 16,
             height: 16,
             child: CircularProgressIndicator(
@@ -1810,7 +1810,7 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                             ],
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.waving_hand,
                             color: AppColors.text1,
                             size: 24,
@@ -2164,7 +2164,7 @@ class _HomeScreenState extends State<HomeScreen>
               constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
               child: Text(
                 wavesCount > 99 ? '99+' : wavesCount.toString(),
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.text1,
                   fontSize: 8,
                   fontWeight: FontWeight.bold,
@@ -2198,7 +2198,7 @@ class _HomeScreenState extends State<HomeScreen>
               constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
               child: Text(
                 requestsCount > 99 ? '99+' : requestsCount.toString(),
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.text1,
                   fontSize: 8,
                   fontWeight: FontWeight.bold,
@@ -2232,7 +2232,7 @@ class _HomeScreenState extends State<HomeScreen>
               constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
               child: Text(
                 unreadCount > 99 ? '99+' : unreadCount.toString(),
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.text1,
                   fontSize: 8,
                   fontWeight: FontWeight.bold,

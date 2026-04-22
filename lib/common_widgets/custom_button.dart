@@ -70,7 +70,7 @@ class CustomButton extends StatelessWidget {
 
   Widget _buildButtonContent() {
     if (isLoading) {
-      return const SizedBox(
+      return SizedBox(
         width: 20,
         height: 20,
         child: CircularProgressIndicator(

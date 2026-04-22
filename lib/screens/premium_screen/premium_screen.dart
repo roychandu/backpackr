@@ -86,15 +86,15 @@ class _PremiumScreenState extends State<PremiumScreen> {
                 color: AppColors.background2,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back_ios_new,
                 color: AppColors.text1,
                 size: 18,
               ),
             ),
           ),
-          const SizedBox(width: 16),
-          const Text(
+          SizedBox(width: 16),
+          Text(
             'Premium Membership',
             style: TextStyle(
               fontSize: 18,
@@ -102,7 +102,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
               color: AppColors.text1,
             ),
           ),
-          const Spacer(),
+          Spacer(),
           if (provider.isPremiumMember)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -112,7 +112,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                 ),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text(
+              child: Text(
                 'ACTIVE',
                 style: TextStyle(
                   color: AppColors.text1,
@@ -152,7 +152,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        const Text(
+        Text(
           'Everything You Need,\nUnlimited Access',
           style: TextStyle(
             fontSize: 32,
@@ -161,7 +161,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
             height: 1.2,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Text(
           'Join thousands of premium members enjoying unlimited features',
           style: TextStyle(
@@ -198,7 +198,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 6),
                 child: Text(
                   '\$',
@@ -209,7 +209,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   ),
                 ),
               ),
-              const Text(
+              Text(
                 '0.99',
                 style: TextStyle(
                   fontSize: 64,
@@ -253,7 +253,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
         Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11,
             color: AppColors.text1,
             fontWeight: FontWeight.w600,
@@ -268,7 +268,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Features Comparison',
           style: TextStyle(
             fontSize: 22,
@@ -300,14 +300,14 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       color: AppColors.text2.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.person_outline,
                       color: AppColors.text2,
                       size: 20,
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text(
+                  Text(
                     'Free Plan',
                     style: TextStyle(
                       fontSize: 18,
@@ -323,12 +323,12 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
                     children: [
-                      const Icon(Icons.check, color: AppColors.text2, size: 18),
+                      Icon(Icons.check, color: AppColors.text2, size: 18),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           feature,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             color: AppColors.text2,
                           ),
@@ -375,14 +375,14 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       ),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.workspace_premium,
                       color: AppColors.text1,
                       size: 20,
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text(
+                  Text(
                     'Premium Plan',
                     style: TextStyle(
                       fontSize: 18,
@@ -402,7 +402,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       ),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Text(
+                    child: Text(
                       'RECOMMENDED',
                       style: TextStyle(
                         fontSize: 9,
@@ -429,7 +429,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       Expanded(
                         child: Text(
                           feature,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             color: AppColors.text1,
                           ),
@@ -476,7 +476,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
         Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
             color: AppColors.text2,
             fontWeight: FontWeight.w500,
@@ -533,7 +533,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       ),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.verified,
                       color: AppColors.text1,
                       size: 24,
@@ -543,7 +543,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
                           'Premium Member',
                           style: TextStyle(
@@ -598,7 +598,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   child: Container(
                     alignment: Alignment.center,
                     child: isLoading
-                        ? const SizedBox(
+                        ? SizedBox(
                             width: 24,
                             height: 24,
                             child: CircularProgressIndicator(
@@ -606,7 +606,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                               strokeWidth: 2.5,
                             ),
                           )
-                        : const Text(
+                        : Text(
                             'Get Premium for \$0.99',
                             style: TextStyle(
                               fontSize: 18,
@@ -629,7 +629,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     provider.restorePurchases();
                     setState(() => isLoading = false);
                   },
-            child: const Text(
+            child: Text(
               'Restore Purchases',
               style: TextStyle(
                 color: AppColors.text2,
@@ -647,7 +647,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const AlertDialog(
+      builder: (context) => AlertDialog(
         backgroundColor: Colors.transparent,
         elevation: 0,
         content: Center(
@@ -674,7 +674,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Icon(Icons.star, color: AppColors.cta1, size: 28),
               SizedBox(width: 12),
               Flexible(
@@ -688,7 +688,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
               ),
             ],
           ),
-          content: const Text(
+          content: Text(
             'Congratulations! You now have unlimited access.',
             style: TextStyle(color: AppColors.text2),
             textAlign: TextAlign.center,
@@ -712,7 +712,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'Get Started',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -735,7 +735,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: const Text(
+          title: Text(
             'Upgrade Failed',
             style: TextStyle(
               color: AppColors.text1,
@@ -745,7 +745,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
           ),
           content: Text(
             'Failed to activate: $e',
-            style: const TextStyle(color: AppColors.text2),
+            style: TextStyle(color: AppColors.text2),
             textAlign: TextAlign.center,
           ),
           actions: [

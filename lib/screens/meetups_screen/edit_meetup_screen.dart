@@ -162,7 +162,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
       widget.onMeetupUpdated();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text('Meetup updated successfully!'),
           backgroundColor: AppColors.success,
         ),
@@ -194,7 +194,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
         elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.text1),
+          icon: Icon(Icons.arrow_back_ios_new, color: AppColors.text1),
         ),
         title: Text(
           'Edit Meetup',
@@ -514,7 +514,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
                 child: ElevatedButton.icon(
                   onPressed: _isUpdating ? null : _updateMeetup,
                   icon: _isUpdating
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(

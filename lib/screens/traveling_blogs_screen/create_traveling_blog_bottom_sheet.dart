@@ -530,7 +530,7 @@ class _CreateTravelingBlogBottomSheetState
           maxChildSize: 0.6,
           builder: (context, scrollController) {
             return Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -562,7 +562,7 @@ class _CreateTravelingBlogBottomSheetState
                             ),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.photo_camera_back,
                             color: AppColors.text1,
                           ),
@@ -572,7 +572,7 @@ class _CreateTravelingBlogBottomSheetState
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'Add Travel Photos',
                                 style: TextStyle(
                                   color: AppColors.text1,
@@ -581,7 +581,7 @@ class _CreateTravelingBlogBottomSheetState
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              const Text(
+                              Text(
                                 'Choose a source to add your travel photos',
                                 style: TextStyle(
                                   color: AppColors.text2,
@@ -684,7 +684,7 @@ class _CreateTravelingBlogBottomSheetState
               const SizedBox(height: 12),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.text1,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
@@ -697,10 +697,7 @@ class _CreateTravelingBlogBottomSheetState
                 child: Center(
                   child: Text(
                     subtitle,
-                    style: const TextStyle(
-                      color: AppColors.text2,
-                      fontSize: 11,
-                    ),
+                    style: TextStyle(color: AppColors.text2, fontSize: 11),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -854,7 +851,7 @@ class _CreateTravelingBlogBottomSheetState
 
       // Close the bottom sheet
       _sheetMessenger.currentState?.showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text('Blog created successfully!'),
           backgroundColor: AppColors.success,
           duration: Duration(milliseconds: 1200),
@@ -942,7 +939,7 @@ class _CreateTravelingBlogBottomSheetState
                                   color: AppColors.primary,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.article_rounded,
                                   color: AppColors.text1,
                                   size: 24,
@@ -1087,14 +1084,11 @@ class _CreateTravelingBlogBottomSheetState
                                                   child: Container(
                                                     padding:
                                                         const EdgeInsets.all(4),
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                          color:
-                                                              AppColors.error,
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                    child: const Icon(
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.error,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Icon(
                                                       Icons.close,
                                                       color: AppColors.text1,
                                                       size: 16,
@@ -1343,7 +1337,7 @@ class _CreateTravelingBlogBottomSheetState
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        const SizedBox(
+                                        SizedBox(
                                           width: 20,
                                           height: 20,
                                           child: CircularProgressIndicator(
@@ -1352,7 +1346,7 @@ class _CreateTravelingBlogBottomSheetState
                                           ),
                                         ),
                                         const SizedBox(width: 12),
-                                        const Text(
+                                        Text(
                                           'Creating...',
                                           style: TextStyle(
                                             color: AppColors.text1,

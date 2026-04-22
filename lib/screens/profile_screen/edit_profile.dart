@@ -156,7 +156,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           maxChildSize: 0.6,
           builder: (context, scrollController) {
             return Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -188,7 +188,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.photo_camera_back,
                             color: AppColors.text1,
                           ),
@@ -198,7 +198,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'Change Profile Photo',
                                 style: TextStyle(
                                   color: AppColors.text1,
@@ -207,7 +207,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              const Text(
+                              Text(
                                 'Choose a source to update your profile picture',
                                 style: TextStyle(
                                   color: AppColors.text2,
@@ -314,7 +314,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const SizedBox(height: 12),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.text1,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
@@ -327,10 +327,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Center(
                   child: Text(
                     subtitle,
-                    style: const TextStyle(
-                      color: AppColors.text2,
-                      fontSize: 11,
-                    ),
+                    style: TextStyle(color: AppColors.text2, fontSize: 11),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -494,9 +491,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.primary),
+          icon: Icon(Icons.arrow_back_ios_new, color: AppColors.primary),
         ),
-        title: const Text(
+        title: Text(
           'Edit Profile',
           style: TextStyle(
             color: AppColors.primary,
@@ -507,9 +504,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         centerTitle: true,
       ),
       body: _isLoadingData
-          ? const Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
-            )
+          ? Center(child: CircularProgressIndicator(color: AppColors.primary))
           : SingleChildScrollView(
               padding: const EdgeInsets.all(24),
               child: Form(
@@ -568,16 +563,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                       CircularProgressIndicator(),
                                                 ),
                                             errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(
-                                                      Icons.person,
-                                                      size: 60,
-                                                      color: AppColors
-                                                          .textSecondary,
-                                                    ),
+                                                (context, url, error) => Icon(
+                                                  Icons.person,
+                                                  size: 60,
+                                                  color:
+                                                      AppColors.textSecondary,
+                                                ),
                                           ),
                                         )
-                                      : const Icon(
+                                      : Icon(
                                           Icons.person,
                                           size: 60,
                                           color: AppColors.textSecondary,
@@ -600,7 +594,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         width: 2,
                                       ),
                                     ),
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.edit,
                                       color: AppColors.text1,
                                       size: 16,
@@ -612,7 +606,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
 
                           const SizedBox(height: 8),
-                          const Text(
+                          Text(
                             'Profile Photo',
                             style: TextStyle(
                               color: AppColors.text1,
@@ -645,7 +639,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'User Email',
                           style: TextStyle(
                             color: AppColors.primary,
@@ -664,7 +658,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: TextFormField(
                             controller: _userEmailController,
                             enabled: false,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: 'user@email.com',
                               hintStyle: TextStyle(
                                 color: AppColors.textSecondary,
@@ -681,7 +675,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 size: 20,
                               ),
                             ),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               color: AppColors.textSecondary,
                             ),
@@ -707,7 +701,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           elevation: 0,
                         ),
                         child: _isLoading
-                            ? const SizedBox(
+                            ? SizedBox(
                                 height: 20,
                                 width: 20,
                                 child: CircularProgressIndicator(
@@ -742,7 +736,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.primary,
           fontWeight: FontWeight.bold,
           fontSize: 18,
@@ -764,7 +758,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.primary,
             fontWeight: FontWeight.bold,
             fontSize: 16,
@@ -783,7 +777,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             validator: validator,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 16,
               ),
@@ -804,7 +798,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     )
                   : null,
             ),
-            style: const TextStyle(fontSize: 16, color: AppColors.primary),
+            style: TextStyle(fontSize: 16, color: AppColors.primary),
           ),
         ),
       ],

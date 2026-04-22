@@ -87,15 +87,15 @@ InputDecoration glassInputDecoration(String hint) {
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: AppColors.highlight, width: 1.2),
+      borderSide: BorderSide(color: AppColors.highlight, width: 1.2),
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: AppColors.error),
+      borderSide: BorderSide(color: AppColors.error),
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: AppColors.error),
+      borderSide: BorderSide(color: AppColors.error),
     ),
   );
 }
@@ -115,7 +115,7 @@ Widget designPrimaryButton({
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [AppColors.highlight, AppColors.cta1]),
+          gradient: LinearGradient(colors: [AppColors.highlight, AppColors.cta1]),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(

@@ -242,7 +242,7 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
                 ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close, color: AppColors.text1),
+                  icon: Icon(Icons.close, color: AppColors.text1),
                 ),
               ],
             ),

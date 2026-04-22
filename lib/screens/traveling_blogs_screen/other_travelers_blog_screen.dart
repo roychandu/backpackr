@@ -150,7 +150,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                 ),
                 child: IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back_ios_new,
                     color: AppColors.text1,
                     size: 20,
@@ -178,7 +178,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                         widget.userName.isNotEmpty
                             ? widget.userName[0].toUpperCase()
                             : 'U',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.text1,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -198,7 +198,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                   color: AppColors.text1.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.article_rounded,
                   color: AppColors.text1,
                   size: 28,
@@ -290,7 +290,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                         color: AppColors.text1.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.auto_stories,
                         color: AppColors.text1,
                         size: 16,
@@ -317,7 +317,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.travel_explore,
                             color: AppColors.text1,
                             size: 14,
@@ -350,7 +350,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
         padding: const EdgeInsets.all(32.0),
         child: Column(
           children: [
-            const Icon(Icons.error_outline, size: 64, color: AppColors.error),
+            Icon(Icons.error_outline, size: 64, color: AppColors.error),
             const SizedBox(height: 16),
             Text('Error loading blogs', style: AppTextStyles.h4),
             const SizedBox(height: 8),
@@ -622,7 +622,7 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                             ),
                             errorWidget: (context, url, error) => Container(
                               color: AppColors.textSecondary.withOpacity(0.4),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.image_not_supported,
                                 size: 50,
                                 color: AppColors.textSecondary,
@@ -673,7 +673,7 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                         ),
                         child: Text(
                           '${_currentImageIndex + 1}/${widget.blog.imageUrls.length}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.text1,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,

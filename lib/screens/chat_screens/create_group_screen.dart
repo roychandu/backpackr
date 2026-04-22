@@ -223,7 +223,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 // Mutual connections list
                 Expanded(
                   child: _isLoading
-                      ? const Center(
+                      ? Center(
                           child: CircularProgressIndicator(
                             color: AppColors.primary,
                           ),
@@ -268,7 +268,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _isCreating ? null : _createGroup,
                       icon: _isCreating
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator(
@@ -334,7 +334,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         ),
         subtitle: Text(
           'Mutual connection',
-          style: AppTextStyles.bodySmall.copyWith(color: AppColors.text1.withOpacity(0.60)),
+          style: AppTextStyles.bodySmall.copyWith(
+            color: AppColors.text1.withOpacity(0.60),
+          ),
         ),
         secondary: CircleAvatar(
           radius: 20,
@@ -381,7 +383,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             Text(
               'Connect with travelers by sending waves first',
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text1.withOpacity(0.70)),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.text1.withOpacity(0.70),
+              ),
             ),
           ],
         ),

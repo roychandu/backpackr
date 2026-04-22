@@ -102,7 +102,7 @@ class _TravelingBlogsScreenState extends State<TravelingBlogsScreen> {
               onPressed: _showCreateBlogDialog,
               backgroundColor: AppColors.primary,
               shape: const CircleBorder(),
-              child: const Icon(Icons.add, color: AppColors.text1),
+              child: Icon(Icons.add, color: AppColors.text1),
             )
           : null,
     );
@@ -123,7 +123,7 @@ class _TravelingBlogsScreenState extends State<TravelingBlogsScreen> {
         padding: const EdgeInsets.all(32.0),
         child: Column(
           children: [
-            const Icon(Icons.error_outline, size: 64, color: AppColors.error),
+            Icon(Icons.error_outline, size: 64, color: AppColors.error),
             const SizedBox(height: 16),
             Text('Error loading blogs', style: AppTextStyles.h4),
             const SizedBox(height: 8),
@@ -211,7 +211,7 @@ class _TravelingBlogsScreenState extends State<TravelingBlogsScreen> {
         onBlogCreated: () {
           _loadBlogs();
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text('Blog created successfully!'),
               backgroundColor: AppColors.success,
             ),
@@ -363,7 +363,7 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                             ),
                             errorWidget: (context, url, error) => Container(
                               color: AppColors.textSecondary.withOpacity(0.4),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.image_not_supported,
                                 size: 50,
                                 color: AppColors.textSecondary,
@@ -414,7 +414,7 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                         ),
                         child: Text(
                           '${_currentImageIndex + 1}/${widget.blog.imageUrls.length}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.text1,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -581,7 +581,11 @@ class _BlogCardWithSliderState extends State<_BlogCardWithSlider> {
                         ),
                       ],
                       const Spacer(),
-                      Icon(Icons.schedule, size: 16, color: AppColors.text3.withOpacity(0.38)),
+                      Icon(
+                        Icons.schedule,
+                        size: 16,
+                        color: AppColors.text3.withOpacity(0.38),
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         widget.blog.duration,
