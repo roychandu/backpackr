@@ -263,7 +263,7 @@ class _IntroScreenState extends State<IntroScreen>
                 decoration: BoxDecoration(
                   color: _currentPage == index
                       ? AppColors.cta1
-                      : AppColors.background2,
+                      : AppColors.cta1.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
