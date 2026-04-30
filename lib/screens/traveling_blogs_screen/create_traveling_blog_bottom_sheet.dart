@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
 import '../../common_widgets/custom_button.dart';
+import '../../common_widgets/image_source_bottom_sheet.dart';
 import '../../services/blog_service.dart';
 import '../../utils/error_handler.dart';
 import '../../services/auth_service.dart';
@@ -501,217 +502,16 @@ class _CreateTravelingBlogBottomSheetState
   }
 
   void _showImagePickerOptions() {
-    showModalBottomSheet(
+    ImageSourceBottomSheet.show(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.35,
-          minChildSize: 0.3,
-          maxChildSize: 0.6,
-          builder: (context, scrollController) {
-            return Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppColors.background2, AppColors.mainBackground],
-                ),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(height: 8),
-                  Container(
-                    width: 40,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: AppColors.text2.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [AppColors.cta1, AppColors.cta2],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.photo_camera_back,
-                            color: AppColors.text1,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Add Travel Photos',
-                                style: TextStyle(
-                                  color: AppColors.text1,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Choose a source to add your travel photos',
-                                style: TextStyle(
-                                  color: AppColors.text2,
-                                  fontSize: 12,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                      child: IntrinsicHeight(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            // Gallery card
-                            Expanded(
-                              child: _imageSourceCard(
-                                icon: Icons.photo_library,
-                                title: 'Choose from gallery',
-                                subtitle: 'Pick photos',
-                                primaryLabel: 'Gallery',
-                                onPrimary: () async {
-                                  Navigator.pop(context);
-                                  await _pickImages();
-                                },
-                                secondaryLabel: null,
-                                onSecondary: null,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            // Camera card
-                            Expanded(
-                              child: _imageSourceCard(
-                                icon: Icons.photo_camera,
-                                title: 'Take a photo',
-                                subtitle: 'Open camera',
-                                primaryLabel: 'Camera',
-                                onPrimary: () async {
-                                  Navigator.pop(context);
-                                  await _pickImageFromCamera();
-                                },
-                                secondaryLabel: null,
-                                onSecondary: null,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
+      title: 'Add Travel Photos',
+      subtitle: 'Choose a source to add your travel photos',
+      onCameraSelected: () async {
+        await _pickImageFromCamera();
       },
-    );
-  }
-
-  Widget _imageSourceCard({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required String primaryLabel,
-    required VoidCallback onPrimary,
-    String? secondaryLabel,
-    VoidCallback? onSecondary,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.background2.withOpacity(0.5),
-        border: Border.all(color: AppColors.text2.withOpacity(0.2)),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppColors.cta1, AppColors.cta2],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: AppColors.text1, size: 28),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                title,
-                style: TextStyle(
-                  color: AppColors.text1,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              SizedBox(
-                height: 28,
-                child: Center(
-                  child: Text(
-                    subtitle,
-                    style: TextStyle(color: AppColors.text2, fontSize: 11),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          CustomButton(
-            text: primaryLabel,
-            backgroundColor: AppColors.primary,
-            isFullWidth: true,
-            borderRadius: 10,
-            height: 40,
-            onPressed: onPrimary,
-          ),
-          if (secondaryLabel != null && onSecondary != null) ...[
-            const SizedBox(height: 8),
-            CustomButton(
-              text: secondaryLabel,
-              isOutlined: true,
-              backgroundColor: AppColors.text2,
-              borderColor: AppColors.text2.withOpacity(0.5),
-              isFullWidth: true,
-              borderRadius: 10,
-              height: 40,
-              onPressed: onSecondary,
-            ),
-          ],
-        ],
-      ),
+      onGallerySelected: () async {
+        await _pickImages();
+      },
     );
   }
 
