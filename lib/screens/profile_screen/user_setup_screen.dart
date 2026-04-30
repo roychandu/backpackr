@@ -200,122 +200,115 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.35,
-          minChildSize: 0.3,
-          maxChildSize: 0.6,
-          builder: (context, scrollController) {
-            return Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppColors.background2, AppColors.mainBackground],
-                ),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(height: 8),
-                  Container(
-                    width: 40,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: AppColors.text2.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColors.background2, AppColors.mainBackground],
+            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 8),
+                Container(
+                  width: 40,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: AppColors.text2.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [AppColors.cta1, AppColors.cta2],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
+                ),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [AppColors.cta1, AppColors.cta2],
                           ),
-                          child: Icon(
-                            Icons.photo_camera_back,
-                            color: AppColors.text1,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          Icons.photo_camera_back,
+                          color: AppColors.text1,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Change Profile Photo',
+                              style: TextStyle(
+                                color: AppColors.text1,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Choose a source to update your profile picture',
+                              style: TextStyle(
+                                color: AppColors.text2,
+                                fontSize: 12,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                  child: IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Camera card
+                        Expanded(
+                          child: _imageSourceCard(
+                            icon: Icons.photo_camera,
+                            title: 'Take a photo',
+                            subtitle: 'Open camera',
+                            primaryLabel: 'Camera',
+                            onPrimary: () async {
+                              Navigator.pop(context);
+                              await _handlePick(ImageSource.camera);
+                            },
                           ),
                         ),
                         const SizedBox(width: 12),
+                        // Gallery card
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Change Profile Photo',
-                                style: TextStyle(
-                                  color: AppColors.text1,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Choose a source to update your profile picture',
-                                style: TextStyle(
-                                  color: AppColors.text2,
-                                  fontSize: 12,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                          child: _imageSourceCard(
+                            icon: Icons.photo_library,
+                            title: 'Choose from gallery',
+                            subtitle: 'Pick a photo',
+                            primaryLabel: 'Gallery',
+                            onPrimary: () async {
+                              Navigator.pop(context);
+                              await _handlePick(ImageSource.gallery);
+                            },
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                      child: IntrinsicHeight(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            // Camera card
-                            Expanded(
-                              child: _imageSourceCard(
-                                icon: Icons.photo_camera,
-                                title: 'Take a photo',
-                                subtitle: 'Open camera',
-                                primaryLabel: 'Camera',
-                                onPrimary: () async {
-                                  Navigator.pop(context);
-                                  await _handlePick(ImageSource.camera);
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            // Gallery card
-                            Expanded(
-                              child: _imageSourceCard(
-                                icon: Icons.photo_library,
-                                title: 'Choose from gallery',
-                                subtitle: 'Pick a photo',
-                                primaryLabel: 'Gallery',
-                                onPrimary: () async {
-                                  Navigator.pop(context);
-                                  await _handlePick(ImageSource.gallery);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -584,8 +577,8 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
 
       // Create UserProfile object
       final profile = UserProfile(
-        displayName: _userName.isNotEmpty
-            ? _userName
+        displayName: _userNameController.text.trim().isNotEmpty
+            ? _userNameController.text.trim()
             : (user.displayName ?? ''),
         bio: _bioController.text,
         currentLocation: _locationController.text,
@@ -793,53 +786,50 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: AppColors.text1.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: TextFormField(
-            controller: _userNameController,
-            enabled: false,
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.text1.withOpacity(0.70),
+        TextFormField(
+          controller: _userNameController,
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text1),
+          decoration: InputDecoration(
+            hintText: 'Enter your user name',
+            hintStyle: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.text1.withOpacity(0.54),
             ),
-            decoration: InputDecoration(
-              hintText: 'Loading user name...',
-              hintStyle: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.text1.withOpacity(0.54),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: AppColors.text1.withOpacity(0.20),
-                ),
-              ),
-              disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: AppColors.text1.withOpacity(0.20),
-                ),
-              ),
-              suffixIcon: Icon(
-                Icons.person,
-                color: AppColors.text1.withOpacity(0.6),
-                size: 20,
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 14,
+            filled: true,
+            fillColor: AppColors.text1.withOpacity(0.10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.text1.withOpacity(0.20),
               ),
             ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+            ),
+            suffixIcon: Icon(
+              Icons.person,
+              color: AppColors.text1.withOpacity(0.6),
+              size: 20,
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
           ),
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Please enter a user name';
+            }
+            return null;
+          },
         ),
         const SizedBox(height: 4),
         Text(
-          'This is your display name from your account',
+          'This is your display name shown to other travelers',
           style: AppTextStyles.bodySmall.copyWith(
             color: AppColors.text1.withOpacity(0.54),
           ),
