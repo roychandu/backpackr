@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:backpackr/aws/aws_module.dart';
 import '../../common_widgets/app_colors.dart';
 import '../../services/auth_service.dart';
+import '../../services/storage_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 // profileimg_HIr4SpWp8Oei0qxLdlzxMlLb1i82_1756382329336.png
 
@@ -25,6 +26,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _passwordController = TextEditingController();
 
   final AuthService _authService = AuthService();
+  final StorageService _storageService = StorageService();
   final ImagePicker _imagePicker = ImagePicker();
   File? pickedImage;
   File? _profileImage;
@@ -440,6 +442,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }
       } catch (e) {
         debugPrint('Failed to persist profile to DB: $e');
+      }
+
+      await _storageService.setProfileDisplayName(
+        _userNameController.text.trim(),
+      );
+      if ((uploadedImageUrl ?? newUploadedImgPath ?? '').isNotEmpty) {
+        await _storageService.setProfileAvatarUrl(
+          uploadedImageUrl ?? newUploadedImgPath!,
+        );
       }
 
       // Update password if provided

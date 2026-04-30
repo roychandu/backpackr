@@ -340,7 +340,6 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       // Navigate to home screen after successful login
-      // Business setup will be checked when user tries to create an invoice
       if (mounted) {
         Navigator.of(
           context,
@@ -521,14 +520,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.textFieldBackground,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: TextField(
+                          TextField(
                               controller: _emailController,
                               keyboardType: TextInputType.emailAddress,
+                              style: TextStyle(color: AppColors.textPrimary),
                               decoration: InputDecoration(
                                 hintText: 'Email',
                                 hintStyle: TextStyle(
@@ -539,14 +534,35 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Icons.email_outlined,
                                   color: AppColors.textSecondary,
                                 ),
-                                border: InputBorder.none,
+                                filled: true,
+                                fillColor: AppColors.background2,
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16,
                                   vertical: 16,
                                 ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: AppColors.border,
+                                    width: 1,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: AppColors.border,
+                                    width: 1,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: AppColors.cta1,
+                                    width: 1.5,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                       const SizedBox(height: 24),
@@ -563,14 +579,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.textFieldBackground,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: TextField(
+                          TextField(
                               controller: _passwordController,
                               obscureText: !_isPasswordVisible,
+                              style: TextStyle(color: AppColors.textPrimary),
                               decoration: InputDecoration(
                                 hintText: 'Password',
                                 hintStyle: TextStyle(
@@ -590,14 +602,35 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   onPressed: _togglePasswordVisibility,
                                 ),
-                                border: InputBorder.none,
+                                filled: true,
+                                fillColor: AppColors.background2,
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16,
                                   vertical: 16,
                                 ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: AppColors.border,
+                                    width: 1,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: AppColors.border,
+                                    width: 1,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: AppColors.cta1,
+                                    width: 1.5,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                       const SizedBox(height: 32),

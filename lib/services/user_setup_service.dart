@@ -2,18 +2,17 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/user_profile_service.dart';
+import '../services/storage_service.dart';
 import '../screens/profile_screen/user_setup_screen.dart';
 import '../screens/profile_screen/setup_reminder_popup.dart';
 
 class UserSetupService {
-  static const String _setupCompletedKey = 'userSetupCompleted';
-  static const String _lastPopupShownKey = 'lastSetupPopupShown';
   static const Duration _popupInterval = Duration(minutes: 10);
   static const Duration _initialDelay = Duration(minutes: 5);
 
+  static final StorageService _storage = StorageService();
   static Timer? _popupTimer;
   static BuildContext? _currentContext;
 
@@ -32,8 +31,7 @@ class UserSetupService {
   /// Check if user has completed setup
   static Future<bool> hasCompletedSetup() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final setupCompleted = prefs.getBool(_setupCompletedKey) ?? false;
+      final setupCompleted = await _storage.isProfileSetupCompleted();
 
       // Additional check: if setup is marked as completed, also verify the user profile exists
       if (setupCompleted) {
@@ -46,7 +44,7 @@ class UserSetupService {
       if (user == null) return false;
       final profile = await UserProfileService().getProfileForUid(user.uid);
       if (profile != null && profile.setupCompleted) {
-        await prefs.setBool(_setupCompletedKey, true);
+        await _storage.setProfileSetupCompleted(true);
         return true;
       }
 
@@ -78,8 +76,7 @@ class UserSetupService {
 
   /// Mark setup as completed
   static Future<void> markSetupCompleted() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_setupCompletedKey, true);
+    await _storage.setProfileSetupCompleted(true);
     _cancelTimer();
     try {
       // Also persist to remote profile so it works across devices
@@ -97,8 +94,7 @@ class UserSetupService {
     final hasCompleted = await hasCompletedSetup();
     if (hasCompleted) return;
 
-    final prefs = await SharedPreferences.getInstance();
-    final lastShown = prefs.getInt(_lastPopupShownKey);
+    final lastShown = await _storage.getLastSetupPopupShown();
     final now = DateTime.now().millisecondsSinceEpoch;
 
     if (lastShown == null) {
@@ -135,9 +131,7 @@ class UserSetupService {
     if (_currentContext == null) return;
 
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt(
-        _lastPopupShownKey,
+      await _storage.setLastSetupPopupShown(
         DateTime.now().millisecondsSinceEpoch,
       );
 
@@ -181,9 +175,8 @@ class UserSetupService {
 
   /// Reset setup status (for testing)
   static Future<void> resetSetupStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_setupCompletedKey);
-    await prefs.remove(_lastPopupShownKey);
+    await _storage.clearProfileSetupCompleted();
+    await _storage.clearLastSetupPopupShown();
     _cancelTimer();
   }
 

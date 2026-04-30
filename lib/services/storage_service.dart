@@ -10,20 +10,20 @@ class StorageService {
   static const String _languageKey = 'app_language';
   static const String _firstLaunchKey = 'first_launch';
   static const String _onboardingCompletedKey = 'onboarding_completed';
-  static const String _businessSetupCompletedKey = 'business_setup_completed';
+  static const String _profileSetupCompletedKey = 'userSetupCompleted';
 
-  // Invoice related keys
-  static const String _lastInvoiceNumberKey = 'last_invoice_number';
-  static const String _invoiceCounterKey = 'invoice_counter';
-  static const String _defaultTaxRateKey = 'default_tax_rate';
-  static const String _defaultCurrencyKey = 'default_currency';
+  // Backpackr flow keys
+  static const String _introSeenKey = 'has_seen_intro';
+  static const String _lastSetupPopupShownKey = 'lastSetupPopupShown';
+  static const String _isPremiumMemberKey = 'isPremiumMember';
+  static const String _isPurchasedKey = 'is_purchased';
 
-  // Business info keys
-  static const String _businessNameKey = 'business_name';
-  static const String _businessAddressKey = 'business_address';
-  static const String _businessPhoneKey = 'business_phone';
-  static const String _businessEmailKey = 'business_email';
-  static const String _businessLogoKey = 'business_logo';
+  // Traveler profile cache keys
+  static const String _profileDisplayNameKey = 'profile_display_name';
+  static const String _profileBioKey = 'profile_bio';
+  static const String _profileCurrentLocationKey = 'profile_current_location';
+  static const String _profileAvatarUrlKey = 'profile_avatar_url';
+  static const String _travelerTagsKey = 'traveler_tags';
 
   // Get SharedPreferences instance
   Future<SharedPreferences> get _prefs => SharedPreferences.getInstance();
@@ -69,106 +69,116 @@ class StorageService {
     return prefs.getBool(_onboardingCompletedKey) ?? false;
   }
 
-  Future<void> setBusinessSetupCompleted(bool completed) async {
+  Future<void> setProfileSetupCompleted(bool completed) async {
     final prefs = await _prefs;
-    await prefs.setBool(_businessSetupCompletedKey, completed);
+    await prefs.setBool(_profileSetupCompletedKey, completed);
   }
 
-  Future<bool> isBusinessSetupCompleted() async {
+  Future<bool> isProfileSetupCompleted() async {
     final prefs = await _prefs;
-    return prefs.getBool(_businessSetupCompletedKey) ?? false;
+    return prefs.getBool(_profileSetupCompletedKey) ?? false;
   }
 
-  // Invoice Settings
-  Future<void> setLastInvoiceNumber(String invoiceNumber) async {
+  Future<void> clearProfileSetupCompleted() async {
     final prefs = await _prefs;
-    await prefs.setString(_lastInvoiceNumberKey, invoiceNumber);
+    await prefs.remove(_profileSetupCompletedKey);
   }
 
-  Future<String?> getLastInvoiceNumber() async {
+  // Backpackr flow
+  Future<void> setIntroSeen(bool seen) async {
     final prefs = await _prefs;
-    return prefs.getString(_lastInvoiceNumberKey);
+    await prefs.setBool(_introSeenKey, seen);
   }
 
-  Future<void> setInvoiceCounter(int counter) async {
+  Future<bool> hasSeenIntro() async {
     final prefs = await _prefs;
-    await prefs.setInt(_invoiceCounterKey, counter);
+    return prefs.getBool(_introSeenKey) ?? false;
   }
 
-  Future<int> getInvoiceCounter() async {
+  Future<void> setLastSetupPopupShown(int timestamp) async {
     final prefs = await _prefs;
-    return prefs.getInt(_invoiceCounterKey) ?? 0;
+    await prefs.setInt(_lastSetupPopupShownKey, timestamp);
   }
 
-  Future<void> setDefaultTaxRate(double taxRate) async {
+  Future<int?> getLastSetupPopupShown() async {
     final prefs = await _prefs;
-    await prefs.setDouble(_defaultTaxRateKey, taxRate);
+    return prefs.getInt(_lastSetupPopupShownKey);
   }
 
-  Future<double> getDefaultTaxRate() async {
+  Future<void> clearLastSetupPopupShown() async {
     final prefs = await _prefs;
-    return prefs.getDouble(_defaultTaxRateKey) ?? 0.0;
+    await prefs.remove(_lastSetupPopupShownKey);
   }
 
-  Future<void> setDefaultCurrency(String currency) async {
+  Future<void> setPremiumMember(bool isPremium) async {
     final prefs = await _prefs;
-    await prefs.setString(_defaultCurrencyKey, currency);
+    await prefs.setBool(_isPremiumMemberKey, isPremium);
   }
 
-  Future<String> getDefaultCurrency() async {
+  Future<bool> isPremiumMember() async {
     final prefs = await _prefs;
-    return prefs.getString(_defaultCurrencyKey) ?? 'USD';
+    return prefs.getBool(_isPremiumMemberKey) ?? false;
   }
 
-  // Business Information
-  Future<void> setBusinessName(String name) async {
+  Future<void> setPurchased(bool isPurchased) async {
     final prefs = await _prefs;
-    await prefs.setString(_businessNameKey, name);
+    await prefs.setBool(_isPurchasedKey, isPurchased);
   }
 
-  Future<String?> getBusinessName() async {
+  Future<bool> isPurchased() async {
     final prefs = await _prefs;
-    return prefs.getString(_businessNameKey);
+    return prefs.getBool(_isPurchasedKey) ?? false;
   }
 
-  Future<void> setBusinessAddress(String address) async {
+  // Traveler profile cache
+  Future<void> setProfileDisplayName(String name) async {
     final prefs = await _prefs;
-    await prefs.setString(_businessAddressKey, address);
+    await prefs.setString(_profileDisplayNameKey, name);
   }
 
-  Future<String?> getBusinessAddress() async {
+  Future<String?> getProfileDisplayName() async {
     final prefs = await _prefs;
-    return prefs.getString(_businessAddressKey);
+    return prefs.getString(_profileDisplayNameKey);
   }
 
-  Future<void> setBusinessPhone(String phone) async {
+  Future<void> setProfileBio(String bio) async {
     final prefs = await _prefs;
-    await prefs.setString(_businessPhoneKey, phone);
+    await prefs.setString(_profileBioKey, bio);
   }
 
-  Future<String?> getBusinessPhone() async {
+  Future<String?> getProfileBio() async {
     final prefs = await _prefs;
-    return prefs.getString(_businessPhoneKey);
+    return prefs.getString(_profileBioKey);
   }
 
-  Future<void> setBusinessEmail(String email) async {
+  Future<void> setProfileCurrentLocation(String location) async {
     final prefs = await _prefs;
-    await prefs.setString(_businessEmailKey, email);
+    await prefs.setString(_profileCurrentLocationKey, location);
   }
 
-  Future<String?> getBusinessEmail() async {
+  Future<String?> getProfileCurrentLocation() async {
     final prefs = await _prefs;
-    return prefs.getString(_businessEmailKey);
+    return prefs.getString(_profileCurrentLocationKey);
   }
 
-  Future<void> setBusinessLogo(String logoPath) async {
+  Future<void> setProfileAvatarUrl(String avatarUrl) async {
     final prefs = await _prefs;
-    await prefs.setString(_businessLogoKey, logoPath);
+    await prefs.setString(_profileAvatarUrlKey, avatarUrl);
   }
 
-  Future<String?> getBusinessLogo() async {
+  Future<String?> getProfileAvatarUrl() async {
     final prefs = await _prefs;
-    return prefs.getString(_businessLogoKey);
+    return prefs.getString(_profileAvatarUrlKey);
+  }
+
+  Future<void> setTravelerTags(List<String> tags) async {
+    final prefs = await _prefs;
+    await prefs.setStringList(_travelerTagsKey, tags);
+  }
+
+  Future<List<String>> getTravelerTags() async {
+    final prefs = await _prefs;
+    return prefs.getStringList(_travelerTagsKey) ?? <String>[];
   }
 
   // Generic methods for any key-value storage

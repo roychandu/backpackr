@@ -3,7 +3,6 @@
 import 'package:backpackr/provider/purchase_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
 import '../../services/app_config_service.dart';
 import '../../common_widgets/app_colors.dart';
@@ -659,8 +658,6 @@ class _PremiumScreenState extends State<PremiumScreen> {
     try {
       await Future.delayed(const Duration(seconds: 2));
       await AuthService().updatePremiumStatus(true);
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('is_purchased', true);
 
       if (!mounted) return;
       Navigator.pop(context);

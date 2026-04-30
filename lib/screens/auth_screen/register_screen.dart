@@ -551,14 +551,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.textFieldBackground,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: TextField(
+                                TextField(
                                     controller: _fullNameController,
                                     keyboardType: TextInputType.name,
+                                    style: TextStyle(color: AppColors.textPrimary),
                                     decoration: InputDecoration(
                                       hintText: 'Full Name',
                                       hintStyle: TextStyle(
@@ -569,15 +565,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         Icons.person_outline,
                                         color: AppColors.textSecondary,
                                       ),
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 16,
-                                          ),
+                                      filled: true,
+                                      fillColor: AppColors.background2,
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 16,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.border,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.border,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.cta1,
+                                          width: 1.5,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 24),
@@ -594,14 +610,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.textFieldBackground,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: TextField(
+                                TextField(
                                     controller: _emailController,
                                     keyboardType: TextInputType.emailAddress,
+                                    style: TextStyle(color: AppColors.textPrimary),
                                     decoration: InputDecoration(
                                       hintText: 'Email',
                                       hintStyle: TextStyle(
@@ -612,15 +624,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         Icons.email_outlined,
                                         color: AppColors.textSecondary,
                                       ),
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 16,
-                                          ),
+                                      filled: true,
+                                      fillColor: AppColors.background2,
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 16,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.border,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.border,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.cta1,
+                                          width: 1.5,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 24),
@@ -637,14 +669,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.textFieldBackground,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: TextField(
+                                TextField(
                                     controller: _passwordController,
                                     obscureText: !_isPasswordVisible,
+                                    style: TextStyle(color: AppColors.textPrimary),
                                     decoration: InputDecoration(
                                       hintText: 'Password',
                                       hintStyle: TextStyle(
@@ -664,15 +692,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ),
                                         onPressed: _togglePasswordVisibility,
                                       ),
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 16,
-                                          ),
+                                      filled: true,
+                                      fillColor: AppColors.background2,
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 16,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.border,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.border,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.cta1,
+                                          width: 1.5,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 24),
@@ -689,14 +737,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.textFieldBackground,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: TextField(
+                                TextField(
                                     controller: _confirmPasswordController,
                                     obscureText: !_isConfirmPasswordVisible,
+                                    style: TextStyle(color: AppColors.textPrimary),
                                     decoration: InputDecoration(
                                       hintText: 'Confirm Password',
                                       hintStyle: TextStyle(
@@ -717,15 +761,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         onPressed:
                                             _toggleConfirmPasswordVisibility,
                                       ),
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 16,
-                                          ),
+                                      filled: true,
+                                      fillColor: AppColors.background2,
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 16,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.border,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.border,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: AppColors.cta1,
+                                          width: 1.5,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 32),

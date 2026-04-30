@@ -3,7 +3,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart' as perm;
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
 import '../../services/user_profile_service.dart';
+import '../../services/storage_service.dart';
 import '../../models/user_profile.dart';
 import '../../aws/aws_module.dart';
 
@@ -31,6 +31,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
   final _userNameController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
   final UserProfileService _profileService = UserProfileService();
+  final StorageService _storageService = StorageService();
 
   File? _selectedImage;
   String? _imageUrl;
@@ -115,6 +116,15 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
       // Then load existing profile data
       final profile = await _profileService.getCurrentUserProfile();
       if (profile != null) {
+        await _storageService.setProfileDisplayName(profile.displayName);
+        await _storageService.setProfileBio(profile.bio);
+        await _storageService.setProfileCurrentLocation(
+          profile.currentLocation,
+        );
+        await _storageService.setProfileAvatarUrl(profile.avatarUrl ?? '');
+        await _storageService.setTravelerTags(profile.tags);
+        await _storageService.setProfileSetupCompleted(profile.setupCompleted);
+
         setState(() {
           _bioController.text = profile.bio;
           _locationController.text = profile.currentLocation;
@@ -131,6 +141,29 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
           if (profile.displayName.isNotEmpty) {
             _userName = profile.displayName;
             _userNameController.text = profile.displayName;
+          }
+        });
+      } else {
+        final cachedDisplayName = await _storageService.getProfileDisplayName();
+        final cachedBio = await _storageService.getProfileBio();
+        final cachedLocation = await _storageService.getProfileCurrentLocation();
+        final cachedAvatarUrl = await _storageService.getProfileAvatarUrl();
+        final cachedTags = await _storageService.getTravelerTags();
+
+        setState(() {
+          if ((cachedDisplayName ?? '').isNotEmpty) {
+            _userName = cachedDisplayName!;
+            _userNameController.text = cachedDisplayName;
+          }
+          if ((cachedBio ?? '').isNotEmpty) {
+            _bioController.text = cachedBio!;
+          }
+          if ((cachedLocation ?? '').isNotEmpty) {
+            _locationController.text = cachedLocation!;
+          }
+          _imageUrl = cachedAvatarUrl;
+          if (cachedTags.isNotEmpty) {
+            _selectedTags = cachedTags;
           }
         });
       }
@@ -588,9 +621,12 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
       // Save profile using service
       await _profileService.setCurrentUserProfile(profile);
 
-      // Mark setup as completed
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('userSetupCompleted', true);
+      await _storageService.setProfileDisplayName(profile.displayName);
+      await _storageService.setProfileBio(profile.bio);
+      await _storageService.setProfileCurrentLocation(profile.currentLocation);
+      await _storageService.setProfileAvatarUrl(profile.avatarUrl ?? '');
+      await _storageService.setTravelerTags(profile.tags);
+      await _storageService.setProfileSetupCompleted(true);
 
       if (mounted) {
         Navigator.of(

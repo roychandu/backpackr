@@ -6,9 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:backpackr/common_widgets/app_colors.dart';
+import 'package:backpackr/services/storage_service.dart';
 import 'package:get/get.dart';
 
 /// test ids
@@ -50,6 +50,7 @@ class InAppPurchaseProvider extends ChangeNotifier {
   };
 
   final InAppPurchase _paymentService = InAppPurchase.instance;
+  final StorageService _storageService = StorageService();
   bool _serviceActive = true;
   bool isPremiumMember = false;
   List<ProductDetails> _products = [];
@@ -129,10 +130,8 @@ class InAppPurchaseProvider extends ChangeNotifier {
         .queryProductDetails(_itemIdentifiers);
     _products = productResponse.productDetails;
     debugPrint("products ${products.length}");
-    final prefs = await SharedPreferences.getInstance();
-    // Check both keys for premium status to ensure consistency
-    final isPurchased = prefs.getBool('is_purchased') ?? false;
-    final authPremiumMember = prefs.getBool('isPremiumMember') ?? false;
+    final isPurchased = await _storageService.isPurchased();
+    final authPremiumMember = await _storageService.isPremiumMember();
     isPremiumMember = isPurchased || authPremiumMember;
 
     await _finalizePendingTransactions();
@@ -227,12 +226,8 @@ class InAppPurchaseProvider extends ChangeNotifier {
   }
 
   Future<void> finalizePurchase() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setBool('is_purchased', true);
-    prefs.setBool(
-      'isPremiumMember',
-      true,
-    ); // Also set AuthService key for consistency
+    await _storageService.setPurchased(true);
+    await _storageService.setPremiumMember(true);
     isPremiumMember = true;
   }
 

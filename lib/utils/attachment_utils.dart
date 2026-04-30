@@ -1,6 +1,5 @@
 import '../../aws/aws_module.dart';
 
-/// Utility class for handling invoice attachments
 ///
 /// This class provides helper methods for working with attachments that are stored
 /// as AWS S3 keys instead of local file paths.

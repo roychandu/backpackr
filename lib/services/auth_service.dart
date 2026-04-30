@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'app_flow_service.dart';
 import 'package:flutter/material.dart';
+import 'storage_service.dart';
 
 class AuthService {
   static final AuthService _instance = AuthService._internal();
@@ -14,6 +15,7 @@ class AuthService {
   AuthService._internal();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final StorageService _storage = StorageService();
   static const String _userKey = 'user_id';
   static const String _userEmailKey = 'user_email';
   static const String _userNameKey = 'user_name';
@@ -108,18 +110,14 @@ class AuthService {
       'email': email,
       'name': name,
       'photoURL': photoURL,
-      'isPremiumMember': prefs.getBool('isPremiumMember') ?? false,
+      'isPremiumMember': await _storage.isPremiumMember(),
     };
   }
 
   // Update premium membership status
   Future<void> updatePremiumStatus(bool isPremium) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isPremiumMember', isPremium);
-    await prefs.setBool(
-      'is_purchased',
-      isPremium,
-    ); // Also set InAppPurchaseProvider key for consistency
+    await _storage.setPremiumMember(isPremium);
+    await _storage.setPurchased(isPremium);
   }
 
   // Clear user data from SharedPreferences

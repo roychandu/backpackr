@@ -41,7 +41,7 @@ void main() async {
   try {
     await Firebase.initializeApp();
     debugPrint("🔥 Firebase initialized");
-    
+
     if (kReleaseMode) {
       FirebaseAppCheck.instance.activate(
         appleProvider: AppleProvider.appAttest,
@@ -137,7 +137,6 @@ class _AppFlowWrapperState extends State<AppFlowWrapper> {
         // If user authentication state changes, determine the appropriate screen
         if (snapshot.hasData && snapshot.data != null) {
           // User is logged in - always go to home screen
-          // Business setup will be checked when user tries to create an invoice
           return const TravelersScreen();
         } else {
           // User is not logged in - check if they've seen intro

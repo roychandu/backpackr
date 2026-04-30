@@ -1,18 +1,19 @@
 // ignore_for_file: avoid_print
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'storage_service.dart';
 
 class AppFlowService {
   static final AppFlowService _instance = AppFlowService._internal();
   factory AppFlowService() => _instance;
   AppFlowService._internal();
 
+  final StorageService _storage = StorageService();
+
   // Check if user has seen intro screen
   Future<bool> hasSeenIntro() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getBool('has_seen_intro') ?? false;
+      return await _storage.hasSeenIntro();
     } catch (e) {
       print('Error checking intro status: $e');
       return false;
@@ -22,8 +23,7 @@ class AppFlowService {
   // Mark intro as seen
   Future<void> markIntroAsSeen() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('has_seen_intro', true);
+      await _storage.setIntroSeen(true);
     } catch (e) {
       print('Error marking intro as seen: $e');
     }
@@ -75,23 +75,21 @@ class AppFlowService {
   // Clear all app data (for logout)
   Future<void> clearAppData() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-
       // Get the intro status and setup completion status before clearing
-      final hasSeenIntro = prefs.getBool('has_seen_intro') ?? false;
-      final setupCompleted = prefs.getBool('userSetupCompleted') ?? false;
+      final hasSeenIntro = await _storage.hasSeenIntro();
+      final setupCompleted = await _storage.isProfileSetupCompleted();
 
       // Clear all data
-      await prefs.clear();
+      await _storage.clearAllData();
 
       // Restore the intro status so user doesn't see intro again after logout
       if (hasSeenIntro) {
-        await prefs.setBool('has_seen_intro', true);
+        await _storage.setIntroSeen(true);
       }
 
       // Restore the setup completion status so user doesn't see setup popup again after logout
       if (setupCompleted) {
-        await prefs.setBool('userSetupCompleted', true);
+        await _storage.setProfileSetupCompleted(true);
       }
     } catch (e) {
       print('Error clearing app data: $e');
