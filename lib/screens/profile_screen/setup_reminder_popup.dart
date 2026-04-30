@@ -24,18 +24,18 @@ class SetupReminderPopup extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.text1.withOpacity(0.25),
-                  AppColors.text1.withOpacity(0.15),
+                  AppColors.cardBackground.withOpacity(0.9),
+                  AppColors.cardBackground.withOpacity(0.8),
                 ],
               ),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: AppColors.text1.withOpacity(0.3),
+                color: AppColors.border,
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.text3.withOpacity(0.1),
+                  color: AppColors.shadow,
                   blurRadius: 30,
                   offset: const Offset(0, 15),
                 ),
@@ -52,9 +52,11 @@ class SetupReminderPopup extends StatelessWidget {
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
                     ),
-                    border: Border.all(
-                      color: AppColors.text1.withOpacity(0.2),
-                      width: 1,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: AppColors.border,
+                        width: 1,
+                      ),
                     ),
                   ),
                   child: Row(
@@ -196,18 +198,18 @@ class SetupReminderPopup extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: AppColors.text1.withOpacity(0.4),
+              color: AppColors.border,
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primary.withOpacity(0.2),
+                color: AppColors.shadow,
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
-          child: Icon(icon, color: AppColors.text1, size: 24),
+          child: Icon(icon, color: AppColors.primary, size: 24),
         ),
         const SizedBox(width: 12),
         Expanded(
