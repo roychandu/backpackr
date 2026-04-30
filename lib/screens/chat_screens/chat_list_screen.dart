@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/app_text_styles.dart';
 import '../../common_widgets/app_header.dart';
+import '../../common_widgets/custom_button.dart';
 import '../../models/conversation.dart';
 import '../../services/chat_service.dart';
 import '../../services/user_setup_service.dart';
@@ -268,18 +270,14 @@ class _ChatListScreenState extends State<ChatListScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
+            CustomButton(
+              text: 'Retry',
+              backgroundColor: AppColors.highlight,
+              textColor: AppColors.text3,
+              borderRadius: 25,
               onPressed: () {
                 setState(() {});
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.highlight,
-                foregroundColor: AppColors.text3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-              ),
-              child: const Text('Retry'),
             ),
           ],
         ),
@@ -325,21 +323,16 @@ class _ChatListScreenState extends State<ChatListScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton.icon(
-                  onPressed: _showCreateGroupSheet,
-                  icon: const Icon(Icons.group_add_rounded),
-                  label: const Text('Create Group'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.text1,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
+                CustomButton(
+                  text: 'Create Group',
+                  backgroundColor: AppColors.primary,
+                  icon: Icons.group_add_rounded,
+                  borderRadius: 25,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
                   ),
+                  onPressed: _showCreateGroupSheet,
                 ),
               ],
             ),

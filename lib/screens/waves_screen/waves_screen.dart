@@ -6,6 +6,7 @@ import 'dart:math' as math;
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
 import '../../common_widgets/app_header.dart';
+import '../../common_widgets/custom_button.dart';
 import '../../common_widgets/sliver_tab_delegate.dart';
 import '../../models/wave.dart';
 import '../../services/wave_service.dart';
@@ -181,22 +182,18 @@ class _WavesScreenState extends State<WavesScreen>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
+                      CustomButton(
+                        text: 'Cancel',
+                        isTextOnly: true,
+                        textColor: AppColors.text1.withOpacity(0.70),
                         onPressed: () => Navigator.pop(dialogContext, false),
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            color: AppColors.text1.withOpacity(0.70),
-                          ),
-                        ),
                       ),
                       const SizedBox(width: 8),
-                      TextButton(
+                      CustomButton(
+                        text: 'Delete',
+                        isTextOnly: true,
+                        textColor: AppColors.error,
                         onPressed: () => Navigator.pop(dialogContext, true),
-                        child: Text(
-                          'Delete',
-                          style: TextStyle(color: AppColors.error),
-                        ),
                       ),
                     ],
                   ),
@@ -420,13 +417,10 @@ class _WavesScreenState extends State<WavesScreen>
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
+          CustomButton(
+            text: 'Retry',
+            backgroundColor: AppColors.primary,
             onPressed: _loadWaves,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.text1,
-            ),
-            child: const Text('Retry'),
           ),
         ],
       ),
@@ -607,21 +601,12 @@ class _WavesScreenState extends State<WavesScreen>
             ],
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
+          CustomButton(
+            text: 'Start Chat',
+            backgroundColor: AppColors.primary,
+            isFullWidth: true,
             height: 44,
-            child: ElevatedButton(
-              onPressed: () => _startChat(wave),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.text1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: const Text('Start Chat'),
-            ),
+            onPressed: () => _startChat(wave),
           ),
         ],
       ),
@@ -697,33 +682,26 @@ class _WavesScreenState extends State<WavesScreen>
           Row(
             children: [
               Expanded(
-                child: ElevatedButton.icon(
+                child: CustomButton(
+                  text: 'Accept',
+                  backgroundColor: AppColors.highlight2,
+                  icon: Icons.verified_rounded,
+                  isFullWidth: true,
+                  height: 44,
                   onPressed: () => _acceptWave(wave),
-                  icon: const Icon(Icons.verified_rounded),
-                  label: const Text('Accept'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.highlight2,
-                    foregroundColor: AppColors.text1,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: OutlinedButton.icon(
+                child: CustomButton(
+                  text: 'Ignore',
+                  isOutlined: true,
+                  backgroundColor: AppColors.text3.withOpacity(0.54),
+                  borderColor: AppColors.text3.withOpacity(0.2),
+                  icon: Icons.close,
+                  isFullWidth: true,
+                  height: 44,
                   onPressed: () => _ignoreWave(wave),
-                  icon: const Icon(Icons.close),
-                  label: const Text('Ignore'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.text3.withOpacity(0.54),
-                    side: BorderSide(color: AppColors.text3.withOpacity(0.2)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
                 ),
               ),
             ],

@@ -13,6 +13,7 @@ import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:permission_handler/permission_handler.dart' as perm;
 import '../../common_widgets/app_text_styles.dart';
 import '../../common_widgets/app_header.dart';
+import '../../common_widgets/custom_button.dart';
 import '../../common_widgets/sliver_tab_delegate.dart';
 import '../waves_screen/waves_screen.dart';
 import '../meetups_screen/meetups_screen.dart';
@@ -251,29 +252,19 @@ class _TravelersScreenState extends State<TravelersScreen>
           style: TextStyle(fontSize: 16),
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              'Maybe Later',
-              style: TextStyle(color: AppColors.textSecondary),
-            ),
+          CustomButton(
+            text: 'Maybe Later',
+            isTextOnly: true,
+            textColor: AppColors.textSecondary,
+            onPressed: () => Navigator.of(context).pop(),
           ),
-          ElevatedButton(
+          CustomButton(
+            text: 'Open Settings',
+            backgroundColor: AppColors.primary,
             onPressed: () async {
               Navigator.of(context).pop();
-              // On Android, this will open location settings
               await perm.openAppSettings();
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.text1,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text('Open Settings'),
           ),
         ],
       ),
@@ -323,20 +314,18 @@ class _TravelersScreenState extends State<TravelersScreen>
           'The location permission allows the app to determine your current location using GPS or network services. This helps provide personalized features like suggesting nearby users, destinations, or tagging your location in posts. It enhances your overall app experience by enabling location-based recommendations.',
         ),
         actions: [
-          TextButton(
+          CustomButton(
+            text: 'Cancel',
+            isTextOnly: true,
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
           ),
-          ElevatedButton(
+          CustomButton(
+            text: 'Open Settings',
+            backgroundColor: AppColors.primary,
             onPressed: () {
               Navigator.of(context).pop();
               perm.openAppSettings();
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.text1,
-            ),
-            child: const Text('Open Settings'),
           ),
         ],
       ),
@@ -1240,18 +1229,15 @@ class _TravelersScreenState extends State<TravelersScreen>
           style: TextStyle(fontSize: 16),
         ),
         actions: [
-          TextButton(
+          CustomButton(
+            text: 'Cancel',
+            isTextOnly: true,
+            textColor: AppColors.textSecondary,
             onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: AppColors.textSecondary),
-            ),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-              foregroundColor: AppColors.text1,
-            ),
+          CustomButton(
+            text: 'Block user',
+            backgroundColor: AppColors.error,
             onPressed: () async {
               Navigator.pop(context);
               try {
@@ -1294,7 +1280,6 @@ class _TravelersScreenState extends State<TravelersScreen>
                 );
               }
             },
-            child: const Text('Block user'),
           ),
         ],
       ),
@@ -1333,18 +1318,15 @@ class _TravelersScreenState extends State<TravelersScreen>
           ],
         ),
         actions: [
-          TextButton(
+          CustomButton(
+            text: 'Cancel',
+            isTextOnly: true,
+            textColor: AppColors.textSecondary,
             onPressed: () => Navigator.pop(dlgCtx),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: AppColors.textSecondary),
-            ),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.highlight,
-              foregroundColor: AppColors.text3,
-            ),
+          CustomButton(
+            text: 'Submit',
+            backgroundColor: AppColors.highlight,
             onPressed: () async {
               final reason = reasonCtrl.text.trim();
               if (reason.isEmpty) return;
@@ -1388,7 +1370,6 @@ class _TravelersScreenState extends State<TravelersScreen>
                 );
               }
             },
-            child: const Text('Submit'),
           ),
         ],
       ),
@@ -1402,30 +1383,19 @@ class _TravelersScreenState extends State<TravelersScreen>
 
     // Require profile setup completion before allowing any wave interactions
     if (!_setupCompleted) {
-      return SizedBox(
+      return CustomButton(
+        text: 'Complete Profile to Connect',
+        backgroundColor: AppColors.primary,
+        icon: Icons.person_pin_circle,
+        isFullWidth: true,
         height: 48,
-        child: ElevatedButton.icon(
-          onPressed: () async {
-            final completed = await _checkProfileSetup();
-            if (!mounted) return;
-            if (completed) {
-              setState(() {
-                _setupCompleted = true;
-              });
-            }
-          },
-          icon: const Icon(Icons.person_pin_circle, size: 18),
-          label: const Text('Complete Profile to Connect'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.text1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-        ),
+        onPressed: () async {
+          final completed = await _checkProfileSetup();
+          if (!mounted) return;
+          if (completed) {
+            setState(() { _setupCompleted = true; });
+          }
+        },
       );
     }
 
@@ -1438,118 +1408,58 @@ class _TravelersScreenState extends State<TravelersScreen>
     }
 
     if (isChecking) {
-      return SizedBox(
+      return CustomButton(
+        text: 'Checking...',
+        backgroundColor: AppColors.primary,
+        isFullWidth: true,
         height: 48,
-        child: ElevatedButton.icon(
-          onPressed: null,
-          icon: SizedBox(
-            width: 16,
-            height: 16,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.text1),
-            ),
-          ),
-          label: const Text('Checking...'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.text1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-        ),
+        isLoading: true,
+        onPressed: null,
       );
     }
 
     // Show different button based on wave status
     if (waveStatus == 'accepted') {
-      // Mutual connection - show chat button
-      return SizedBox(
+      return CustomButton(
+        text: 'Mutual Connection',
+        backgroundColor: AppColors.highlight2,
+        icon: Icons.chat_bubble,
+        isFullWidth: true,
         height: 48,
-        child: ElevatedButton.icon(
-          onPressed: () async {
-            if (!await _checkProfileSetup()) return;
-            await _startChat(travelerId, traveler.displayName);
-          },
-          icon: const Icon(Icons.chat_bubble, size: 18),
-          label: const Text('Mutual Connection'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.highlight2,
-            foregroundColor: AppColors.text1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-        ),
+        onPressed: () async {
+          if (!await _checkProfileSetup()) return;
+          await _startChat(travelerId, traveler.displayName);
+        },
       );
     } else if (waveStatus == 'pending') {
-      // Pending wave - show disabled state
-      return SizedBox(
+      return CustomButton(
+        text: 'Wave Pending',
+        backgroundColor: AppColors.cta1,
+        icon: Icons.schedule,
+        isFullWidth: true,
         height: 48,
-        child: ElevatedButton.icon(
-          onPressed: null,
-          icon: const Icon(Icons.schedule, size: 18),
-          label: const Text('Wave Pending'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.cta1,
-            foregroundColor: AppColors.text1,
-            disabledBackgroundColor: AppColors.cta1,
-            disabledForegroundColor: AppColors.text1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-        ),
+        onPressed: null,
       );
     } else if (waveStatus == 'ignored') {
-      // Wave was ignored - show disabled state
-      return SizedBox(
+      return CustomButton(
+        text: 'Wave Ignored',
+        backgroundColor: AppColors.textSecondary,
+        icon: Icons.block,
+        isFullWidth: true,
         height: 48,
-        child: ElevatedButton.icon(
-          onPressed: null,
-          icon: const Icon(Icons.block, size: 18),
-          label: const Text('Wave Ignored'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.textSecondary,
-            foregroundColor: AppColors.text1,
-            disabledBackgroundColor: AppColors.textSecondary,
-            disabledForegroundColor: AppColors.text1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-        ),
+        onPressed: null,
       );
     } else {
-      // No wave sent - show send wave button
-      return SizedBox(
+      return CustomButton(
+        text: 'Send Wave',
+        backgroundColor: AppColors.primary,
+        icon: Icons.waving_hand,
+        isFullWidth: true,
         height: 48,
-        child: ElevatedButton.icon(
-          onPressed: () async {
-            if (!await _checkProfileSetup()) return;
-            await _sendWave(traveler);
-          },
-          icon: const Icon(Icons.waving_hand, size: 18),
-          label: const Text('Send Wave'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.text1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-        ),
+        onPressed: () async {
+          if (!await _checkProfileSetup()) return;
+          await _sendWave(traveler);
+        },
       );
     }
   }
@@ -1876,122 +1786,25 @@ class _TravelersScreenState extends State<TravelersScreen>
                         Row(
                           children: [
                             Expanded(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                    sigmaX: 5,
-                                    sigmaY: 5,
-                                  ),
-                                  child: TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(null),
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: AppColors.text1,
-                                      backgroundColor: AppColors.text1
-                                          .withOpacity(0.2),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 14,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        side: BorderSide(
-                                          color: AppColors.text1.withOpacity(
-                                            0.3,
-                                          ),
-                                          width: 1,
-                                        ),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'Cancel',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        shadows: [
-                                          Shadow(
-                                            color: AppColors.text3.withOpacity(
-                                              0.2,
-                                            ),
-                                            offset: const Offset(0, 1),
-                                            blurRadius: 1,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                              child: CustomButton(
+                                text: 'Cancel',
+                                isTextOnly: true,
+                                textColor: AppColors.text1,
+                                isFullWidth: true,
+                                height: 48,
+                                onPressed: () => Navigator.of(context).pop(null),
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
                               flex: 2,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                    sigmaX: 5,
-                                    sigmaY: 5,
-                                  ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          AppColors.primary,
-                                          AppColors.primary.withOpacity(0.8),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(12),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: AppColors.primary.withOpacity(
-                                            0.3,
-                                          ),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 4),
-                                        ),
-                                      ],
-                                    ),
-                                    child: ElevatedButton.icon(
-                                      onPressed: () => Navigator.of(
-                                        context,
-                                      ).pop(controller.text.trim()),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
-                                        foregroundColor: AppColors.text1,
-                                        shadowColor: Colors.transparent,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 14,
-                                        ),
-                                        elevation: 0,
-                                      ),
-                                      icon: const Icon(
-                                        Icons.waving_hand,
-                                        size: 20,
-                                      ),
-                                      label: Text(
-                                        'Send Wave',
-                                        style: AppTextStyles.bodyMedium
-                                            .copyWith(
-                                              color: AppColors.text1,
-                                              fontWeight: FontWeight.w700,
-                                              shadows: [
-                                                Shadow(
-                                                  color: AppColors.text3
-                                                      .withOpacity(0.2),
-                                                  offset: const Offset(0, 1),
-                                                  blurRadius: 1,
-                                                ),
-                                              ],
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                              child: CustomButton(
+                                text: 'Send Wave',
+                                icon: Icons.waving_hand,
+                                isGradient: true,
+                                isFullWidth: true,
+                                height: 48,
+                                onPressed: () => Navigator.of(context).pop(controller.text.trim()),
                               ),
                             ),
                           ],

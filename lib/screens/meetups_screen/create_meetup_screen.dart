@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/custom_button.dart';
 import '../../models/meetup.dart';
 import '../../services/meetup_service.dart';
 import '../../services/auth_service.dart';
@@ -257,28 +258,23 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(color: AppColors.cta2),
-                            ),
-                          ),
-                          child: Text(
-                            'Later',
-                            style: AppTextStyles.buttonLarge.copyWith(
-                              color: AppColors.cta2,
-                            ),
-                          ),
+                        child: CustomButton(
+                          text: 'Later',
+                          isOutlined: true,
+                          backgroundColor: AppColors.cta2,
+                          borderColor: AppColors.cta2,
+                          isFullWidth: true,
+                          height: 48,
+                          onPressed: () => Navigator.of(context).pop(),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: ElevatedButton(
+                        child: CustomButton(
+                          text: 'Accept',
+                          backgroundColor: AppColors.cta1,
+                          isFullWidth: true,
+                          height: 48,
                           onPressed: () async {
                             try {
                               Navigator.of(context).pop();
@@ -296,20 +292,6 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                               );
                             }
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.cta1,
-                            foregroundColor: AppColors.text3,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
-                          child: Text(
-                            'Accept',
-                            style: AppTextStyles.buttonLarge.copyWith(
-                              color: AppColors.text2,
-                            ),
-                          ),
                         ),
                       ),
                     ],
@@ -924,31 +906,15 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                   ),
                 ),
               ),
-              child: SizedBox(
-                width: double.infinity,
+              child: CustomButton(
+                text: _isCreating ? 'Creating...' : 'Create Meetup',
+                backgroundColor: AppColors.primary,
+                icon: Icons.check_rounded,
+                isFullWidth: true,
                 height: 50,
-                child: ElevatedButton.icon(
-                  onPressed: _isCreating ? null : _createMeetup,
-                  icon: _isCreating
-                      ? SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppColors.text1,
-                          ),
-                        )
-                      : const Icon(Icons.check_rounded),
-                  label: Text(_isCreating ? 'Creating...' : 'Create Meetup'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.text1,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    elevation: 0,
-                  ),
-                ),
+                borderRadius: 25,
+                isLoading: _isCreating,
+                onPressed: _isCreating ? null : _createMeetup,
               ),
             ),
           ],

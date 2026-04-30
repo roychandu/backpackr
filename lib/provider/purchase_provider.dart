@@ -8,6 +8,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:backpackr/common_widgets/app_colors.dart';
+import 'package:backpackr/common_widgets/custom_button.dart';
 import 'package:backpackr/services/storage_service.dart';
 import 'package:get/get.dart';
 
@@ -81,8 +82,10 @@ class InAppPurchaseProvider extends ChangeNotifier {
                 "Some error occurred${kDebugMode ? (error ?? errorInfo ?? "") : ""}",
               ),
               actions: [
-                TextButton(
-                  child: Text("OK", style: TextStyle(color: AppColors.info)),
+                CustomButton(
+                  text: 'OK',
+                  isTextOnly: true,
+                  textColor: AppColors.info,
                   onPressed: () {
                     Get.back();
                   },
@@ -315,8 +318,10 @@ class InAppPurchaseProvider extends ChangeNotifier {
               title: const Text("Purchase Restored"),
               content: const Text("Your purchases are restored."),
               actions: [
-                TextButton(
-                  child: Text("OK", style: TextStyle(color: AppColors.info)),
+                CustomButton(
+                  text: 'OK',
+                  isTextOnly: true,
+                  textColor: AppColors.info,
                   onPressed: () {
                     Get.back();
                   },
@@ -345,8 +350,10 @@ class InAppPurchaseProvider extends ChangeNotifier {
               title: const Text("Purchase Successful"),
               content: const Text("You have purchased the premium membership."),
               actions: [
-                TextButton(
-                  child: Text("OK", style: TextStyle(color: AppColors.info)),
+                CustomButton(
+                  text: 'OK',
+                  isTextOnly: true,
+                  textColor: AppColors.info,
                   onPressed: () {
                     Get.back();
                   },

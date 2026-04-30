@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/custom_button.dart';
 import '../../models/meetup.dart';
 import '../../services/meetup_service.dart';
 import '../../utils/error_handler.dart';
@@ -285,14 +286,16 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
           'Are you sure you want to remove $userName from this meetup?',
         ),
         actions: [
-          TextButton(
+          CustomButton(
+            text: 'Cancel',
+            isTextOnly: true,
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
           ),
-          TextButton(
+          CustomButton(
+            text: 'Remove',
+            isTextOnly: true,
+            textColor: AppColors.error,
             onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Remove'),
           ),
         ],
       ),
@@ -418,23 +421,16 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
           style: TextStyle(color: AppColors.text1.withOpacity(0.70)),
         ),
         actions: [
-          TextButton(
+          CustomButton(
+            text: 'Cancel',
+            isTextOnly: true,
+            textColor: AppColors.text1.withOpacity(0.70),
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: AppColors.text1.withOpacity(0.70)),
-            ),
           ),
-          ElevatedButton(
+          CustomButton(
+            text: 'Delete',
+            backgroundColor: AppColors.error,
             onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-              foregroundColor: AppColors.text1,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text('Delete'),
           ),
         ],
       ),
@@ -1817,96 +1813,53 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
       child: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(20),
-          child: SizedBox(
-            width: double.infinity,
+          child: CustomButton(
+            text: isHost
+                ? 'You\'re the Host'
+                : isPast
+                ? 'Event Ended'
+                : isAttending
+                ? 'Leave Meetup'
+                : hasPendingRequest
+                ? 'Cancel Request'
+                : isFull
+                ? 'Meetup is Full'
+                : 'Request to Join',
+            icon: isHost
+                ? Icons.star_rounded
+                : isPast
+                ? Icons.event_busy_rounded
+                : isAttending
+                ? Icons.exit_to_app_rounded
+                : hasPendingRequest
+                ? Icons.cancel_rounded
+                : isFull
+                ? Icons.block_rounded
+                : Icons.send_rounded,
+            backgroundColor: isAttending
+                ? AppColors.cta1
+                : hasPendingRequest
+                ? AppColors.cta1
+                : isHost || isFull || isPast
+                ? AppColors.textSecondary.withOpacity(0.6)
+                : _getCategoryColor(_currentMeetup.category),
+            isFullWidth: true,
             height: 56,
-            child: ElevatedButton(
-              onPressed: _isProcessing
-                  ? null
-                  : isHost
-                  ? null
-                  : isPast
-                  ? null
-                  : isAttending
-                  ? _leaveMeetup
-                  : hasPendingRequest
-                  ? _cancelJoinRequest
-                  : isFull
-                  ? null
-                  : _requestToJoinMeetup,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isAttending
-                    ? AppColors.cta1
-                    : hasPendingRequest
-                    ? AppColors.cta1
-                    : isHost || isFull || isPast
-                    ? AppColors.textSecondary.withOpacity(0.6)
-                    : _getCategoryColor(_currentMeetup.category),
-                foregroundColor: AppColors.text1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                elevation: 0,
-                shadowColor:
-                    (isAttending || hasPendingRequest
-                            ? AppColors.cta1
-                            : isPast
-                            ? AppColors.textSecondary
-                            : _getCategoryColor(_currentMeetup.category))
-                        .withOpacity(0.3),
-                disabledBackgroundColor: AppColors.textSecondary.withOpacity(
-                  0.4,
-                ),
-                disabledForegroundColor: AppColors.textSecondary,
-              ),
-              child: _isProcessing
-                  ? SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.text1,
-                      ),
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          isHost
-                              ? Icons.star_rounded
-                              : isPast
-                              ? Icons.event_busy_rounded
-                              : isAttending
-                              ? Icons.exit_to_app_rounded
-                              : hasPendingRequest
-                              ? Icons.cancel_rounded
-                              : isFull
-                              ? Icons.block_rounded
-                              : Icons.send_rounded,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          isHost
-                              ? 'You\'re the Host'
-                              : isPast
-                              ? 'Event Ended'
-                              : isAttending
-                              ? 'Leave Meetup'
-                              : hasPendingRequest
-                              ? 'Cancel Request'
-                              : isFull
-                              ? 'Meetup is Full'
-                              : 'Request to Join',
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.3,
-                          ),
-                        ),
-                      ],
-                    ),
-            ),
+            borderRadius: 16,
+            isLoading: _isProcessing,
+            onPressed: _isProcessing
+                ? null
+                : isHost
+                ? null
+                : isPast
+                ? null
+                : isAttending
+                ? _leaveMeetup
+                : hasPendingRequest
+                ? _cancelJoinRequest
+                : isFull
+                ? null
+                : _requestToJoinMeetup,
           ),
         ),
       ),

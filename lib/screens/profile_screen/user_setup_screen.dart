@@ -11,6 +11,7 @@ import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:permission_handler/permission_handler.dart' as perm;
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/custom_button.dart';
 import '../../services/user_profile_service.dart';
 import '../../services/storage_service.dart';
 import '../../models/user_profile.dart';
@@ -376,27 +377,13 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
             ],
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: onPrimary,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.text1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-              ),
-              child: Text(
-                primaryLabel,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                ),
-              ),
-            ),
+          CustomButton(
+            text: primaryLabel,
+            backgroundColor: AppColors.primary,
+            isFullWidth: true,
+            borderRadius: 10,
+            height: 40,
+            onPressed: onPrimary,
           ),
         ],
       ),
@@ -719,34 +706,13 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
           child: SizedBox(
             width: double.infinity,
             height: 44,
-            child: ElevatedButton(
+            child: CustomButton(
+              text: 'Save Profile',
+              backgroundColor: AppColors.primary,
+              isFullWidth: true,
+              borderRadius: 12,
+              isLoading: _isSaving,
               onPressed: _isSaving ? null : _saveProfile,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.text1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: _isSaving
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.text1,
-                        ),
-                      ),
-                    )
-                  : Text(
-                      'Save Profile',
-                      style: AppTextStyles.bodyLarge.copyWith(
-                        color: AppColors.text1,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
             ),
           ),
         ),
@@ -1081,17 +1047,14 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
               ),
             ),
             const SizedBox(width: 8),
-            ElevatedButton(
+            CustomButton(
+              text: '',
+              icon: Icons.add,
+              backgroundColor: AppColors.primary,
+              borderRadius: 12,
+              width: 48,
+              height: 48,
               onPressed: _addDestination,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.text1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.all(12),
-              ),
-              child: const Icon(Icons.add, size: 20),
             ),
           ],
         ),

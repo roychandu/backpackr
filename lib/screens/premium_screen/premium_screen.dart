@@ -1,5 +1,4 @@
-// ignore_for_file: unnecessary_to_list_in_spreads, deprecated_member_use
-
+import 'package:backpackr/common_widgets/custom_button.dart';
 import 'package:backpackr/provider/purchase_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -567,60 +566,28 @@ class _PremiumScreenState extends State<PremiumScreen> {
             ),
 
           if (!provider.isPremiumMember) ...[
-            SizedBox(
-              width: double.infinity,
+            CustomButton(
+              text: 'Get Premium for \$0.99',
+              isGradient: true,
+              isFullWidth: true,
               height: 56,
-              child: ElevatedButton(
-                onPressed: isLoading
-                    ? null
-                    : () async {
-                        setState(() => isLoading = true);
-                        provider.buyNONConsumableInAppPurchase();
-                        // _handleUpgrade();
-                        setState(() => isLoading = false);
-                      },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  padding: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [AppColors.cta1, AppColors.cta2],
-                    ),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: isLoading
-                        ? SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: AppColors.text1,
-                              strokeWidth: 2.5,
-                            ),
-                          )
-                        : Text(
-                            'Get Premium for \$0.99',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.text1,
-                            ),
-                          ),
-                  ),
-                ),
-              ),
+              isLoading: isLoading,
+              onPressed: isLoading
+                  ? null
+                  : () async {
+                      setState(() => isLoading = true);
+                      provider.buyNONConsumableInAppPurchase();
+                      setState(() => isLoading = false);
+                    },
             ),
             const SizedBox(height: 12),
           ],
 
-          TextButton(
+          CustomButton(
+            text: 'Restore Purchases',
+            isTextOnly: true,
+            textColor: AppColors.text2,
+            isLoading: isLoading,
             onPressed: isLoading
                 ? null
                 : () {
@@ -628,14 +595,6 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     provider.restorePurchases();
                     setState(() => isLoading = false);
                   },
-            child: Text(
-              'Restore Purchases',
-              style: TextStyle(
-                color: AppColors.text2,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
           ),
         ],
       ),
@@ -693,7 +652,10 @@ class _PremiumScreenState extends State<PremiumScreen> {
           actions: [
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child: CustomButton(
+                text: 'Get Started',
+                backgroundColor: AppColors.primary,
+                isFullWidth: true,
                 onPressed: () {
                   Navigator.pop(context);
                   final provider = Provider.of<InAppPurchaseProvider>(
@@ -703,19 +665,6 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   provider.isPremiumMember = true;
                   Navigator.pop(context);
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  'Get Started',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.text1,
-                  ),
-                ),
               ),
             ),
           ],
@@ -746,15 +695,11 @@ class _PremiumScreenState extends State<PremiumScreen> {
             textAlign: TextAlign.center,
           ),
           actions: [
-            TextButton(
+            CustomButton(
+              text: 'OK',
+              isTextOnly: true,
+              textColor: AppColors.cta1,
               onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'OK',
-                style: TextStyle(
-                  color: AppColors.cta1,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
             ),
           ],
         ),

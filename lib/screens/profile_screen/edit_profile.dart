@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:backpackr/aws/aws_module.dart';
+import 'package:backpackr/common_widgets/custom_button.dart';
 import '../../common_widgets/app_colors.dart';
 import '../../services/auth_service.dart';
 import '../../services/storage_service.dart';
@@ -341,50 +342,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
+            child: CustomButton(
+              text: primaryLabel,
+              backgroundColor: AppColors.primary,
+              isFullWidth: true,
+              borderRadius: 10,
+              height: 40,
               onPressed: onPrimary,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.text1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-              ),
-              child: Text(
-                primaryLabel,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                ),
-              ),
             ),
           ),
           if (secondaryLabel != null && onSecondary != null) ...[
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
-              child: OutlinedButton(
+              child: CustomButton(
+                text: secondaryLabel,
+                isOutlined: true,
+                backgroundColor: AppColors.text2,
+                isFullWidth: true,
+                borderRadius: 10,
+                height: 40,
                 onPressed: onSecondary,
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    color: AppColors.text2.withOpacity(0.5),
-                    width: 1.2,
-                  ),
-                  foregroundColor: AppColors.text2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                ),
-                child: Text(
-                  secondaryLabel,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                  ),
-                ),
               ),
             ),
           ],
@@ -698,38 +676,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     const SizedBox(height: 40),
 
                     // Save Button
-                    SizedBox(
-                      width: double.infinity,
+                    CustomButton(
+                      text: 'Save',
+                      backgroundColor: AppColors.primary,
+                      isFullWidth: true,
                       height: 50,
-                      child: ElevatedButton(
-                        onPressed: _isLoading ? null : _saveProfile,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: AppColors.text1,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: _isLoading
-                            ? SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    AppColors.text1,
-                                  ),
-                                ),
-                              )
-                            : const Text(
-                                'Save',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                      ),
+                      isLoading: _isLoading,
+                      onPressed: _isLoading ? null : _saveProfile,
                     ),
                   ],
                 ),

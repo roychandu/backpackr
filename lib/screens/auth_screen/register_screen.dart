@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:backpackr/screens/auth_screen/login_screen.dart';
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/custom_button.dart';
 import '../../services/auth_service.dart';
 import '../../utils/error_handler.dart';
 
@@ -299,47 +300,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: TextButton(
+                        child: CustomButton(
+                          text: 'Later',
+                          isOutlined: true,
+                          backgroundColor: AppColors.cta2,
+                          isFullWidth: true,
+                          height: 44,
                           onPressed: () {
                             Navigator.of(context).pop();
                             _proceedWithRegistration(eulaAccepted: false);
                           },
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(color: AppColors.cta2),
-                            ),
-                          ),
-                          child: Text(
-                            'Later',
-                            style: AppTextStyles.buttonLarge.copyWith(
-                              color: AppColors.cta2,
-                            ),
-                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: ElevatedButton(
+                        child: CustomButton(
+                          text: 'Accept',
+                          backgroundColor: AppColors.cta1,
+                          isFullWidth: true,
+                          height: 44,
                           onPressed: () {
                             Navigator.of(context).pop();
                             _proceedWithRegistration(eulaAccepted: true);
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.cta1,
-                            foregroundColor: AppColors.text3,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
-                          child: Text(
-                            'Accept',
-                            style: AppTextStyles.buttonLarge.copyWith(
-                              color: AppColors.text2,
-                            ),
-                          ),
                         ),
                       ),
                     ],
@@ -795,39 +778,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             const SizedBox(height: 32),
 
                             // Register Button
-                            SizedBox(
-                              width: double.infinity,
+                            CustomButton(
+                              text: 'Register',
+                              backgroundColor: AppColors.cta1,
+                              isFullWidth: true,
                               height: 50,
-                              child: ElevatedButton(
-                                onPressed: _isAnyLoading
-                                    ? null
-                                    : _handleRegister,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.cta1,
-                                  foregroundColor: AppColors.text2,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  elevation: 0,
-                                ),
-                                child: _isRegisterLoading
-                                    ? SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                AppColors.text2,
-                                              ),
-                                        ),
-                                      )
-                                    : Text(
-                                        'Register',
-                                        style: AppTextStyles.buttonLarge
-                                            .copyWith(color: AppColors.text2),
-                                      ),
-                              ),
+                              isLoading: _isRegisterLoading,
+                              onPressed: _isAnyLoading ? null : _handleRegister,
                             ),
                             const SizedBox(height: 16),
 
@@ -862,105 +819,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             const SizedBox(height: 16),
 
                             // Sign up with Apple Button
-                            SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: ElevatedButton.icon(
-                                onPressed: _isAnyLoading
-                                    ? null
-                                    : _handleAppleSignUp,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.appleButton,
-                                  foregroundColor: AppColors.appleButtonText,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
-                                ),
-                                icon: _isAppleLoading
-                                    ? SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                AppColors.text2,
-                                              ),
-                                        ),
-                                      )
-                                    : Icon(
-                                        Icons.apple,
-                                        size: 24,
-                                        color: AppColors.text2,
-                                      ),
-                                label: _isAppleLoading
-                                    ? Text(
-                                        'Signing up...',
-                                        style: AppTextStyles.buttonLarge
-                                            .copyWith(color: AppColors.text2),
-                                      )
-                                    : Text(
-                                        'Sign up with Apple',
-                                        style: AppTextStyles.buttonLarge
-                                            .copyWith(color: AppColors.text2),
-                                      ),
+                            CustomButton(
+                              text: _isAppleLoading ? 'Signing up...' : 'Sign up with Apple',
+                              backgroundColor: AppColors.appleButton,
+                              textColor: AppColors.appleButtonText,
+                              iconWidget: Icon(
+                                Icons.apple,
+                                size: 24,
+                                color: AppColors.appleButtonText,
                               ),
+                              isFullWidth: true,
+                              height: 50,
+                              isLoading: _isAppleLoading,
+                              onPressed: _isAnyLoading ? null : _handleAppleSignUp,
                             ),
                             const SizedBox(height: 16),
 
                             // Register with Google Button
-                            SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: ElevatedButton.icon(
-                                onPressed: _isAnyLoading
-                                    ? null
-                                    : _handleGoogleSignIn,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.googleButton,
-                                  foregroundColor: AppColors.googleButtonText,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  elevation: 0,
-                                ),
-                                icon: _isGoogleLoading
-                                    ? const SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                AppColors.cta1,
-                                              ),
-                                        ),
-                                      )
-                                    : Image.asset(
-                                        'assets/icons/google-icon.png',
-                                        height: 24,
-                                        width: 24,
-                                      ),
-                                label: _isGoogleLoading
-                                    ? Text(
-                                        'Registering...',
-                                        style: AppTextStyles.buttonLarge
-                                            .copyWith(
-                                              color: AppColors.textPrimary,
-                                            ),
-                                      )
-                                    : Text(
-                                        'Register with Google',
-                                        style: AppTextStyles.buttonLarge
-                                            .copyWith(
-                                              color: AppColors.textPrimary,
-                                            ),
-                                      ),
+                            CustomButton(
+                              text: _isGoogleLoading ? 'Registering...' : 'Register with Google',
+                              backgroundColor: AppColors.googleButton,
+                              textColor: AppColors.googleButtonText,
+                              iconWidget: Image.asset(
+                                'assets/icons/google-icon.png',
+                                height: 24,
+                                width: 24,
                               ),
+                              isFullWidth: true,
+                              height: 50,
+                              isLoading: _isGoogleLoading,
+                              onPressed: _isAnyLoading ? null : _handleGoogleSignIn,
                             ),
                             const SizedBox(height: 24),
 

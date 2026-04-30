@@ -7,6 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:math' as math;
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/custom_button.dart';
 import '../../models/meetup.dart';
 import '../../services/meetup_service.dart';
 import '../../services/traveler_service.dart';
@@ -521,14 +522,11 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              ElevatedButton.icon(
+              CustomButton(
+                text: idx == 0 ? 'Create your Meetup' : 'Create Meetup',
+                backgroundColor: AppColors.primary,
+                icon: Icons.add,
                 onPressed: _showCreateMeetupDialog,
-                icon: const Icon(Icons.add),
-                label: Text(idx == 0 ? 'Create your Meetup' : 'Create Meetup'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.text1,
-                ),
               ),
             ],
           ),
@@ -615,18 +613,13 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                     ),
                   ),
                   const Spacer(),
-                  TextButton(
+                  CustomButton(
+                    text: 'Clear All',
+                    isTextOnly: true,
+                    textColor: AppColors.primary,
                     onPressed: () async {
                       await _meetupService.clearMeetupNotifications();
                     },
-                    child: Text(
-                      'Clear All',
-                      style: TextStyle(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -1027,53 +1020,38 @@ class _MeetupsScreenState extends State<MeetupsScreen>
               ],
             ),
             const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
+            CustomButton(
+              text: isHost
+                  ? 'You\'re the host'
+                  : isPast
+                  ? 'Event ended'
+                  : isAttending
+                  ? 'Leave Meetup'
+                  : hasPendingRequest
+                  ? 'Request Sent (Cancel)'
+                  : isFull
+                  ? 'Full'
+                  : 'Request to Join',
+              backgroundColor: isAttending
+                  ? AppColors.textSecondary
+                  : isPast
+                  ? AppColors.textSecondary
+                  : hasPendingRequest
+                  ? AppColors.cta1
+                  : AppColors.primary,
+              isFullWidth: true,
               height: 44,
-              child: ElevatedButton(
-                onPressed: isHost
-                    ? null
-                    : isPast
-                    ? null
-                    : isAttending
-                    ? () => _leaveMeetup(meetup)
-                    : hasPendingRequest
-                    ? () => _cancelJoinRequest(meetup)
-                    : isFull
-                    ? null
-                    : () => _requestToJoinMeetup(meetup),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isAttending
-                      ? AppColors.textSecondary
-                      : isPast
-                      ? AppColors.textSecondary
-                      : hasPendingRequest
-                      ? AppColors.cta1
-                      : AppColors.primary,
-                  foregroundColor: AppColors.text1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                  disabledBackgroundColor: AppColors.textSecondary.withOpacity(
-                    0.4,
-                  ),
-                  disabledForegroundColor: AppColors.textSecondary,
-                ),
-                child: Text(
-                  isHost
-                      ? 'You\'re the host'
-                      : isPast
-                      ? 'Event ended'
-                      : isAttending
-                      ? 'Leave Meetup'
-                      : hasPendingRequest
-                      ? 'Request Sent (Cancel)'
-                      : isFull
-                      ? 'Full'
-                      : 'Request to Join',
-                ),
-              ),
+              onPressed: isHost
+                  ? null
+                  : isPast
+                  ? null
+                  : isAttending
+                  ? () => _leaveMeetup(meetup)
+                  : hasPendingRequest
+                  ? () => _cancelJoinRequest(meetup)
+                  : isFull
+                  ? null
+                  : () => _requestToJoinMeetup(meetup),
             ),
           ],
         ),
@@ -1107,15 +1085,17 @@ class _MeetupsScreenState extends State<MeetupsScreen>
             ],
           ),
           actions: [
-            TextButton(
+            CustomButton(
+              text: 'Cancel',
+              isTextOnly: true,
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
             ),
-            ElevatedButton(
+            CustomButton(
+              text: 'Submit',
+              backgroundColor: AppColors.primary,
               onPressed: () {
                 Navigator.pop(context, reasonController.text.trim());
               },
-              child: const Text('Submit'),
             ),
           ],
         );
@@ -1168,13 +1148,15 @@ class _MeetupsScreenState extends State<MeetupsScreen>
           'You will no longer see meetups from this user. Continue?',
         ),
         actions: [
-          TextButton(
+          CustomButton(
+            text: 'Cancel',
+            isTextOnly: true,
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
           ),
-          ElevatedButton(
+          CustomButton(
+            text: 'Block',
+            backgroundColor: AppColors.error,
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Block'),
           ),
         ],
       ),

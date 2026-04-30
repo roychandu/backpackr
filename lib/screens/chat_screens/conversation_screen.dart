@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/custom_button.dart';
 import '../../models/conversation.dart';
 import '../../models/chat_message.dart';
 import '../../services/chat_service.dart';
@@ -545,40 +546,27 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: ElevatedButton(
+                      child: CustomButton(
+                        text: primaryLabel,
+                        backgroundColor: color,
+                        isFullWidth: true,
+                        borderRadius: 10,
+                        height: 44,
                         onPressed: onPrimary,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: color,
-                          foregroundColor: AppColors.text1,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 0,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                        child: Text(
-                          primaryLabel,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
                       ),
                     ),
                     if (secondaryLabel != null && onSecondary != null) ...[
                       const SizedBox(width: 10),
                       Expanded(
-                        child: OutlinedButton(
+                        child: CustomButton(
+                          text: secondaryLabel,
+                          isOutlined: true,
+                          backgroundColor: color,
+                          borderColor: color,
+                          isFullWidth: true,
+                          borderRadius: 10,
+                          height: 44,
                           onPressed: onSecondary,
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: color, width: 1.2),
-                            foregroundColor: color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
-                          child: Text(
-                            secondaryLabel,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
                         ),
                       ),
                     ],
@@ -819,25 +807,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
+                      CustomButton(
+                        text: 'Cancel',
+                        isTextOnly: true,
+                        textColor: AppColors.text1.withOpacity(0.70),
                         onPressed: () => Navigator.pop(dialogContext),
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            color: AppColors.text1.withOpacity(0.70),
-                          ),
-                        ),
                       ),
                       const SizedBox(width: 8),
-                      TextButton(
+                      CustomButton(
+                        text: 'Block',
+                        isTextOnly: true,
+                        textColor: AppColors.error,
                         onPressed: () {
                           Navigator.pop(dialogContext);
                           _blockUser();
                         },
-                        child: Text(
-                          'Block',
-                          style: TextStyle(color: AppColors.error),
-                        ),
                       ),
                     ],
                   ),
@@ -905,25 +889,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
+                      CustomButton(
+                        text: 'Cancel',
+                        isTextOnly: true,
+                        textColor: AppColors.text1.withOpacity(0.70),
                         onPressed: () => Navigator.pop(dialogContext),
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            color: AppColors.text1.withOpacity(0.70),
-                          ),
-                        ),
                       ),
                       const SizedBox(width: 8),
-                      TextButton(
+                      CustomButton(
+                        text: 'Delete',
+                        isTextOnly: true,
+                        textColor: AppColors.error,
                         onPressed: () {
                           Navigator.pop(dialogContext);
                           _deleteConversation();
                         },
-                        child: Text(
-                          'Delete',
-                          style: TextStyle(color: AppColors.error),
-                        ),
                       ),
                     ],
                   ),
@@ -1178,25 +1158,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
+                      CustomButton(
+                        text: 'Cancel',
+                        isTextOnly: true,
+                        textColor: AppColors.text1.withOpacity(0.70),
                         onPressed: () => Navigator.pop(dialogContext),
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            color: AppColors.text1.withOpacity(0.70),
-                          ),
-                        ),
                       ),
                       const SizedBox(width: 8),
-                      TextButton(
+                      CustomButton(
+                        text: 'Leave',
+                        isTextOnly: true,
+                        textColor: AppColors.cta1,
                         onPressed: () async {
                           Navigator.pop(dialogContext);
                           await _leaveGroup();
                         },
-                        child: const Text(
-                          'Leave',
-                          style: TextStyle(color: AppColors.cta1),
-                        ),
                       ),
                     ],
                   ),

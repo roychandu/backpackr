@@ -285,16 +285,11 @@ class _IntroScreenState extends State<IntroScreen>
           if (_currentPage < _pages.length - 1)
             Padding(
               padding: const EdgeInsets.only(top: 16),
-              child: TextButton(
+              child: CustomButton(
+                text: 'Skip',
+                isTextOnly: true,
+                textColor: AppColors.text2,
                 onPressed: _skipToAuth,
-                child: Text(
-                  'Skip',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.text2,
-                    decoration: TextDecoration.underline,
-                    fontSize: 14,
-                  ),
-                ),
               ),
             ),
         ],

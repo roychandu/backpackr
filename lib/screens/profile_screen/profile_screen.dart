@@ -11,6 +11,7 @@ import 'package:backpackr/provider/purchase_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import '../../common_widgets/app_colors.dart';
+import '../../common_widgets/custom_button.dart';
 import '../../services/auth_service.dart';
 import '../../services/theme_service.dart';
 
@@ -379,17 +380,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
+                      CustomButton(
+                        text: 'Cancel',
+                        isTextOnly: true,
+                        textColor: AppColors.text1.withOpacity(0.70),
                         onPressed: () => Navigator.pop(dialogContext),
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            color: AppColors.text1.withOpacity(0.70),
-                          ),
-                        ),
                       ),
                       const SizedBox(width: 8),
-                      TextButton(
+                      CustomButton(
+                        text: 'Sign Out',
+                        isTextOnly: true,
+                        textColor: AppColors.error,
                         onPressed: () async {
                           Navigator.pop(dialogContext);
                           try {
@@ -412,10 +413,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }
                           }
                         },
-                        child: Text(
-                          'Sign Out',
-                          style: TextStyle(color: AppColors.error),
-                        ),
                       ),
                     ],
                   ),
@@ -439,19 +436,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: TextStyle(color: AppColors.text1.withOpacity(0.70)),
         ),
         actions: [
-          TextButton(
+          CustomButton(
+            text: 'Cancel',
+            isTextOnly: true,
+            textColor: AppColors.text1.withOpacity(0.70),
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: AppColors.text1.withOpacity(0.70)),
-            ),
           ),
-          TextButton(
+          CustomButton(
+            text: 'Delete',
+            isTextOnly: true,
+            textColor: AppColors.error,
             onPressed: () async {
               Navigator.pop(dialogContext);
               await _deleteAccount();
             },
-            child: Text('Delete', style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),

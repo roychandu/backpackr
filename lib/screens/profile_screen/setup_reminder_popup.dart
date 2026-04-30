@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/custom_button.dart';
 
 class SetupReminderPopup extends StatelessWidget {
   const SetupReminderPopup({super.key});
@@ -147,106 +148,25 @@ class SetupReminderPopup extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                                child: TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: AppColors.text1,
-                                    backgroundColor: AppColors.text1.withOpacity(
-                                      0.2,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      side: BorderSide(
-                                        color: AppColors.text1.withOpacity(0.3),
-                                        width: 1,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Later',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      shadows: [
-                                        Shadow(
-                                          color: AppColors.text3.withOpacity(0.2),
-                                          offset: const Offset(0, 1),
-                                          blurRadius: 1,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            child: CustomButton(
+                              text: 'Later',
+                              isTextOnly: true,
+                              backgroundColor: AppColors.text1,
+                              textColor: AppColors.text1,
+                              isFullWidth: true,
+                              height: 44,
+                              onPressed: () => Navigator.of(context).pop(false),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             flex: 2,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        AppColors.primary,
-                                        AppColors.primary.withOpacity(0.8),
-                                      ],
-                                    ),
-                                    borderRadius: BorderRadius.circular(12),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.primary.withOpacity(
-                                          0.3,
-                                        ),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: ElevatedButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(true),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.transparent,
-                                      foregroundColor: AppColors.text1,
-                                      shadowColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 12,
-                                      ),
-                                      elevation: 0,
-                                    ),
-                                    child: Text(
-                                      'Setup Profile',
-                                      style: AppTextStyles.bodyMedium.copyWith(
-                                        color: AppColors.text1,
-                                        fontWeight: FontWeight.w700,
-                                        shadows: [
-                                          Shadow(
-                                            color: AppColors.text3.withOpacity(
-                                              0.2,
-                                            ),
-                                            offset: const Offset(0, 1),
-                                            blurRadius: 1,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            child: CustomButton(
+                              text: 'Setup Profile',
+                              isGradient: true,
+                              isFullWidth: true,
+                              height: 44,
+                              onPressed: () => Navigator.of(context).pop(true),
                             ),
                           ),
                         ],

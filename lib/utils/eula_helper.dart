@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../common_widgets/app_colors.dart';
 import '../common_widgets/app_text_styles.dart';
+import '../common_widgets/custom_button.dart';
 import '../services/auth_service.dart';
 
 class EulaHelper {
@@ -79,45 +80,24 @@ class EulaHelper {
                       Row(
                         children: [
                           Expanded(
-                            child: TextButton(
+                            child: CustomButton(
+                              text: 'Cancel',
+                              isOutlined: true,
+                              backgroundColor: AppColors.primary,
+                              borderColor: AppColors.primary,
+                              isFullWidth: true,
+                              height: 48,
                               onPressed: () => Navigator.of(context).pop(false),
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  side: BorderSide(color: AppColors.primary),
-                                ),
-                              ),
-                              child: Text(
-                                'Cancel',
-                                style: AppTextStyles.buttonLarge.copyWith(
-                                  color: AppColors.primary,
-                                ),
-                              ),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: ElevatedButton(
+                            child: CustomButton(
+                              text: 'Accept',
+                              backgroundColor: AppColors.primary,
+                              isFullWidth: true,
+                              height: 48,
                               onPressed: () => Navigator.of(context).pop(true),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                foregroundColor: AppColors.text1,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                ),
-                              ),
-                              child: Text(
-                                'Accept',
-                                style: AppTextStyles.buttonLarge.copyWith(
-                                  color: AppColors.text1,
-                                ),
-                              ),
                             ),
                           ),
                         ],

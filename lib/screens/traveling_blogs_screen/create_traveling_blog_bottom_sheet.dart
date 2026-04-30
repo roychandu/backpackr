@@ -6,6 +6,7 @@ import 'dart:ui' as ui;
 import 'package:image_picker/image_picker.dart';
 import '../../common_widgets/app_colors.dart';
 import '../../common_widgets/app_text_styles.dart';
+import '../../common_widgets/custom_button.dart';
 import '../../services/blog_service.dart';
 import '../../utils/error_handler.dart';
 import '../../services/auth_service.dart';
@@ -269,28 +270,23 @@ class _CreateTravelingBlogBottomSheetState
                   child: Row(
                     children: [
                       Expanded(
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(color: AppColors.cta2),
-                            ),
-                          ),
-                          child: Text(
-                            'Later',
-                            style: AppTextStyles.buttonLarge.copyWith(
-                              color: AppColors.cta2,
-                            ),
-                          ),
+                        child: CustomButton(
+                          text: 'Later',
+                          isOutlined: true,
+                          backgroundColor: AppColors.cta2,
+                          borderColor: AppColors.cta2,
+                          isFullWidth: true,
+                          height: 48,
+                          onPressed: () => Navigator.of(context).pop(),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: ElevatedButton(
+                        child: CustomButton(
+                          text: 'Accept',
+                          backgroundColor: AppColors.cta1,
+                          isFullWidth: true,
+                          height: 48,
                           onPressed: () async {
                             try {
                               Navigator.of(context).pop();
@@ -308,20 +304,6 @@ class _CreateTravelingBlogBottomSheetState
                               );
                             }
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.cta1,
-                            foregroundColor: AppColors.text3,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
-                          child: Text(
-                            'Accept',
-                            style: AppTextStyles.buttonLarge.copyWith(
-                              color: AppColors.text2,
-                            ),
-                          ),
                         ),
                       ),
                     ],
@@ -707,53 +689,25 @@ class _CreateTravelingBlogBottomSheetState
             ],
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: onPrimary,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.text1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-              ),
-              child: Text(
-                primaryLabel,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                ),
-              ),
-            ),
+          CustomButton(
+            text: primaryLabel,
+            backgroundColor: AppColors.primary,
+            isFullWidth: true,
+            borderRadius: 10,
+            height: 40,
+            onPressed: onPrimary,
           ),
           if (secondaryLabel != null && onSecondary != null) ...[
             const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: onSecondary,
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    color: AppColors.text2.withOpacity(0.5),
-                    width: 1.2,
-                  ),
-                  foregroundColor: AppColors.text2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                ),
-                child: Text(
-                  secondaryLabel,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
+            CustomButton(
+              text: secondaryLabel,
+              isOutlined: true,
+              backgroundColor: AppColors.text2,
+              borderColor: AppColors.text2.withOpacity(0.5),
+              isFullWidth: true,
+              borderRadius: 10,
+              height: 40,
+              onPressed: onSecondary,
             ),
           ],
         ],
@@ -1327,53 +1281,15 @@ class _CreateTravelingBlogBottomSheetState
                               ),
                             ),
                           ),
-                          child: SizedBox(
-                            width: double.infinity,
+                          child: CustomButton(
+                            text: _isCreating ? 'Creating...' : 'Create Blog Post',
+                            backgroundColor: AppColors.primary,
+                            icon: Icons.check_rounded,
+                            isFullWidth: true,
                             height: 50,
-                            child: ElevatedButton(
-                              onPressed: _isCreating ? null : _createBlog,
-                              child: _isCreating
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            color: AppColors.text1,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Text(
-                                          'Creating...',
-                                          style: TextStyle(
-                                            color: AppColors.text1,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(Icons.check_rounded),
-                                        const SizedBox(width: 8),
-                                        const Text('Create Blog Post'),
-                                      ],
-                                    ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                foregroundColor: AppColors.text1,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                elevation: 0,
-                              ),
-                            ),
+                            borderRadius: 25,
+                            isLoading: _isCreating,
+                            onPressed: _isCreating ? null : _createBlog,
                           ),
                         ),
                       ],
