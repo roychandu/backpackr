@@ -256,18 +256,18 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
         return;
       }
 
-      // Permission flow via permission_handler for reliability
-      var status = await perm.Permission.locationWhenInUse.status;
-      if (status.isDenied) {
-        status = await perm.Permission.locationWhenInUse.request();
+      // Use Geolocator permission flow
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
       }
-      if (status.isDenied) {
+      if (permission == LocationPermission.denied) {
         setState(() {
           _errorMessage = 'Location permission denied';
         });
         return;
       }
-      if (status.isPermanentlyDenied) {
+      if (permission == LocationPermission.deniedForever) {
         setState(() {
           _errorMessage =
               'Location permission permanently denied. Enable in Settings';
@@ -277,7 +277,9 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
 
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
-      );
+      ).timeout(const Duration(seconds: 15), onTimeout: () {
+        throw Exception('Location fetching timed out');
+      });
 
       // Cache coordinates
       _currentLat = position.latitude;
@@ -723,52 +725,51 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        GestureDetector(
-          onTap: _fetchAndSetCurrentLocation,
-          child: AbsorbPointer(
-            child: TextFormField(
-              controller: _locationController,
-              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text1),
-              decoration: InputDecoration(
-                hintText: 'Tap to fetch your current city',
-                hintStyle: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.text1.withOpacity(0.70),
-                ),
-                filled: true,
-                fillColor: AppColors.text1.withOpacity(0.10),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: AppColors.text1.withOpacity(0.20),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.primary, width: 1.5),
-                ),
-                suffixIcon: _isLocating
-                    ? const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                      )
-                    : Icon(Icons.my_location, color: AppColors.primary),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please add your current location';
-                }
-                return null;
-              },
+        TextFormField(
+          controller: _locationController,
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text1),
+          decoration: InputDecoration(
+            hintText: 'Enter city or tap icon to fetch',
+            hintStyle: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.text1.withOpacity(0.70),
             ),
+            filled: true,
+            fillColor: AppColors.text1.withOpacity(0.10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.text1.withOpacity(0.20),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+            ),
+            suffixIcon: _isLocating
+                ? const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  )
+                : IconButton(
+                    icon: Icon(Icons.my_location, color: AppColors.primary),
+                    onPressed: _fetchAndSetCurrentLocation,
+                    tooltip: 'Fetch current location',
+                  ),
           ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please add your current location';
+            }
+            return null;
+          },
         ),
         const SizedBox(height: 8),
         Text(
