@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print, empty_catches, deprecated_member_use, prefer_interpolation_to_compose_strings, sort_child_properties_last
 import 'package:backpackr/common_widgets/app_colors.dart';
-import 'package:backpackr/screens/profile_screen/profile_screen.dart';
 import 'package:backpackr/screens/traveling_blogs_screen/traveling_blogs_screen.dart';
 import 'package:backpackr/screens/traveling_blogs_screen/other_travelers_blog_screen.dart';
 import 'package:flutter/material.dart';
@@ -37,14 +36,16 @@ class TravelersScreen extends StatefulWidget {
 
 class _TravelersScreenState extends State<TravelersScreen>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+  static const double _nearbyTravelerRadiusKm = 200.0;
+
   int _selectedIndex = 0;
   late TabController _travelersTabController;
   String _currentCity = '';
   bool _isLocating = false;
   bool _isLoadingTravelers = false;
-  bool _isLoadingTravelersInProgress =
-      false; // Prevent multiple simultaneous loads
-  Position? _currentPosition;
+  double? _currentLatitude;
+  double? _currentLongitude;
+  int _currentCoordinatesUpdatedAt = 0;
   List<UserProfile> _filteredTravelers = [];
   final List<UserProfile> _allTravelers = [];
   final List<UserProfile> _dummyTravelers = [
@@ -150,6 +151,8 @@ class _TravelersScreenState extends State<TravelersScreen>
   final ChatService _chatService = ChatService();
   final MeetupService _meetupService = MeetupService();
   final TravelerService _travelerService = TravelerService();
+  StreamSubscription<DatabaseEvent>? _profilesSubscription;
+  int _profilesSubscriptionGeneration = 0;
 
   @override
   void initState() {
@@ -201,6 +204,8 @@ class _TravelersScreenState extends State<TravelersScreen>
 
   @override
   void dispose() {
+    _profilesSubscriptionGeneration++;
+    _profilesSubscription?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     UserSetupService.dispose();
     _travelersTabController.dispose();
@@ -409,15 +414,37 @@ class _TravelersScreenState extends State<TravelersScreen>
           if (profileSnap.exists && profileSnap.value is Map) {
             final profileData = profileSnap.value as Map<dynamic, dynamic>;
             final savedLocation = profileData['currentLocation'] as String?;
+            final savedLatitude = _readDouble(profileData['latitude']);
+            final savedLongitude = _readDouble(profileData['longitude']);
+            final savedLastUpdated = _readInt(profileData['lastUpdated']) ?? 0;
+            final hasSavedLocation =
+                savedLocation != null && savedLocation.trim().isNotEmpty;
+            final hasSavedCoordinates = _hasUsableCoordinates(
+              savedLatitude,
+              savedLongitude,
+            );
 
-            if (savedLocation != null && savedLocation.trim().isNotEmpty) {
+            if (hasSavedLocation || hasSavedCoordinates) {
               if (mounted) {
                 setState(() {
-                  _currentCity = savedLocation.trim();
+                  if (hasSavedLocation) {
+                    _currentCity = savedLocation.trim();
+                  }
+                  if (hasSavedCoordinates) {
+                    _setCurrentCoordinates(
+                      savedLatitude!,
+                      savedLongitude!,
+                      updatedAt: savedLastUpdated,
+                    );
+                  }
                   _applyFilters();
                 });
               }
-              // Still load nearby travelers with GPS for distance calculation
+              if (hasSavedCoordinates) {
+                await _startNearbyTravelersWatcher();
+              }
+
+              // Refresh with GPS, but do not block first nearby results on geocoding.
               await _loadCurrentCityFromGPS();
               return;
             }
@@ -466,7 +493,28 @@ class _TravelersScreenState extends State<TravelersScreen>
         desiredAccuracy: LocationAccuracy.low,
         timeLimit: const Duration(seconds: 10), // Add timeout
       );
-      _currentPosition = position;
+      if (!mounted) return;
+
+      final positionUpdatedAt = DateTime.now().millisecondsSinceEpoch;
+      setState(() {
+        _setCurrentCoordinates(
+          position.latitude,
+          position.longitude,
+          updatedAt: positionUpdatedAt,
+        );
+        _applyFilters();
+      });
+
+      unawaited(
+        _syncCurrentUserLocation(
+          latitude: position.latitude,
+          longitude: position.longitude,
+          lastUpdated: positionUpdatedAt,
+        ),
+      );
+
+      await _startNearbyTravelersWatcher();
+
       final placemarks = await geocoding.placemarkFromCoordinates(
         position.latitude,
         position.longitude,
@@ -485,12 +533,17 @@ class _TravelersScreenState extends State<TravelersScreen>
             _currentCity = display;
             _applyFilters();
           });
+          unawaited(
+            _syncCurrentUserLocation(
+              latitude: position.latitude,
+              longitude: position.longitude,
+              currentLocation: display,
+            ),
+          );
         }
-        // Load nearby users after we have a position
-        await _loadNearbyTravelers(position);
       } else {
         // No placemarks found - stop loading
-        if (mounted) {
+        if (mounted && _profilesSubscription == null) {
           setState(() {
             _isLoadingTravelers = false;
           });
@@ -653,7 +706,7 @@ class _TravelersScreenState extends State<TravelersScreen>
   // Remove static data: rely on dynamic list (to be plugged from backend)
 
   void _applyFilters() {
-    // Start with all travelers (already filtered by 200km in _loadNearbyTravelers)
+    // Start with all travelers already filtered by the 200km watcher.
     Iterable<UserProfile> list = _allTravelers;
 
     // Exclude hidden and reported travelers
@@ -708,136 +761,306 @@ class _TravelersScreenState extends State<TravelersScreen>
 
   double _degToRad(double deg) => deg * (math.pi / 180.0);
 
-  // Removed fallback loader to enforce 200km-only visibility
+  double? _readDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value.toString());
+  }
 
-  Future<void> _loadNearbyTravelers(Position position) async {
-    // Prevent multiple simultaneous loads
-    if (_isLoadingTravelersInProgress) {
-      return;
+  int? _readInt(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value.toInt();
+    return int.tryParse(value.toString());
+  }
+
+  bool _hasUsableCoordinates(double? latitude, double? longitude) {
+    if (latitude == null || longitude == null) return false;
+    if (latitude.isNaN || longitude.isNaN) return false;
+    if (latitude < -90 || latitude > 90) return false;
+    if (longitude < -180 || longitude > 180) return false;
+    return true;
+  }
+
+  void _setCurrentCoordinates(
+    double latitude,
+    double longitude, {
+    int? updatedAt,
+  }) {
+    _currentLatitude = latitude;
+    _currentLongitude = longitude;
+    if (updatedAt != null) {
+      _currentCoordinatesUpdatedAt = updatedAt;
+    }
+  }
+
+  Future<void> _syncCurrentUserLocation({
+    required double latitude,
+    required double longitude,
+    String? currentLocation,
+    int? lastUpdated,
+  }) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null || !_hasUsableCoordinates(latitude, longitude)) return;
+
+    final updates = <String, dynamic>{
+      'latitude': latitude,
+      'longitude': longitude,
+      'lastUpdated': lastUpdated ?? DateTime.now().millisecondsSinceEpoch,
+    };
+
+    if (currentLocation != null && currentLocation.trim().isNotEmpty) {
+      updates['currentLocation'] = currentLocation.trim();
     }
 
     try {
-      _isLoadingTravelersInProgress = true;
+      await FirebaseDatabase.instance
+          .ref('userProfiles')
+          .child(uid)
+          .update(updates);
+    } catch (e) {
+      debugPrint('Failed to sync current location: $e');
+    }
+  }
+
+  // Removed fallback loader to enforce 200km-only visibility
+
+  Future<void> _startNearbyTravelersWatcher() async {
+    if (!_hasUsableCoordinates(_currentLatitude, _currentLongitude)) {
+      if (mounted) {
+        setState(() {
+          _allTravelers.clear();
+          _applyFilters();
+          _isLoadingTravelers = false;
+        });
+      }
+      return;
+    }
+
+    final generation = ++_profilesSubscriptionGeneration;
+    try {
       if (mounted) {
         setState(() {
           _isLoadingTravelers = true;
         });
       }
-      // Clear maps at the START, not at the end
-      _travelerIdMap.clear();
-      _waveSentMap.clear();
-      _waveCheckingMap.clear();
-      _waveStatusMap.clear();
 
-      final DataSnapshot snap = await FirebaseDatabase.instance
+      await _profilesSubscription?.cancel();
+      _profilesSubscription = FirebaseDatabase.instance
           .ref('userProfiles')
-          .get();
-      if (!snap.exists) {
-        setState(() {
-          _allTravelers.clear();
-          _applyFilters();
-        });
-        return;
-      }
+          .onValue
+          .listen(
+            (DatabaseEvent event) async {
+              if (generation != _profilesSubscriptionGeneration) return;
 
-      final Map<dynamic, dynamic> data = snap.value as Map<dynamic, dynamic>;
-      final List<UserProfile> nearby = [];
-      final String? currentUid = FirebaseAuth.instance.currentUser?.uid;
+              try {
+                // Clear maps at the START, not at the end
+                _travelerIdMap.clear();
+                _waveSentMap.clear();
+                _waveCheckingMap.clear();
+                _waveStatusMap.clear();
 
-      for (final entry in data.entries) {
-        final key = entry.key;
-        final value = entry.value;
+                final DataSnapshot snap = event.snapshot;
+                if (!snap.exists || snap.value is! Map) {
+                  if (mounted &&
+                      generation == _profilesSubscriptionGeneration) {
+                    setState(() {
+                      _allTravelers.clear();
+                      _applyFilters();
+                      _isLoadingTravelers = false;
+                    });
+                  }
+                  return;
+                }
 
-        if (value is Map) {
-          // Skip current user
-          if (currentUid != null && key is String && key == currentUid) {
-            continue;
-          }
+                final Map<dynamic, dynamic> data =
+                    snap.value as Map<dynamic, dynamic>;
+                final List<UserProfile> nearby = [];
+                final String? currentUid =
+                    FirebaseAuth.instance.currentUser?.uid;
 
-          try {
-            final profile = UserProfile.fromMap(value);
-
-            // Include all users (no distance restriction for All Travelers)
-            bool includeUser = true;
-
-            if (includeUser) {
-              // Resolve username with multiple fallbacks
-              String? username;
-
-              // 1) Prefer name fields on profile record itself
-              final rawMap = value;
-              final fromProfileName = (rawMap['displayName'] as String?)
-                  ?.trim();
-              final fromProfileAlt = (rawMap['name'] as String?)?.trim();
-              if (fromProfileName != null && fromProfileName.isNotEmpty) {
-                username = fromProfileName;
-              } else if (fromProfileAlt != null && fromProfileAlt.isNotEmpty) {
-                username = fromProfileAlt;
-              } else if (profile.displayName.isNotEmpty) {
-                username = profile.displayName;
-              } else {
-                // 2) Then try users/<uid>/name
-                try {
-                  final userSnap = await FirebaseDatabase.instance
-                      .ref('users')
-                      .child(key.toString())
-                      .get();
-                  if (userSnap.exists) {
-                    final userData = userSnap.value as Map<dynamic, dynamic>;
-                    final dbName = userData['name'] as String?;
-                    if (dbName != null && dbName.trim().isNotEmpty) {
-                      username = dbName.trim();
+                if (currentUid != null) {
+                  final currentProfileData = data[currentUid];
+                  if (currentProfileData is Map) {
+                    final currentProfile = UserProfile.fromMap(
+                      currentProfileData,
+                    );
+                    final remoteLastUpdated =
+                        _readInt(currentProfileData['lastUpdated']) ?? 0;
+                    if (_hasUsableCoordinates(
+                          currentProfile.latitude,
+                          currentProfile.longitude,
+                        ) &&
+                        remoteLastUpdated >= _currentCoordinatesUpdatedAt) {
+                      _setCurrentCoordinates(
+                        currentProfile.latitude!,
+                        currentProfile.longitude!,
+                        updatedAt: remoteLastUpdated,
+                      );
+                    }
+                    if (currentProfile.currentLocation.trim().isNotEmpty) {
+                      _currentCity = currentProfile.currentLocation.trim();
                     }
                   }
-                } catch (_) {
-                  // leave as null
+                }
+
+                final currentLat = _currentLatitude;
+                final currentLng = _currentLongitude;
+                if (!_hasUsableCoordinates(currentLat, currentLng)) {
+                  if (mounted &&
+                      generation == _profilesSubscriptionGeneration) {
+                    setState(() {
+                      _allTravelers.clear();
+                      _applyFilters();
+                      _isLoadingTravelers = false;
+                    });
+                  }
+                  return;
+                }
+
+                final centerLatitude = currentLat!;
+                final centerLongitude = currentLng!;
+
+                for (final entry in data.entries) {
+                  final key = entry.key;
+                  final value = entry.value;
+
+                  if (value is Map) {
+                    // Skip current user
+                    if (currentUid != null &&
+                        key is String &&
+                        key == currentUid) {
+                      continue;
+                    }
+
+                    try {
+                      final profile = UserProfile.fromMap(value);
+                      if (!profile.setupCompleted) continue;
+                      if (!_hasUsableCoordinates(
+                        profile.latitude,
+                        profile.longitude,
+                      )) {
+                        continue;
+                      }
+
+                      final distance = _distanceKm(
+                        centerLatitude,
+                        centerLongitude,
+                        profile.latitude!,
+                        profile.longitude!,
+                      );
+                      if (!distance.isFinite ||
+                          distance > _nearbyTravelerRadiusKm) {
+                        continue;
+                      }
+
+                      // Resolve username with multiple fallbacks
+                      String? username;
+
+                      // 1) Prefer name fields on profile record itself
+                      final rawMap = value;
+                      final fromProfileName = (rawMap['displayName'] as String?)
+                          ?.trim();
+                      final fromProfileAlt = (rawMap['name'] as String?)
+                          ?.trim();
+                      if (fromProfileName != null &&
+                          fromProfileName.isNotEmpty) {
+                        username = fromProfileName;
+                      } else if (fromProfileAlt != null &&
+                          fromProfileAlt.isNotEmpty) {
+                        username = fromProfileAlt;
+                      } else if (profile.displayName.isNotEmpty) {
+                        username = profile.displayName;
+                      } else {
+                        // 2) Then try users/<uid>/name
+                        try {
+                          final userSnap = await FirebaseDatabase.instance
+                              .ref('users')
+                              .child(key.toString())
+                              .get();
+                          if (userSnap.exists) {
+                            final userData =
+                                userSnap.value as Map<dynamic, dynamic>;
+                            final dbName = userData['name'] as String?;
+                            if (dbName != null && dbName.trim().isNotEmpty) {
+                              username = dbName.trim();
+                            }
+                          }
+                        } catch (_) {
+                          // leave as null
+                        }
+                      }
+
+                      // Skip users without proper names
+                      if (username == null || username.isEmpty) {
+                        continue;
+                      }
+
+                      final userProfile = UserProfile(
+                        displayName: username,
+                        bio: profile.bio.isNotEmpty
+                            ? profile.bio
+                            : 'Adventurer exploring the world',
+                        currentLocation: profile.currentLocation,
+                        latitude: profile.latitude,
+                        longitude: profile.longitude,
+                        avatarUrl: profile.avatarUrl,
+                        tags: profile.tags,
+                        destinations: profile.destinations,
+                        setupCompleted: profile.setupCompleted,
+                        lastUpdated: profile.lastUpdated,
+                        wavesSent: profile.wavesSent,
+                        wavesReceived: profile.wavesReceived,
+                        mutualConnections: profile.mutualConnections,
+                      );
+
+                      nearby.add(userProfile);
+                      // Store mapping for wave sending
+                      _travelerIdMap[userProfile.displayName] = key.toString();
+                    } catch (e) {
+                      // Skip invalid profile data
+                    }
+                  }
+                }
+
+                if (!mounted || generation != _profilesSubscriptionGeneration) {
+                  return;
+                }
+                setState(() {
+                  _allTravelers
+                    ..clear()
+                    ..addAll(nearby);
+                  _applyFilters();
+                  _isLoadingTravelers = false;
+                });
+              } catch (e) {
+                debugPrint('Error processing nearby travelers: $e');
+                if (mounted && generation == _profilesSubscriptionGeneration) {
+                  setState(() {
+                    _allTravelers.clear();
+                    _applyFilters();
+                    _isLoadingTravelers = false;
+                  });
                 }
               }
-
-              // Skip users without proper names
-              if (username == null || username.isEmpty) {
-                continue;
+            },
+            onError: (Object error) {
+              debugPrint('Error watching nearby travelers: $error');
+              if (!mounted || generation != _profilesSubscriptionGeneration) {
+                return;
               }
-
-              final userProfile = UserProfile(
-                displayName: username,
-                bio: profile.bio.isNotEmpty
-                    ? profile.bio
-                    : 'Adventurer exploring the world 🌍',
-                currentLocation: profile.currentLocation,
-                latitude: profile.latitude,
-                longitude: profile.longitude,
-                avatarUrl: profile.avatarUrl,
-                tags: profile.tags,
-                destinations: profile.destinations,
-                setupCompleted: profile.setupCompleted,
-                lastUpdated: profile.lastUpdated,
-                wavesSent: profile.wavesSent,
-                wavesReceived: profile.wavesReceived,
-                mutualConnections: profile.mutualConnections,
-              );
-
-              nearby.add(userProfile);
-              // Store mapping for wave sending
-              _travelerIdMap[userProfile.displayName] = key.toString();
-            }
-          } catch (e) {
-            // Skip invalid profile data
-          }
-        }
-      }
-
-      if (!mounted) return;
-      setState(() {
-        _allTravelers
-          ..clear()
-          ..addAll(nearby);
-        _applyFilters();
-        _isLoadingTravelers = false;
-        _isLoadingTravelersInProgress = false;
-      });
+              setState(() {
+                _allTravelers.clear();
+                _travelerIdMap.clear();
+                _waveSentMap.clear();
+                _waveCheckingMap.clear();
+                _waveStatusMap.clear();
+                _applyFilters();
+                _isLoadingTravelers = false;
+              });
+            },
+          );
     } catch (e) {
-      print('Error in _loadNearbyTravelers: $e');
+      print('Error in _startNearbyTravelersWatcher: $e');
       if (!mounted) return;
       setState(() {
         _allTravelers.clear();
@@ -847,7 +1070,6 @@ class _TravelersScreenState extends State<TravelersScreen>
         _waveStatusMap.clear(); // Clear wave status tracking on error
         _applyFilters();
         _isLoadingTravelers = false;
-        _isLoadingTravelersInProgress = false;
       });
     }
   }
@@ -896,8 +1118,10 @@ class _TravelersScreenState extends State<TravelersScreen>
       );
     }
 
-    // Prefer GPS-based filtering within 200km if we have a position and coordinates
-    if (_currentPosition != null) {
+    // Prefer coordinate filtering within 200km if we have current coordinates.
+    if (_hasUsableCoordinates(_currentLatitude, _currentLongitude)) {
+      final currentLatitude = _currentLatitude!;
+      final currentLongitude = _currentLongitude!;
       final List<UserProfile> gpsNear = _filteredTravelers.where((t) {
         if (t.latitude == null || t.longitude == null) return false;
         // Validate coordinates before calculating distance
@@ -905,12 +1129,12 @@ class _TravelersScreenState extends State<TravelersScreen>
         if (t.latitude! < -90 || t.latitude! > 90) return false;
         if (t.longitude! < -180 || t.longitude! > 180) return false;
         final dist = _distanceKm(
-          _currentPosition!.latitude,
-          _currentPosition!.longitude,
+          currentLatitude,
+          currentLongitude,
           t.latitude!,
           t.longitude!,
         );
-        return dist.isFinite && dist <= 200.0;
+        return dist.isFinite && dist <= _nearbyTravelerRadiusKm;
       }).toList();
 
       if (gpsNear.isNotEmpty) {
@@ -920,7 +1144,7 @@ class _TravelersScreenState extends State<TravelersScreen>
           itemBuilder: (context, index) => _buildTravelerCard(gpsNear[index]),
         );
       }
-      // GPS filtering returned empty list
+      // Coordinate filtering returned an empty list.
       return SizedBox.expand(
         child: Center(
           child: SingleChildScrollView(
@@ -1393,7 +1617,9 @@ class _TravelersScreenState extends State<TravelersScreen>
           final completed = await _checkProfileSetup();
           if (!mounted) return;
           if (completed) {
-            setState(() { _setupCompleted = true; });
+            setState(() {
+              _setupCompleted = true;
+            });
           }
         },
       );
@@ -1792,7 +2018,8 @@ class _TravelersScreenState extends State<TravelersScreen>
                                 textColor: AppColors.text1,
                                 isFullWidth: true,
                                 height: 48,
-                                onPressed: () => Navigator.of(context).pop(null),
+                                onPressed: () =>
+                                    Navigator.of(context).pop(null),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -1804,7 +2031,9 @@ class _TravelersScreenState extends State<TravelersScreen>
                                 isGradient: true,
                                 isFullWidth: true,
                                 height: 48,
-                                onPressed: () => Navigator.of(context).pop(controller.text.trim()),
+                                onPressed: () => Navigator.of(
+                                  context,
+                                ).pop(controller.text.trim()),
                               ),
                             ),
                           ],
