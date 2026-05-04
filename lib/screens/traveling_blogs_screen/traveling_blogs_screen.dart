@@ -13,6 +13,7 @@ import '../../common_widgets/app_header.dart';
 import '../../utils/error_handler.dart';
 import 'create_traveling_blog_bottom_sheet.dart';
 import 'traveling_blog_details_screen.dart';
+import '../../services/local_storage_service.dart';
 
 class TravelingBlogsScreen extends StatefulWidget {
   const TravelingBlogsScreen({super.key});
@@ -40,12 +41,26 @@ class _TravelingBlogsScreenState extends State<TravelingBlogsScreen> {
     });
 
     try {
+      // Load from cache first for instant UI
+      final cachedBlogs = LocalStorageService.getAllBlogs();
+      if (cachedBlogs.isNotEmpty && mounted) {
+        setState(() {
+          _allBlogs = cachedBlogs;
+          // Don't set _isLoading to false yet, we still want to show a spinner if possible 
+          // OR set it to false if you want instant feedback.
+          // Let's set it to false for instant speed.
+          _isLoading = false;
+        });
+      }
+
       final blogs = await _blogService.getAllBlogs();
 
-      setState(() {
-        _allBlogs = blogs;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _allBlogs = blogs;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       setState(() {
         _errorMessage = ErrorHandler.getFriendlyErrorMessage(e);

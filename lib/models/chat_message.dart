@@ -1,13 +1,28 @@
+import 'package:hive/hive.dart';
+
+part 'chat_message.g.dart';
+
+@HiveType(typeId: 2)
 class ChatMessage {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final String conversationId;
+  @HiveField(2)
   final String senderId;
+  @HiveField(3)
   final String senderName;
+  @HiveField(4)
   final String content;
+  @HiveField(5)
   final DateTime timestamp;
+  @HiveField(6)
   final MessageType type;
+  @HiveField(7)
   final bool isRead;
+  @HiveField(8)
   final String? replyToMessageId;
+  @HiveField(9)
   final Map<String, dynamic>? metadata;
 
   ChatMessage({
@@ -83,4 +98,14 @@ class ChatMessage {
   }
 }
 
-enum MessageType { text, image, file, system }
+@HiveType(typeId: 3)
+enum MessageType {
+  @HiveField(0)
+  text,
+  @HiveField(1)
+  image,
+  @HiveField(2)
+  file,
+  @HiveField(3)
+  system
+}

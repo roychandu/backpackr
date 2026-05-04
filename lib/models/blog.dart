@@ -1,19 +1,40 @@
+import 'package:hive/hive.dart';
+
+part 'blog.g.dart';
+
+@HiveType(typeId: 5)
 class Blog {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final String title;
+  @HiveField(2)
   final String content;
+  @HiveField(3)
   final String author;
+  @HiveField(4)
   final String authorId;
+  @HiveField(5)
   final String startPlace;
+  @HiveField(6)
   final String destination;
+  @HiveField(7)
   final String distance;
+  @HiveField(8)
   final String duration;
+  @HiveField(9)
   final DateTime startDate;
+  @HiveField(10)
   final DateTime? endDate;
+  @HiveField(11)
   final List<String> tags;
+  @HiveField(12)
   final List<String> imageUrls;
+  @HiveField(13)
   final DateTime dateCreated;
+  @HiveField(14)
   final int likes;
+  @HiveField(15)
   final int comments;
 
   Blog({

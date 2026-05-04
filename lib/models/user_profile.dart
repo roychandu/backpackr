@@ -1,5 +1,12 @@
+import 'package:hive/hive.dart';
+
+part 'user_profile.g.dart';
+
+@HiveType(typeId: 1)
 class Destination {
+  @HiveField(0)
   final String city;
+  @HiveField(1)
   final String date; // MM/YYYY or free-text
 
   const Destination({required this.city, required this.date});
@@ -14,21 +21,35 @@ class Destination {
   Map<String, dynamic> toMap() => {'city': city, 'date': date};
 }
 
+@HiveType(typeId: 0)
 class UserProfile {
+  @HiveField(0)
   final String displayName;
+  @HiveField(1)
   final String bio;
+  @HiveField(2)
   final String currentLocation;
+  @HiveField(3)
   final double? latitude;
+  @HiveField(4)
   final double? longitude;
+  @HiveField(5)
   final String? avatarUrl;
+  @HiveField(6)
   final List<String> tags;
+  @HiveField(7)
   final List<Destination> destinations;
+  @HiveField(8)
   final bool setupCompleted;
+  @HiveField(9)
   final int lastUpdated;
 
   // Wave statistics
+  @HiveField(10)
   final int wavesSent;
+  @HiveField(11)
   final int wavesReceived;
+  @HiveField(12)
   final int mutualConnections;
 
   const UserProfile({

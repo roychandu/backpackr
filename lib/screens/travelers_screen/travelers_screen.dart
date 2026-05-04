@@ -24,6 +24,7 @@ import '../../services/wave_service.dart';
 import '../../services/chat_service.dart';
 import '../../services/meetup_service.dart';
 import '../../services/traveler_service.dart';
+import '../../services/local_storage_service.dart';
 import '../../models/user_profile.dart';
 import 'dart:math' as math;
 
@@ -179,6 +180,9 @@ class _TravelersScreenState extends State<TravelersScreen>
     // Ensure current user data exists in Firebase
     _authService.ensureUserDataInFirebase();
 
+    // Load cached travelers for instant UI
+    _loadCachedTravelers();
+
     // Load hidden/reported travelers for current user
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -200,6 +204,17 @@ class _TravelersScreenState extends State<TravelersScreen>
         } catch (_) {}
       }
     });
+  }
+
+  void _loadCachedTravelers() {
+    final cached = LocalStorageService.getAllProfiles();
+    if (cached.isNotEmpty) {
+      setState(() {
+        _allTravelers.addAll(cached);
+        _applyFilters();
+        // Keep _isLoadingTravelers true so the spinner still shows we are checking for updates
+      });
+    }
   }
 
   @override
@@ -1032,6 +1047,9 @@ class _TravelersScreenState extends State<TravelersScreen>
                   _applyFilters();
                   _isLoadingTravelers = false;
                 });
+
+                // Cache the profiles for next launch
+                LocalStorageService.saveAllProfiles(nearby);
               } catch (e) {
                 debugPrint('Error processing nearby travelers: $e');
                 if (mounted && generation == _profilesSubscriptionGeneration) {

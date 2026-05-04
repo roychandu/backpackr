@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/chat_message.dart';
 import '../models/conversation.dart';
 // import 'notification_service.dart';
+import 'package:backpackr/services/local_storage_service.dart';
 import 'auth_service.dart';
 
 class ChatService {
@@ -155,7 +156,10 @@ class ChatService {
       metadata: metadata,
     );
 
-    // Save message
+    // Save message locally
+    await LocalStorageService.saveMessage(message);
+
+    // Save message to Firebase
     await _messagesRef
         .child(conversationId)
         .child(messageId)
@@ -311,6 +315,10 @@ class ChatService {
       conversations.sort(
         (a, b) => b.lastMessageTimestamp.compareTo(a.lastMessageTimestamp),
       );
+
+      // Save to local storage for offline access
+      LocalStorageService.saveAllConversations(conversations);
+
       return conversations;
     });
   }
@@ -337,6 +345,10 @@ class ChatService {
 
           // Sort by timestamp (oldest first for chat display)
           messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
+          // Save to local storage for offline access
+          LocalStorageService.saveAllMessages(messages);
+
           return messages;
         });
   }

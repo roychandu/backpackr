@@ -1,20 +1,42 @@
+import 'package:hive/hive.dart';
+
+part 'conversation.g.dart';
+
+@HiveType(typeId: 4)
 class Conversation {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final Map<String, bool> participants;
+  @HiveField(2)
   final Map<String, String> participantNames;
+  @HiveField(3)
   final String lastMessageId;
+  @HiveField(4)
   final String lastMessageContent;
+  @HiveField(5)
   final String lastMessageSenderId;
+  @HiveField(6)
   final DateTime lastMessageTimestamp;
+  @HiveField(7)
   final bool isActive;
+  @HiveField(8)
   final DateTime createdAt;
+  @HiveField(9)
   final DateTime updatedAt;
+  @HiveField(10)
   final Map<String, bool> readStatus;
+  @HiveField(11)
   final Map<String, int> unreadCounts;
+  @HiveField(12)
   final bool isGroup;
+  @HiveField(13)
   final String? groupName;
+  @HiveField(14)
   final String? groupAvatarUrl;
+  @HiveField(15)
   final String? createdBy;
+  @HiveField(16)
   final List<String> admins;
 
   Conversation({

@@ -9,6 +9,7 @@ import 'package:backpackr/services/app_flow_service.dart';
 import 'package:backpackr/services/auth_service.dart';
 import 'package:backpackr/services/notification_service.dart';
 import 'package:backpackr/services/theme_service.dart';
+import 'package:backpackr/services/local_storage_service.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,14 @@ void main() async {
 
   // Initialize Theme Service
   await Get.putAsync(() => ThemeService().init());
+
+  // Initialize Local Storage (Hive)
+  try {
+    await LocalStorageService.init();
+    debugPrint("📦 Local storage initialized");
+  } catch (e) {
+    debugPrint("❌ Local storage init error: $e");
+  }
 
   setPortait();
   runApp(const MyApp());

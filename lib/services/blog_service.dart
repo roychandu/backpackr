@@ -5,6 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/blog.dart';
 import '../aws/aws_module.dart';
+import 'package:backpackr/services/local_storage_service.dart';
+import 'package:flutter/foundation.dart';
 
 class BlogService {
   static final BlogService _instance = BlogService._internal();
@@ -125,6 +127,9 @@ class BlogService {
     // Save blog to Firebase
     await blogRef.set(blog.toMap());
 
+    // Save blog locally
+    await LocalStorageService.saveBlog(blog);
+
     debugPrint('Blog created successfully with ID: $blogId');
     return blogId;
   }
@@ -161,6 +166,9 @@ class BlogService {
 
       // Sort by date created (newest first)
       blogs.sort((a, b) => b.dateCreated.compareTo(a.dateCreated));
+
+      // Save to local storage for offline access
+      await LocalStorageService.saveAllBlogs(blogs);
 
       debugPrint(
         'Loaded ${blogs.length} blogs for current user $currentUserId',
@@ -223,6 +231,9 @@ class BlogService {
           .child('travelingBlogs')
           .child(blogId)
           .remove();
+
+      // Delete from local storage
+      await LocalStorageService.deleteBlog(blogId);
 
       debugPrint('Blog deleted successfully: $blogId');
     } catch (e) {
