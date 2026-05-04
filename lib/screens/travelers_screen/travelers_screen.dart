@@ -1856,196 +1856,92 @@ class _TravelersScreenState extends State<TravelersScreen>
     return showDialog<String>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 340),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    AppColors.background.withOpacity(0.5),
-                    AppColors.background.withOpacity(0.15),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: AppColors.text1.withOpacity(0.3),
-                  width: 1.5,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.text3.withOpacity(0.1),
-                    blurRadius: 30,
-                    offset: const Offset(0, 15),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Header
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                      border: Border.all(
-                        color: AppColors.text1.withOpacity(0.2),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                AppColors.primary.withOpacity(0.3),
-                                AppColors.primary.withOpacity(0.2),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: AppColors.text1.withOpacity(0.4),
-                              width: 1.5,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.primary.withOpacity(0.2),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            Icons.waving_hand,
-                            color: AppColors.text1,
-                            size: 24,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Send Wave',
-                                style: AppTextStyles.bodyLarge.copyWith(
-                                  color: AppColors.text1,
-                                  fontWeight: FontWeight.bold,
-                                  shadows: [
-                                    Shadow(
-                                      color: AppColors.text3.withOpacity(0.3),
-                                      offset: const Offset(0, 1),
-                                      blurRadius: 2,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Text(
-                                'Connect with fellow traveler',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.text1,
-                                  fontWeight: FontWeight.w600,
-                                  shadows: [
-                                    Shadow(
-                                      color: AppColors.text3.withOpacity(0.2),
-                                      offset: const Offset(0, 1),
-                                      blurRadius: 1,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Content
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.text1.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: AppColors.text1.withOpacity(0.3),
-                              width: 1,
-                            ),
-                          ),
-                          child: TextField(
-                            controller: controller,
-                            maxLines: 4,
-                            maxLength: 200,
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.text1,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: 'Add a personal message...',
-                              hintStyle: AppTextStyles.bodyMedium.copyWith(
-                                color: AppColors.text1.withOpacity(0.7),
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              counterStyle: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.text1.withOpacity(0.6),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Action buttons
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CustomButton(
-                                text: 'Cancel',
-                                isTextOnly: true,
-                                textColor: AppColors.text1,
-                                isFullWidth: true,
-                                height: 48,
-                                onPressed: () =>
-                                    Navigator.of(context).pop(null),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              flex: 2,
-                              child: CustomButton(
-                                text: 'Send Wave',
-                                icon: Icons.waving_hand,
-                                isGradient: true,
-                                isFullWidth: true,
-                                height: 48,
-                                onPressed: () => Navigator.of(
-                                  context,
-                                ).pop(controller.text.trim()),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.cardBackground,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Icon(Icons.waving_hand, color: AppColors.primary),
+            const SizedBox(width: 8),
+            Text(
+              'Send Wave',
+              style: AppTextStyles.bodyLarge.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
+          ],
         ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Connect with fellow traveler',
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.textFieldBackground,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppColors.border,
+                  width: 1,
+                ),
+              ),
+              child: TextField(
+                controller: controller,
+                maxLines: 4,
+                maxLength: 200,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Add a personal message...',
+                  hintStyle: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.all(16),
+                  counterStyle: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          Row(
+            children: [
+              Expanded(
+                child: CustomButton(
+                  text: 'Cancel',
+                  isTextOnly: true,
+                  textColor: AppColors.textSecondary,
+                  isFullWidth: true,
+                  height: 48,
+                  onPressed: () => Navigator.of(context).pop(null),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                flex: 2,
+                child: CustomButton(
+                  text: 'Send Wave',
+                  icon: Icons.waving_hand,
+                  isGradient: true,
+                  isFullWidth: true,
+                  height: 48,
+                  onPressed: () => Navigator.of(context).pop(controller.text.trim()),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
