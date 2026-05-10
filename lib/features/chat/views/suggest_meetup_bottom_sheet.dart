@@ -1,13 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'dart:math' as math;
+import 'package:backpackr/features/chat/controllers/suggest_meetup_controller.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/features/meetups/models/meetup.dart';
-import 'package:backpackr/features/meetups/repositories/meetup_service.dart';
 import 'package:backpackr/features/meetups/views/meetup_details_screen.dart';
 
 class SuggestMeetupBottomSheet extends StatefulWidget {
@@ -19,247 +16,100 @@ class SuggestMeetupBottomSheet extends StatefulWidget {
 }
 
 class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
-  final MeetupService _meetupService = MeetupService();
-  List<Meetup> _nearbyMeetups = [];
-  bool _isLoading = true;
-  String? _errorMessage;
-  Map<String, double> _organizerDistances = {}; // Store organizer distances
+  final SuggestMeetupController _controller = SuggestMeetupController();
 
   @override
   void initState() {
     super.initState();
-    _loadNearbyMeetups();
+    _controller.loadNearbyMeetups();
   }
 
-  Future<void> _loadNearbyMeetups() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      // Get current user's location
-      final position = await _getCurrentLocation();
-      if (position == null) {
-        setState(() {
-          _errorMessage = 'Unable to get your location';
-          _isLoading = false;
-        });
-        return;
-      }
-
-      // Get all meetups
-      final meetups = await _meetupService.getAllMeetups();
-
-      // Get all unique host IDs that need profile data
-      final Set<String> hostIds = {};
-      for (final meetup in meetups) {
-        if (!meetup.isPast &&
-            (meetup.latitude == null || meetup.longitude == null)) {
-          hostIds.add(meetup.hostId);
-        }
-      }
-
-      // Fetch all user profiles at once for efficiency
-      final Map<String, Map<String, double>> organizerLocations = {};
-      if (hostIds.isNotEmpty) {
-        final userProfilesSnapshot = await FirebaseDatabase.instance
-            .ref('userProfiles')
-            .get();
-
-        if (userProfilesSnapshot.exists && userProfilesSnapshot.value is Map) {
-          final allProfiles =
-              userProfilesSnapshot.value as Map<dynamic, dynamic>;
-
-          for (final hostId in hostIds) {
-            if (allProfiles.containsKey(hostId)) {
-              final profileData = allProfiles[hostId] as Map<dynamic, dynamic>;
-              final lat = profileData['latitude'];
-              final lng = profileData['longitude'];
-
-              if (lat != null && lng != null) {
-                organizerLocations[hostId] = {
-                  'latitude': double.tryParse(lat.toString()) ?? 0.0,
-                  'longitude': double.tryParse(lng.toString()) ?? 0.0,
-                };
-              }
-            }
-          }
-        }
-      }
-
-      // Filter meetups based on organizer's location (within 200km)
-      final List<Meetup> nearby = [];
-      final Map<String, double> distances = {};
-
-      for (final meetup in meetups) {
-        // Skip past meetups
-        if (meetup.isPast) continue;
-
-        double? orgLat;
-        double? orgLng;
-
-        // Try to get organizer location from meetup data first
-        if (meetup.latitude != null && meetup.longitude != null) {
-          orgLat = meetup.latitude;
-          orgLng = meetup.longitude;
-        } else if (organizerLocations.containsKey(meetup.hostId)) {
-          // Fallback to fetched profile data
-          orgLat = organizerLocations[meetup.hostId]!['latitude'];
-          orgLng = organizerLocations[meetup.hostId]!['longitude'];
-        }
-
-        // Calculate distance if we have organizer coordinates
-        if (orgLat != null && orgLng != null) {
-          final distance = _distanceKm(
-            position.latitude,
-            position.longitude,
-            orgLat,
-            orgLng,
-          );
-
-          // Include meetup if organizer is within 200km
-          if (distance <= 200.0) {
-            nearby.add(meetup);
-            distances[meetup.id] = distance; // Store organizer distance
-          }
-        }
-      }
-
-      // Sort by date
-      nearby.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-
-      setState(() {
-        _nearbyMeetups = nearby;
-        _organizerDistances = distances;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Failed to load meetups: ${e.toString()}';
-        _isLoading = false;
-      });
-    }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
-
-  Future<Position?> _getCurrentLocation() async {
-    try {
-      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        return null;
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          return null;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        return null;
-      }
-
-      return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low,
-      );
-    } catch (e) {
-      return null;
-    }
-  }
-
-  double _distanceKm(double lat1, double lon1, double lat2, double lon2) {
-    const double earthRadiusKm = 6371.0;
-    final double dLat = _degToRad(lat2 - lat1);
-    final double dLon = _degToRad(lon2 - lon1);
-    final double a =
-        math.sin(dLat / 2) * math.sin(dLat / 2) +
-        math.cos(_degToRad(lat1)) *
-            math.cos(_degToRad(lat2)) *
-            math.sin(dLon / 2) *
-            math.sin(dLon / 2);
-    final double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
-    return earthRadiusKm * c;
-  }
-
-  double _degToRad(double deg) => deg * (math.pi / 180.0);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(28),
-          topRight: Radius.circular(28),
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Header
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.primary.withOpacity(0.98),
-                  AppColors.primary.withOpacity(0.78),
-                ],
-              ),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(28),
-                topRight: Radius.circular(28),
-              ),
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.background,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(28),
+              topRight: Radius.circular(28),
             ),
-            child: Row(
-              children: [
-                Icon(Icons.send_rounded, color: AppColors.text1, size: 28),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Suggest a Meetup',
-                        style: AppTextStyles.h4.copyWith(
-                          color: AppColors.text1,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'From organizers near you (200km)',
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.text1.withOpacity(0.9),
-                        ),
-                      ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      AppColors.primary.withOpacity(0.98),
+                      AppColors.primary.withOpacity(0.78),
                     ],
                   ),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(28),
+                    topRight: Radius.circular(28),
+                  ),
                 ),
-                IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: Icon(Icons.close, color: AppColors.text1),
+                child: Row(
+                  children: [
+                    Icon(Icons.send_rounded, color: AppColors.text1, size: 28),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Suggest a Meetup',
+                            style: AppTextStyles.h4.copyWith(
+                              color: AppColors.text1,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'From organizers near you (200km)',
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: AppColors.text1.withOpacity(0.9),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: Icon(Icons.close, color: AppColors.text1),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
 
-          // Content
-          Expanded(
-            child: _isLoading
-                ? _buildLoadingState()
-                : _errorMessage != null
-                ? _buildErrorState()
-                : _nearbyMeetups.isEmpty
-                ? _buildEmptyState()
-                : _buildMeetupsList(),
+              // Content
+              Expanded(
+                child: _controller.isLoading
+                    ? _buildLoadingState()
+                    : _controller.errorMessage != null
+                    ? _buildErrorState()
+                    : _controller.nearbyMeetups.isEmpty
+                    ? _buildEmptyState()
+                    : _buildMeetupsList(),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -296,7 +146,7 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
             ),
             const SizedBox(height: 8),
             Text(
-              _errorMessage ?? 'Something went wrong',
+              _controller.errorMessage ?? 'Something went wrong',
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.primaryText,
               ),
@@ -304,7 +154,7 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
-              onPressed: _loadNearbyMeetups,
+              onPressed: _controller.loadNearbyMeetups,
               icon: const Icon(Icons.refresh),
               label: const Text('Retry'),
               style: ElevatedButton.styleFrom(
@@ -348,9 +198,9 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
   Widget _buildMeetupsList() {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _nearbyMeetups.length,
+      itemCount: _controller.nearbyMeetups.length,
       itemBuilder: (context, index) {
-        final meetup = _nearbyMeetups[index];
+        final meetup = _controller.nearbyMeetups[index];
         return _buildMeetupCard(meetup);
       },
     );
@@ -358,7 +208,7 @@ class _SuggestMeetupBottomSheetState extends State<SuggestMeetupBottomSheet> {
 
   Widget _buildMeetupCard(Meetup meetup) {
     // Get the organizer's distance that was calculated earlier
-    final distance = _organizerDistances[meetup.id];
+    final distance = _controller.organizerDistances[meetup.id];
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),

@@ -1,6 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:backpackr/features/chat/controllers/notification_controller.dart';
+import 'package:backpackr/features/chat/models/notification_item.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 
@@ -21,9 +23,7 @@ class _NotificationScreenState extends State<NotificationScreen>
   late Animation<Offset> _slideAnimation;
   late Animation<double> _pulseAnimation;
   late Animation<double> _rippleAnimation;
-
-  // Notifications data (to be loaded dynamically)
-  final List<NotificationItem> _notifications = [];
+  final NotificationController _controller = NotificationController();
 
   @override
   void initState() {
@@ -76,34 +76,44 @@ class _NotificationScreenState extends State<NotificationScreen>
     _slideController.dispose();
     _pulseController.dispose();
     _rippleController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF1A1A2E), Color(0xFF16213E), Color(0xFF0F3460)],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(),
-              Expanded(
-                child: _notifications.isEmpty
-                    ? _buildEmptyState()
-                    : _buildNotificationsList(),
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1A1A2E),
+                  Color(0xFF16213E),
+                  Color(0xFF0F3460),
+                ],
               ),
-            ],
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  Expanded(
+                    child: _controller.notifications.isEmpty
+                        ? _buildEmptyState()
+                        : _buildNotificationsList(),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -159,7 +169,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                       ),
                       Center(
                         child: Text(
-                          '${_notifications.where((n) => !n.isRead).length} unread',
+                          '${_controller.unreadCount} unread',
                           style: AppTextStyles.bodyMedium.copyWith(
                             color: AppColors.text1.withOpacity(0.7),
                           ),
@@ -301,9 +311,9 @@ class _NotificationScreenState extends State<NotificationScreen>
         position: _slideAnimation,
         child: ListView.builder(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          itemCount: _notifications.length,
+          itemCount: _controller.notifications.length,
           itemBuilder: (context, index) {
-            final notification = _notifications[index];
+            final notification = _controller.notifications[index];
             return _buildNotificationCard(notification, index);
           },
         ),
@@ -456,7 +466,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    _formatTime(notification.time),
+                                    _controller.formatTime(notification.time),
                                     style: AppTextStyles.bodySmall.copyWith(
                                       color: AppColors.text1.withOpacity(0.5),
                                       fontSize: 12,
@@ -481,7 +491,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                                       ),
                                     ),
                                     child: Text(
-                                      _getTypeLabel(notification.type),
+                                      _controller.typeLabel(notification.type),
                                       style: AppTextStyles.bodySmall.copyWith(
                                         color: notification.color,
                                         fontWeight: FontWeight.w600,
@@ -506,50 +516,12 @@ class _NotificationScreenState extends State<NotificationScreen>
     );
   }
 
-  String _formatTime(DateTime time) {
-    final now = DateTime.now();
-    final difference = now.difference(time);
-
-    if (difference.inMinutes < 1) {
-      return 'Just now';
-    } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m ago';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours}h ago';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays}d ago';
-    } else {
-      return '${time.day}/${time.month}/${time.year}';
-    }
-  }
-
-  String _getTypeLabel(NotificationType type) {
-    switch (type) {
-      case NotificationType.message:
-        return 'MESSAGE';
-      case NotificationType.sale:
-        return 'SALE';
-      case NotificationType.offer:
-        return 'OFFER';
-      case NotificationType.system:
-        return 'SYSTEM';
-      case NotificationType.social:
-        return 'SOCIAL';
-    }
-  }
-
   void _markAsRead(String id) {
-    setState(() {
-      final index = _notifications.indexWhere((n) => n.id == id);
-      if (index != -1) {
-        _notifications[index] = _notifications[index].copyWith(isRead: true);
-      }
-    });
+    _controller.markAsRead(id);
   }
 
   void _markAllAsRead() {
-    final hasUnread = _notifications.any((n) => !n.isRead);
-    if (!hasUnread) {
+    if (!_controller.markAllAsRead()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('No new notifications'),
@@ -559,58 +531,5 @@ class _NotificationScreenState extends State<NotificationScreen>
       );
       return;
     }
-
-    setState(() {
-      for (int i = 0; i < _notifications.length; i++) {
-        _notifications[i] = _notifications[i].copyWith(isRead: true);
-      }
-    });
   }
 }
-
-// Data models
-class NotificationItem {
-  final String id;
-  final String title;
-  final String message;
-  final DateTime time;
-  final NotificationType type;
-  final bool isRead;
-  final IconData icon;
-  final Color color;
-
-  NotificationItem({
-    required this.id,
-    required this.title,
-    required this.message,
-    required this.time,
-    required this.type,
-    required this.isRead,
-    required this.icon,
-    required this.color,
-  });
-
-  NotificationItem copyWith({
-    String? id,
-    String? title,
-    String? message,
-    DateTime? time,
-    NotificationType? type,
-    bool? isRead,
-    IconData? icon,
-    Color? color,
-  }) {
-    return NotificationItem(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      message: message ?? this.message,
-      time: time ?? this.time,
-      type: type ?? this.type,
-      isRead: isRead ?? this.isRead,
-      icon: icon ?? this.icon,
-      color: color ?? this.color,
-    );
-  }
-}
-
-enum NotificationType { message, sale, offer, system, social }

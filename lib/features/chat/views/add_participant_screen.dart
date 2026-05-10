@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
+import 'package:backpackr/features/chat/controllers/chat_controller.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
-import 'package:backpackr/features/chat/repositories/chat_service.dart';
 import 'package:backpackr/features/chat/models/conversation.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
 
@@ -18,11 +18,7 @@ class AddParticipantScreen extends StatefulWidget {
 }
 
 class _AddParticipantScreenState extends State<AddParticipantScreen> {
-  final ChatService _chatService = ChatService();
-  final Set<String> _selectedParticipants = {};
-  List<Map<String, String>> _availableConnections = [];
-  bool _isLoading = true;
-  bool _isAdding = false;
+  final ChatController _controller = ChatController();
 
   @override
   void initState() {
@@ -30,23 +26,16 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
     _loadAvailableConnections();
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadAvailableConnections() async {
-    setState(() => _isLoading = true);
     try {
-      final allConnections = await _chatService.getMutualConnections();
-
-      // Filter out users who are already in the group
-      final available = allConnections.where((connection) {
-        final userId = connection['id']!;
-        return !widget.conversation.participants.containsKey(userId);
-      }).toList();
-
-      setState(() {
-        _availableConnections = available;
-        _isLoading = false;
-      });
+      await _controller.loadAvailableConnectionsForGroup(widget.conversation);
     } catch (e) {
-      setState(() => _isLoading = false);
       if (mounted) {
         ErrorHandler.showErrorSnackBar(context, e);
       }
@@ -54,40 +43,17 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
   }
 
   Future<void> _addSelectedParticipants() async {
-    if (_selectedParticipants.isEmpty) {
-      ErrorHandler.showWarningSnackBar(
-        context,
-        'Please select at least one participant',
-      );
-      return;
-    }
-
-    setState(() => _isAdding = true);
-
     try {
-      // Add each selected participant
-      for (final participantId in _selectedParticipants) {
-        final connection = _availableConnections.firstWhere(
-          (c) => c['id'] == participantId,
-        );
-        final participantName = connection['name']!;
-
-        await _chatService.addParticipantToGroup(
-          conversationId: widget.conversation.id,
-          participantId: participantId,
-          participantName: participantName,
-        );
-      }
+      await _controller.addSelectedParticipantsToGroup(widget.conversation);
 
       if (!mounted) return;
 
       Navigator.pop(context, true); // Return true to indicate success
       ErrorHandler.showSuccessSnackBar(
         context,
-        'Added ${_selectedParticipants.length} participant(s) to the group',
+        'Added ${_controller.selectedParticipantIds.length} participant(s) to the group',
       );
     } catch (e) {
-      setState(() => _isAdding = false);
       if (mounted) {
         ErrorHandler.showErrorSnackBar(context, e);
       }
@@ -96,197 +62,214 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.9,
-      minChildSize: 0.5,
-      maxChildSize: 0.95,
-      builder: (context, scrollController) {
-        return ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          child: BackdropFilter(
-            filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.background.withOpacity(0.95),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-                border: Border.all(color: AppColors.text1.withOpacity(0.1)),
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.9,
+          minChildSize: 0.5,
+          maxChildSize: 0.95,
+          builder: (context, scrollController) {
+            return ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
               ),
-              child: Column(
-                children: [
-                  // Handle bar
-                  const SizedBox(height: 8),
-                  Container(
-                    width: 40,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: AppColors.text1.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(4),
+              child: BackdropFilter(
+                filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.background.withOpacity(0.95),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
                     ),
+                    border: Border.all(color: AppColors.text1.withOpacity(0.1)),
                   ),
-                  const SizedBox(height: 16),
-
-                  // Header
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.person_add_rounded,
-                            color: AppColors.text1,
-                            size: 24,
-                          ),
+                  child: Column(
+                    children: [
+                      // Handle bar
+                      const SizedBox(height: 8),
+                      Container(
+                        width: 40,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: AppColors.text1.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Add Participants',
-                                style: AppTextStyles.h4.copyWith(
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Header
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(
+                                Icons.person_add_rounded,
+                                color: AppColors.text1,
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Add Participants',
+                                    style: AppTextStyles.h4.copyWith(
+                                      color: AppColors.text1,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    widget.conversation.groupName ?? 'Group',
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      color: AppColors.text1.withOpacity(0.60),
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => Navigator.pop(context),
+                              icon: Icon(
+                                Icons.close_rounded,
+                                color: AppColors.text1.withOpacity(0.70),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Selected count
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Select from mutual connections',
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.text1.withOpacity(0.70),
+                              ),
+                            ),
+                            const Spacer(),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                '${_controller.selectedParticipantIds.length} selected',
+                                style: AppTextStyles.bodySmall.copyWith(
                                   color: AppColors.text1,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(
-                                widget.conversation.groupName ?? 'Group',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.text1.withOpacity(0.60),
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: Icon(
-                            Icons.close_rounded,
-                            color: AppColors.text1.withOpacity(0.70),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Selected count
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Select from mutual connections',
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.text1.withOpacity(0.70),
-                          ),
-                        ),
-                        const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            '${_selectedParticipants.length} selected',
-                            style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.text1,
-                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Available connections list
-                  Expanded(
-                    child: _isLoading
-                        ? Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.primary,
-                            ),
-                          )
-                        : _availableConnections.isEmpty
-                        ? _buildEmptyState()
-                        : ListView.builder(
-                            controller: scrollController,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            itemCount: _availableConnections.length,
-                            itemBuilder: (context, index) {
-                              final connection = _availableConnections[index];
-                              final userId = connection['id']!;
-                              final userName = connection['name']!;
-                              final isSelected = _selectedParticipants.contains(
-                                userId,
-                              );
-
-                              return _buildConnectionTile(
-                                userId: userId,
-                                userName: userName,
-                                isSelected: isSelected,
-                              );
-                            },
-                          ),
-                  ),
-
-                  // Add button
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.background,
-                      border: Border(
-                        top: BorderSide(
-                          color: AppColors.text1.withOpacity(0.1),
-                          width: 1,
+                          ],
                         ),
                       ),
-                    ),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton.icon(
-                        onPressed: _isAdding ? null : _addSelectedParticipants,
-                        icon: _isAdding
-                            ? SizedBox(
-                                width: 20,
-                                height: 20,
+                      const SizedBox(height: 12),
+
+                      // Available connections list
+                      Expanded(
+                        child: _controller.isLoadingConnections
+                            ? Center(
                                 child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: AppColors.text1,
+                                  color: AppColors.primary,
                                 ),
                               )
-                            : const Icon(Icons.person_add_rounded),
-                        label: Text(_isAdding ? 'Adding...' : 'Add to Group'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: AppColors.text1,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
+                            : _controller.availableConnections.isEmpty
+                            ? _buildEmptyState()
+                            : ListView.builder(
+                                controller: scrollController,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                itemCount:
+                                    _controller.availableConnections.length,
+                                itemBuilder: (context, index) {
+                                  final connection =
+                                      _controller.availableConnections[index];
+                                  final userId = connection['id']!;
+                                  final userName = connection['name']!;
+                                  final isSelected = _controller
+                                      .selectedParticipantIds
+                                      .contains(userId);
+
+                                  return _buildConnectionTile(
+                                    userId: userId,
+                                    userName: userName,
+                                    isSelected: isSelected,
+                                  );
+                                },
+                              ),
+                      ),
+
+                      // Add button
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: AppColors.background,
+                          border: Border(
+                            top: BorderSide(
+                              color: AppColors.text1.withOpacity(0.1),
+                              width: 1,
+                            ),
                           ),
-                          elevation: 0,
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton.icon(
+                            onPressed: _controller.isAddingParticipants
+                                ? null
+                                : _addSelectedParticipants,
+                            icon: _controller.isAddingParticipants
+                                ? SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: AppColors.text1,
+                                    ),
+                                  )
+                                : const Icon(Icons.person_add_rounded),
+                            label: Text(
+                              _controller.isAddingParticipants
+                                  ? 'Adding...'
+                                  : 'Add to Group',
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: AppColors.text1,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              elevation: 0,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -312,13 +295,7 @@ class _AddParticipantScreenState extends State<AddParticipantScreen> {
       child: CheckboxListTile(
         value: isSelected,
         onChanged: (value) {
-          setState(() {
-            if (value == true) {
-              _selectedParticipants.add(userId);
-            } else {
-              _selectedParticipants.remove(userId);
-            }
-          });
+          _controller.toggleParticipant(userId, value == true);
         },
         title: Text(
           userName,

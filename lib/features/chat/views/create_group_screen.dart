@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
+import 'package:backpackr/features/chat/controllers/chat_controller.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
-import 'package:backpackr/features/chat/repositories/chat_service.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
 import 'package:backpackr/features/chat/views/conversation_screen.dart';
 
@@ -16,12 +16,8 @@ class CreateGroupScreen extends StatefulWidget {
 }
 
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
-  final ChatService _chatService = ChatService();
+  final ChatController _controller = ChatController();
   final TextEditingController _groupNameController = TextEditingController();
-  final Set<String> _selectedParticipants = {};
-  List<Map<String, String>> _mutualConnections = [];
-  bool _isLoading = true;
-  bool _isCreating = false;
 
   @override
   void initState() {
@@ -32,19 +28,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   @override
   void dispose() {
     _groupNameController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   Future<void> _loadMutualConnections() async {
-    setState(() => _isLoading = true);
     try {
-      final connections = await _chatService.getMutualConnections();
-      setState(() {
-        _mutualConnections = connections;
-        _isLoading = false;
-      });
+      await _controller.loadMutualConnectionsForGroupCreation();
     } catch (e) {
-      setState(() => _isLoading = false);
       if (mounted) {
         ErrorHandler.showErrorSnackBar(context, e);
       }
@@ -54,51 +45,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   Future<void> _createGroup() async {
     final groupName = _groupNameController.text.trim();
 
-    if (groupName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text('Please enter a group name'),
-          backgroundColor: AppColors.cta1,
-        ),
-      );
-      return;
-    }
-
-    if (_selectedParticipants.length < 2) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text('Please select at least 2 participants'),
-          backgroundColor: AppColors.cta1,
-        ),
-      );
-      return;
-    }
-
-    setState(() => _isCreating = true);
-
     try {
-      // Build participant names map
-      final participantNames = <String, String>{};
-      for (final participantId in _selectedParticipants) {
-        final connection = _mutualConnections.firstWhere(
-          (c) => c['id'] == participantId,
-        );
-        participantNames[participantId] = connection['name']!;
-      }
-
-      final groupId = await _chatService.createGroupChat(
-        groupName: groupName,
-        participantIds: _selectedParticipants.toList(),
-        participantNames: participantNames,
-      );
+      final conversation = await _controller.createSelectedGroup(groupName);
 
       if (!mounted) return;
-
-      // Get the created group conversation
-      final conversations = await _chatService.getConversations().first;
-      final conversation = conversations.firstWhere((c) => c.id == groupId);
 
       // Navigate to the group chat
       Navigator.of(context).pushReplacement(
@@ -107,7 +57,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         ),
       );
     } catch (e) {
-      setState(() => _isCreating = false);
       if (mounted) {
         ErrorHandler.showErrorSnackBar(context, e);
       }
@@ -116,184 +65,198 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        foregroundColor: AppColors.text1,
-        elevation: 0,
-        title: Text(
-          'Create Group Chat',
-          style: AppTextStyles.h4.copyWith(
-            color: AppColors.text1,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: ClipRRect(
-        borderRadius: BorderRadius.zero,
-        child: BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.background.withOpacity(0.95),
-              border: Border.all(color: AppColors.text1.withOpacity(0.1)),
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBar(
+            backgroundColor: AppColors.background,
+            foregroundColor: AppColors.text1,
+            elevation: 0,
+            title: Text(
+              'Create Group Chat',
+              style: AppTextStyles.h4.copyWith(
+                color: AppColors.text1,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            child: Column(
-              children: [
-                const SizedBox(height: 12),
-
-                // Group name input
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: BackdropFilter(
-                      filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.text1.withOpacity(0.08),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: AppColors.text1.withOpacity(0.15),
-                          ),
-                        ),
-                        child: TextField(
-                          controller: _groupNameController,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.text1,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Group name',
-                            hintStyle: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.text1.withOpacity(0.5),
-                            ),
-                            prefixIcon: Icon(
-                              Icons.people_rounded,
-                              color: AppColors.primary,
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
-                            ),
-                          ),
-                          textCapitalization: TextCapitalization.words,
-                        ),
-                      ),
-                    ),
-                  ),
+          ),
+          body: ClipRRect(
+            borderRadius: BorderRadius.zero,
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.background.withOpacity(0.95),
+                  border: Border.all(color: AppColors.text1.withOpacity(0.1)),
                 ),
-                const SizedBox(height: 16),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 12),
 
-                // Selected count
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Select participants',
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.text1.withOpacity(0.70),
-                        ),
-                      ),
-                      const Spacer(),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          '${_selectedParticipants.length} selected',
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.text1,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // Mutual connections list
-                Expanded(
-                  child: _isLoading
-                      ? Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.primary,
-                          ),
-                        )
-                      : _mutualConnections.isEmpty
-                      ? _buildEmptyState()
-                      : ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          itemCount: _mutualConnections.length,
-                          itemBuilder: (context, index) {
-                            final connection = _mutualConnections[index];
-                            final userId = connection['id']!;
-                            final userName = connection['name']!;
-                            final isSelected = _selectedParticipants.contains(
-                              userId,
-                            );
-
-                            return _buildConnectionTile(
-                              userId: userId,
-                              userName: userName,
-                              isSelected: isSelected,
-                            );
-                          },
-                        ),
-                ),
-
-                // Create button
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.background,
-                    border: Border(
-                      top: BorderSide(
-                        color: AppColors.text1.withOpacity(0.1),
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton.icon(
-                      onPressed: _isCreating ? null : _createGroup,
-                      icon: _isCreating
-                          ? SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
+                    // Group name input
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: BackdropFilter(
+                          filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.text1.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppColors.text1.withOpacity(0.15),
+                              ),
+                            ),
+                            child: TextField(
+                              controller: _groupNameController,
+                              style: AppTextStyles.bodyMedium.copyWith(
                                 color: AppColors.text1,
                               ),
-                            )
-                          : const Icon(Icons.check_rounded),
-                      label: Text(_isCreating ? 'Creating...' : 'Create Group'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: AppColors.text1,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
+                              decoration: InputDecoration(
+                                hintText: 'Group name',
+                                hintStyle: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppColors.text1.withOpacity(0.5),
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.people_rounded,
+                                  color: AppColors.primary,
+                                ),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 16,
+                                ),
+                              ),
+                              textCapitalization: TextCapitalization.words,
+                            ),
+                          ),
                         ),
-                        elevation: 0,
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 16),
+
+                    // Selected count
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Select participants',
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.text1.withOpacity(0.70),
+                            ),
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '${_controller.selectedParticipantIds.length} selected',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.text1,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Mutual connections list
+                    Expanded(
+                      child: _controller.isLoadingConnections
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.primary,
+                              ),
+                            )
+                          : _controller.mutualConnections.isEmpty
+                          ? _buildEmptyState()
+                          : ListView.builder(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              itemCount: _controller.mutualConnections.length,
+                              itemBuilder: (context, index) {
+                                final connection =
+                                    _controller.mutualConnections[index];
+                                final userId = connection['id']!;
+                                final userName = connection['name']!;
+                                final isSelected = _controller
+                                    .selectedParticipantIds
+                                    .contains(userId);
+
+                                return _buildConnectionTile(
+                                  userId: userId,
+                                  userName: userName,
+                                  isSelected: isSelected,
+                                );
+                              },
+                            ),
+                    ),
+
+                    // Create button
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.background,
+                        border: Border(
+                          top: BorderSide(
+                            color: AppColors.text1.withOpacity(0.1),
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton.icon(
+                          onPressed: _controller.isCreatingGroup
+                              ? null
+                              : _createGroup,
+                          icon: _controller.isCreatingGroup
+                              ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: AppColors.text1,
+                                  ),
+                                )
+                              : const Icon(Icons.check_rounded),
+                          label: Text(
+                            _controller.isCreatingGroup
+                                ? 'Creating...'
+                                : 'Create Group',
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.text1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            elevation: 0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -317,13 +280,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       child: CheckboxListTile(
         value: isSelected,
         onChanged: (value) {
-          setState(() {
-            if (value == true) {
-              _selectedParticipants.add(userId);
-            } else {
-              _selectedParticipants.remove(userId);
-            }
-          });
+          _controller.toggleParticipant(userId, value == true);
         },
         title: Text(
           userName,

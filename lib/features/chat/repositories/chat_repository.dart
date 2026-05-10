@@ -8,6 +8,8 @@ class ChatRepository {
 
   final FirebaseChatDataSource _dataSource;
 
+  String? get currentUserId => _dataSource.currentUserId;
+
   Stream<List<Conversation>> getConversations() {
     return _dataSource.getConversations();
   }
@@ -39,6 +41,56 @@ class ChatRepository {
       type: type,
       replyToMessageId: replyToMessageId,
       metadata: metadata,
+    );
+  }
+
+  Future<void> markMessagesAsRead(String conversationId) {
+    return _dataSource.markMessagesAsRead(conversationId);
+  }
+
+  Future<void> deleteConversation(String conversationId) {
+    return _dataSource.deleteConversation(conversationId);
+  }
+
+  Future<void> blockUser(String userId) {
+    return _dataSource.blockUser(userId);
+  }
+
+  Future<void> removeParticipantFromGroup({
+    required String conversationId,
+    required String participantId,
+  }) {
+    return _dataSource.removeParticipantFromGroup(
+      conversationId: conversationId,
+      participantId: participantId,
+    );
+  }
+
+  Future<List<Map<String, String>>> getMutualConnections() {
+    return _dataSource.getMutualConnections();
+  }
+
+  Future<String> createGroupChat({
+    required String groupName,
+    required List<String> participantIds,
+    required Map<String, String> participantNames,
+  }) {
+    return _dataSource.createGroupChat(
+      groupName: groupName,
+      participantIds: participantIds,
+      participantNames: participantNames,
+    );
+  }
+
+  Future<void> addParticipantToGroup({
+    required String conversationId,
+    required String participantId,
+    required String participantName,
+  }) {
+    return _dataSource.addParticipantToGroup(
+      conversationId: conversationId,
+      participantId: participantId,
+      participantName: participantName,
     );
   }
 }

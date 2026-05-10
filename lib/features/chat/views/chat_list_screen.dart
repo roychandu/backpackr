@@ -1,14 +1,12 @@
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:backpackr/features/chat/controllers/chat_controller.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
-import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/app_header.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
 import 'package:backpackr/features/chat/models/conversation.dart';
-import 'package:backpackr/features/chat/repositories/chat_service.dart';
 import 'package:backpackr/shared/services/user_setup_service.dart';
 import 'package:backpackr/features/chat/views/conversation_screen.dart';
 import 'package:backpackr/features/chat/views/create_group_screen.dart';
@@ -23,14 +21,12 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  final ChatService _chatService = ChatService();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String? _currentUserId;
+  final ChatController _controller = ChatController();
 
   @override
-  void initState() {
-    super.initState();
-    _currentUserId = _auth.currentUser?.uid;
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Widget _actionTile(IconData icon, String label, VoidCallback onTap) {
@@ -69,58 +65,63 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: _actionTile(
-                          Icons.send_rounded,
-                          'Suggest Meetup',
-                          _showSuggestMeetupSheet,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _actionTile(
+                              Icons.send_rounded,
+                              'Suggest Meetup',
+                              _showSuggestMeetupSheet,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _actionTile(
+                              Icons.group_add_rounded,
+                              'Create Group',
+                              _showCreateGroupSheet,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        'Recent Chats',
+                        style: AppTextStyles.h4.copyWith(
+                          color: AppColors.text1,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _actionTile(
-                          Icons.group_add_rounded,
-                          'Create Group',
-                          _showCreateGroupSheet,
-                        ),
-                      ),
+                      const SizedBox(height: 12),
+                      if (_controller.currentUserId == null)
+                        _buildNotLoggedInState()
+                      else
+                        _buildConversationsList(),
+                      const SizedBox(height: 12),
                     ],
                   ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Recent Chats',
-                    style: AppTextStyles.h4.copyWith(
-                      color: AppColors.text1,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  if (_currentUserId == null)
-                    _buildNotLoggedInState()
-                  else
-                    _buildConversationsList(),
-                  const SizedBox(height: 12),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -183,7 +184,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   Widget _buildConversationsList() {
     return StreamBuilder<List<Conversation>>(
-      stream: _chatService.getConversations(),
+      key: ValueKey(_controller.conversationRefreshToken),
+      stream: _controller.conversations,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return _buildLoadingState();
@@ -276,7 +278,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               textColor: AppColors.text3,
               borderRadius: 25,
               onPressed: () {
-                setState(() {});
+                _controller.refreshConversations();
               },
             ),
           ],
@@ -343,9 +345,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   Widget _buildConversationCard(Conversation conversation) {
-    final displayName = conversation.getDisplayName(_currentUserId!);
-    final hasUnread = conversation.hasUnreadMessages(_currentUserId!);
-    final unreadCount = conversation.getUnreadCount(_currentUserId!);
+    final displayName = _controller.displayNameFor(conversation);
+    final hasUnread = _controller.hasUnreadMessages(conversation);
+    final unreadCount = _controller.unreadCountFor(conversation);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -397,7 +399,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         ),
                       ),
                       Text(
-                        _formatTime(conversation.lastMessageTimestamp),
+                        _controller.formatConversationTime(
+                          conversation.lastMessageTimestamp,
+                        ),
                         style: TextStyle(
                           color: AppColors.text3.withOpacity(0.45),
                           fontSize: 12,
@@ -453,27 +457,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
     );
   }
 
-  String _formatTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inDays > 0) {
-      if (difference.inDays == 1) {
-        return 'Yesterday';
-      } else if (difference.inDays < 7) {
-        return '${difference.inDays} days ago';
-      } else {
-        return '${dateTime.day}/${dateTime.month}';
-      }
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m ago';
-    } else {
-      return 'Now';
-    }
-  }
-
   void _navigateToConversation(Conversation conversation) {
     Navigator.push(
       context,
@@ -519,7 +502,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   /// Check if user has completed profile setup
   Future<bool> _checkProfileSetup() async {
-    final hasCompleted = await UserSetupService.hasCompletedSetup();
+    final hasCompleted = await _controller.hasCompletedProfileSetup();
     if (!hasCompleted) {
       if (!mounted) return false;
 

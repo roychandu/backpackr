@@ -2,13 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:backpackr/features/chat/controllers/chat_controller.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
 import 'package:backpackr/features/chat/models/conversation.dart';
 import 'package:backpackr/features/chat/models/chat_message.dart';
-import 'package:backpackr/features/chat/repositories/chat_service.dart';
 import 'package:backpackr/features/chat/views/add_participant_screen.dart';
 
 class ConversationScreen extends StatefulWidget {
@@ -21,32 +20,19 @@ class ConversationScreen extends StatefulWidget {
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
-  final ChatService _chatService = ChatService();
+  final ChatController _controller = ChatController();
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String? _currentUserId;
-  String _otherUserName = '';
-  String _otherUserId = '';
+
+  String get _conversationTitle => _controller.titleFor(widget.conversation);
 
   @override
   void initState() {
     super.initState();
-    _currentUserId = _auth.currentUser?.uid;
-
-    if (!widget.conversation.isGroup) {
-      _otherUserId = widget.conversation.getOtherParticipantId(_currentUserId!);
-      _otherUserName = widget.conversation.getOtherParticipantName(
-        _currentUserId!,
-      );
-    } else {
-      _otherUserName = widget.conversation.groupName ?? 'Group Chat';
-      _otherUserId = ''; // Not applicable for groups
-    }
 
     // Mark messages as read when entering conversation
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _chatService.markMessagesAsRead(widget.conversation.id);
+      _controller.markMessagesAsRead(widget.conversation.id);
     });
   }
 
@@ -54,6 +40,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   void dispose() {
     _messageController.dispose();
     _scrollController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -95,7 +82,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _otherUserName,
+                  _conversationTitle,
                   style: AppTextStyles.bodyLarge.copyWith(
                     color: AppColors.text1,
                     fontWeight: FontWeight.bold,
@@ -131,7 +118,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   Widget _buildMessagesList() {
     return StreamBuilder<List<ChatMessage>>(
-      stream: _chatService.getMessages(widget.conversation.id),
+      stream: _controller.messagesFor(widget.conversation.id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return _buildLoadingState();
@@ -164,7 +151,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           itemCount: messages.length,
           itemBuilder: (context, index) {
             final message = messages[index];
-            final isCurrentUser = message.senderId == _currentUserId;
+            final isCurrentUser = _controller.isCurrentUserMessage(message);
             final isSystemMessage = message.type == MessageType.system;
 
             if (isSystemMessage) {
@@ -244,7 +231,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Start the conversation with $_otherUserName',
+              'Start the conversation with $_conversationTitle',
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.text1.withOpacity(0.70),
@@ -349,7 +336,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _formatMessageTime(message.timestamp),
+                    _controller.formatMessageTime(message.timestamp),
                     style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.text1.withOpacity(0.7),
                       fontSize: 10,
@@ -453,28 +440,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
     );
   }
 
-  String _formatMessageTime(DateTime timestamp) {
-    final now = DateTime.now();
-    final difference = now.difference(timestamp);
-
-    if (difference.inDays > 0) {
-      return '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}';
-    } else if (difference.inHours > 0) {
-      return '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m ago';
-    } else {
-      return 'Now';
-    }
-  }
-
   void _sendMessage() {
     final content = _messageController.text.trim();
     if (content.isEmpty) return;
 
     _messageController.clear();
 
-    _chatService.sendMessage(
+    _controller.sendConversationMessage(
       conversationId: widget.conversation.id,
       content: content,
     );
@@ -640,7 +612,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    _otherUserName,
+                                    _conversationTitle,
                                     style: TextStyle(
                                       color: AppColors.text1.withOpacity(0.7),
                                       fontSize: 12,
@@ -676,8 +648,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   onSecondary: () => Navigator.pop(context),
                                 ),
                                 const SizedBox(height: 12),
-                                if (widget.conversation.isAdmin(
-                                  _currentUserId!,
+                                if (_controller.isCurrentUserAdmin(
+                                  widget.conversation,
                                 )) ...[
                                   actionCard(
                                     icon: Icons.person_add_rounded,
@@ -714,7 +686,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   icon: Icons.block,
                                   title: 'Block User',
                                   subtitle:
-                                      'Prevent $_otherUserName from messaging you in the future.',
+                                      'Prevent $_conversationTitle from messaging you in the future.',
                                   color: AppColors.error,
                                   primaryLabel: 'Block',
                                   onPrimary: () {
@@ -797,7 +769,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Are you sure you want to block $_otherUserName? You won\'t be able to receive messages from them.',
+                    'Are you sure you want to block $_conversationTitle? You won\'t be able to receive messages from them.',
                     style: TextStyle(
                       color: AppColors.text1.withOpacity(0.70),
                       fontSize: 14,
@@ -918,12 +890,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   void _blockUser() async {
     try {
-      await _chatService.blockUser(_otherUserId);
+      await _controller.blockConversationUser(widget.conversation);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             behavior: SnackBarBehavior.floating,
-            content: Text('$_otherUserName has been blocked'),
+            content: Text('$_conversationTitle has been blocked'),
             backgroundColor: AppColors.success,
           ),
         );
@@ -944,7 +916,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   void _deleteConversation() async {
     try {
-      await _chatService.deleteConversation(widget.conversation.id);
+      await _controller.deleteConversation(widget.conversation.id);
       if (mounted) {
         Navigator.of(context).pop();
       }
@@ -1054,8 +1026,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             final isAdmin = widget.conversation.isAdmin(
                               participantId,
                             );
-                            final isCurrentUser =
-                                participantId == _currentUserId;
+                            final isCurrentUser = _controller.isCurrentUser(
+                              participantId,
+                            );
 
                             return Container(
                               margin: const EdgeInsets.only(bottom: 8),
@@ -1148,7 +1121,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Are you sure you want to leave "$_otherUserName"? You will no longer receive messages from this group.',
+                    'Are you sure you want to leave "$_conversationTitle"? You will no longer receive messages from this group.',
                     style: TextStyle(
                       color: AppColors.text1.withOpacity(0.70),
                       fontSize: 14,
@@ -1187,13 +1160,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   Future<void> _leaveGroup() async {
     try {
-      await _chatService.removeParticipantFromGroup(
-        conversationId: widget.conversation.id,
-        participantId: _currentUserId!,
-      );
-
-      // After leaving, mark as deleted for this user so it doesn't show in their list
-      await _chatService.deleteConversation(widget.conversation.id);
+      await _controller.leaveGroup(widget.conversation);
 
       if (mounted) {
         // Navigate back to chat list
