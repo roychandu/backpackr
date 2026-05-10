@@ -1,17 +1,12 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously, avoid_unnecessary_containers, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'dart:math' as math;
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
+import 'package:backpackr/features/meetups/controllers/meetups_controller.dart';
 import 'package:backpackr/features/meetups/models/meetup.dart';
-import 'package:backpackr/features/meetups/repositories/meetup_service.dart';
-import 'package:backpackr/features/travelers/repositories/traveler_service.dart';
-import 'package:backpackr/shared/services/user_setup_service.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
 import 'package:backpackr/features/meetups/views/create_meetup_screen.dart';
 import 'package:backpackr/features/meetups/views/meetup_details_screen.dart';
@@ -27,8 +22,7 @@ class MeetupsScreen extends StatefulWidget {
 
 class _MeetupsScreenState extends State<MeetupsScreen>
     with SingleTickerProviderStateMixin {
-  final MeetupService _meetupService = MeetupService();
-  final TravelerService _travelerService = TravelerService();
+  final MeetupsController _meetupsController = MeetupsController();
   List<Meetup> _meetups = [];
   bool _isLoading = true;
   String? _errorMessage;
@@ -54,14 +48,15 @@ class _MeetupsScreenState extends State<MeetupsScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    _meetupsController.dispose();
     super.dispose();
   }
 
   Future<void> _loadReportedUsers() async {
     try {
-      final uid = _meetupService.currentUserId;
+      final uid = _meetupsController.currentUserId;
       if (uid == null) return;
-      final reported = await _travelerService.getUsersReportedBy(uid);
+      final reported = await _meetupsController.getReportedUsers(uid);
       if (!mounted) return;
       setState(() {
         _reportedUserIds = reported;
@@ -71,9 +66,9 @@ class _MeetupsScreenState extends State<MeetupsScreen>
 
   Future<void> _loadHiddenUsers() async {
     try {
-      final uid = _meetupService.currentUserId;
+      final uid = _meetupsController.currentUserId;
       if (uid == null) return;
-      final hidden = await _travelerService.getHiddenTravelersForUser(uid);
+      final hidden = await _meetupsController.getHiddenUsers(uid);
       if (!mounted) return;
       setState(() {
         _hiddenUserIds = hidden;
@@ -83,47 +78,12 @@ class _MeetupsScreenState extends State<MeetupsScreen>
 
   Future<void> _loadUserLocation() async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
-
-      // First, try to get location from user profile
-      try {
-        final profileSnap = await FirebaseDatabase.instance
-            .ref('userProfiles')
-            .child(user.uid)
-            .get();
-
-        if (profileSnap.exists && profileSnap.value is Map) {
-          final profileData = profileSnap.value as Map<dynamic, dynamic>;
-          final lat = profileData['latitude'];
-          final lng = profileData['longitude'];
-
-          if (lat != null && lng != null) {
-            setState(() {
-              _userLatitude = double.tryParse(lat.toString());
-              _userLongitude = double.tryParse(lng.toString());
-            });
-            return;
-          }
-        }
-      } catch (e) {
-        // Continue to GPS fallback
-      }
-
-      // Fallback to GPS if profile doesn't have location
-      try {
-        final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-        if (!serviceEnabled) return;
-
-        final position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.low,
-        );
+      final position = await _meetupsController.getCurrentUserLocation();
+      if (position != null && mounted) {
         setState(() {
           _userLatitude = position.latitude;
           _userLongitude = position.longitude;
         });
-      } catch (e) {
-        // Location not available
       }
     } catch (e) {
       // Ignore errors
@@ -179,7 +139,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
     });
 
     try {
-      final meetups = await _meetupService.getAllMeetups();
+      final meetups = await _meetupsController.getAllMeetups();
       setState(() {
         _meetups = meetups;
         _isLoading = false;
@@ -199,7 +159,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
     }
 
     try {
-      await _meetupService.requestToJoinMeetup(meetup.id);
+      await _meetupsController.requestToJoinMeetup(meetup.id);
 
       if (!mounted) return;
 
@@ -226,7 +186,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
 
   Future<void> _cancelJoinRequest(Meetup meetup) async {
     try {
-      await _meetupService.cancelJoinRequest(meetup.id);
+      await _meetupsController.cancelJoinRequest(meetup.id);
 
       if (!mounted) return;
 
@@ -252,7 +212,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
   }
 
   List<Meetup> get _myMeetups {
-    final userId = _meetupService.currentUserId;
+    final userId = _meetupsController.currentUserId;
     if (userId == null) return [];
 
     final filteredMeetups = _meetups.where((meetup) {
@@ -561,7 +521,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
 
   Widget _buildNotificationsSection() {
     return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: _meetupService.getMeetupNotificationsStream(),
+      stream: _meetupsController.getMeetupNotificationsStream(),
       builder: (context, snapshot) {
         print(
           'Notifications StreamBuilder rebuild: connectionState=${snapshot.connectionState}, hasData=${snapshot.hasData}, dataLength=${snapshot.data?.length ?? 0}',
@@ -618,7 +578,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                     isTextOnly: true,
                     textColor: AppColors.primary,
                     onPressed: () async {
-                      await _meetupService.clearMeetupNotifications();
+                      await _meetupsController.clearMeetupNotifications();
                     },
                   ),
                 ],
@@ -693,7 +653,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                   key: Key(notificationId),
                   direction: DismissDirection.endToStart,
                   onDismissed: (direction) async {
-                    await _meetupService.deleteNotification(notificationId);
+                    await _meetupsController.deleteNotification(notificationId);
                   },
                   background: Container(
                     margin: const EdgeInsets.only(bottom: 12),
@@ -711,9 +671,8 @@ class _MeetupsScreenState extends State<MeetupsScreen>
                             final meetupId =
                                 notification['meetupId'] as String?;
                             if (meetupId != null && meetupId.isNotEmpty) {
-                              final meetup = await _meetupService.getMeetupById(
-                                meetupId,
-                              );
+                              final meetup = await _meetupsController
+                                  .getMeetupById(meetupId);
                               if (!mounted) return;
                               if (meetup != null) {
                                 Navigator.push(
@@ -812,13 +771,13 @@ class _MeetupsScreenState extends State<MeetupsScreen>
 
   Widget _meetupCard(Meetup meetup) {
     final isAttending = meetup.attendeeIds.contains(
-      _meetupService.currentUserId,
+      _meetupsController.currentUserId,
     );
-    final isHost = meetup.hostId == _meetupService.currentUserId;
+    final isHost = meetup.hostId == _meetupsController.currentUserId;
     final isFull = meetup.isFull;
     final isPast = meetup.isPast;
     final hasPendingRequest = meetup.pendingRequests.contains(
-      _meetupService.currentUserId,
+      _meetupsController.currentUserId,
     );
     final bool showUserActions =
         !isHost &&
@@ -1060,7 +1019,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
   }
 
   Future<void> _onReportUser(Meetup meetup) async {
-    final userId = _meetupService.currentUserId;
+    final userId = _meetupsController.currentUserId;
     if (userId == null) return;
 
     final TextEditingController reasonController = TextEditingController();
@@ -1105,7 +1064,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
     if (reason == null) return;
 
     try {
-      await _travelerService.reportUser(
+      await _meetupsController.reportUser(
         reportedUserId: meetup.hostId,
         reporterUserId: userId,
         reason: reason.isEmpty ? 'Reported from meetups screen' : reason,
@@ -1137,7 +1096,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
   }
 
   Future<void> _onBlockUser(Meetup meetup) async {
-    final userId = _meetupService.currentUserId;
+    final userId = _meetupsController.currentUserId;
     if (userId == null) return;
 
     final confirm = await showDialog<bool>(
@@ -1165,9 +1124,9 @@ class _MeetupsScreenState extends State<MeetupsScreen>
     if (confirm != true) return;
 
     try {
-      await _travelerService.hideTravelerForUser(
+      await _meetupsController.hideTravelerForUser(
         userId: userId,
-        travelerUserId: meetup.hostId,
+        travelerId: meetup.hostId,
       );
 
       setState(() {
@@ -1196,7 +1155,7 @@ class _MeetupsScreenState extends State<MeetupsScreen>
 
   Future<void> _leaveMeetup(Meetup meetup) async {
     try {
-      await _meetupService.leaveMeetup(meetup.id);
+      await _meetupsController.leaveMeetup(meetup.id);
 
       if (!mounted) return;
 
@@ -1242,12 +1201,12 @@ class _MeetupsScreenState extends State<MeetupsScreen>
 
   /// Check if user has completed profile setup
   Future<bool> _checkProfileSetup() async {
-    final hasCompleted = await UserSetupService.isProfileStrictlyComplete();
+    final hasCompleted = await _meetupsController.isProfileStrictlyComplete();
     if (!hasCompleted) {
       if (!mounted) return false;
 
       // Use the existing SetupReminderPopup
-      await UserSetupService.showSetupPopup(context);
+      await _meetupsController.showSetupPopup(context);
       return false;
     }
     return true;

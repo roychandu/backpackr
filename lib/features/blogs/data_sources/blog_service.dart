@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:backpackr/features/blogs/models/blog.dart';
 import 'package:backpackr/shared/services/upload/aws_module.dart';
 import 'package:backpackr/shared/services/local_storage_service.dart';
-import 'package:flutter/foundation.dart';
 
 class BlogService {
   static final BlogService _instance = BlogService._internal();

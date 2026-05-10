@@ -7,7 +7,6 @@ import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/app_header.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
 import 'package:backpackr/features/chat/models/conversation.dart';
-import 'package:backpackr/shared/services/user_setup_service.dart';
 import 'package:backpackr/features/chat/views/conversation_screen.dart';
 import 'package:backpackr/features/chat/views/create_group_screen.dart';
 import 'package:backpackr/features/chat/views/suggest_meetup_bottom_sheet.dart';
@@ -507,7 +506,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
       if (!mounted) return false;
 
       // Use the existing SetupReminderPopup
-      await UserSetupService.showSetupPopup(context);
+      await _controller.showSetupPopup(context);
       return false;
     }
     return true;

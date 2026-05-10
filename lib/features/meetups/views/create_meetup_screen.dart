@@ -5,9 +5,8 @@ import 'dart:ui' as ui;
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
+import 'package:backpackr/features/meetups/controllers/meetups_controller.dart';
 import 'package:backpackr/features/meetups/models/meetup.dart';
-import 'package:backpackr/features/meetups/repositories/meetup_service.dart';
-import 'package:backpackr/features/auth/repositories/auth_service.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
 
 class CreateMeetupScreen extends StatefulWidget {
@@ -21,8 +20,7 @@ class CreateMeetupScreen extends StatefulWidget {
 
 class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _meetupService = MeetupService();
-  final _authService = AuthService();
+  final MeetupsController _meetupsController = MeetupsController();
 
   // Form controllers
   final _titleController = TextEditingController();
@@ -278,7 +276,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
                           onPressed: () async {
                             try {
                               Navigator.of(context).pop();
-                              await _authService.acceptEula();
+                              await _meetupsController.acceptEula();
                               await _performCreateMeetup();
                             } catch (e) {
                               if (!mounted) return;
@@ -311,6 +309,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
     _descriptionController.dispose();
     _locationController.dispose();
     _capacityController.dispose();
+    _meetupsController.dispose();
     super.dispose();
   }
 
@@ -482,7 +481,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
     }
 
     // Check EULA acceptance before creating the meetup
-    final hasAccepted = await _authService.hasAcceptedEula();
+    final hasAccepted = await _meetupsController.hasAcceptedEula();
     if (!hasAccepted) {
       await _showEulaDialogBeforeCreate();
       return;
@@ -508,7 +507,7 @@ class _CreateMeetupScreenState extends State<CreateMeetupScreen> {
         _selectedTime.minute,
       );
 
-      await _meetupService.createMeetup(
+      await _meetupsController.createMeetup(
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
         category: _selectedCategory,

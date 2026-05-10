@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:backpackr/features/auth/views/login_screen.dart';
+import 'package:backpackr/features/onboarding/controllers/onboarding_controller.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
-import 'package:backpackr/shared/services/app_flow_service.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -20,7 +20,7 @@ class _IntroScreenState extends State<IntroScreen>
   final PageController _pageController = PageController();
   int _currentPage = 0;
   late final List<_OnboardPage> _pages;
-  final AppFlowService _appFlowService = AppFlowService();
+  final OnboardingController _onboardingController = OnboardingController();
   bool _isLoading = false;
   bool _hasError = false;
   late AnimationController _slideController;
@@ -74,6 +74,7 @@ class _IntroScreenState extends State<IntroScreen>
     _pageController.dispose();
     _slideController.dispose();
     _fadeController.dispose();
+    _onboardingController.dispose();
     super.dispose();
   }
 
@@ -86,7 +87,7 @@ class _IntroScreenState extends State<IntroScreen>
       );
     } else {
       // Mark intro as seen and navigate to auth
-      await _appFlowService.markIntroAsSeen();
+      await _onboardingController.markIntroAsSeen();
       if (mounted) {
         _fadeController.forward();
         Navigator.of(context).pushReplacement(
@@ -105,7 +106,7 @@ class _IntroScreenState extends State<IntroScreen>
   }
 
   void _skipToAuth() async {
-    await _appFlowService.markIntroAsSeen();
+    await _onboardingController.markIntroAsSeen();
     if (mounted) {
       _fadeController.forward();
       Navigator.of(context).pushReplacement(

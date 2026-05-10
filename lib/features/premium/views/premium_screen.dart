@@ -2,8 +2,6 @@ import 'package:backpackr/shared/widgets/custom_button.dart';
 import 'package:backpackr/features/premium/controllers/purchase_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:backpackr/features/auth/repositories/auth_service.dart';
-import 'package:backpackr/shared/services/app_config_service.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 
 class PremiumScreen extends StatefulWidget {
@@ -15,7 +13,6 @@ class PremiumScreen extends StatefulWidget {
 
 class _PremiumScreenState extends State<PremiumScreen> {
   bool isLoading = false;
-  final AppConfigService _configService = AppConfigService();
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +44,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                         const SizedBox(height: 32),
 
                         // Plans Comparison
-                        _buildPlansComparison(),
+                        _buildPlansComparison(inAppPurchaseProvider),
 
                         const SizedBox(height: 32),
                       ],
@@ -262,7 +259,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
     );
   }
 
-  Widget _buildPlansComparison() {
+  Widget _buildPlansComparison(InAppPurchaseProvider provider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -316,7 +313,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              ..._configService.getAllFreePlanFeatures().map((feature) {
+              ...provider.freePlanFeatures.map((feature) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
@@ -413,7 +410,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              ..._configService.getAllPremiumPlanFeatures().map((feature) {
+              ...provider.premiumPlanFeatures.map((feature) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
@@ -616,7 +613,10 @@ class _PremiumScreenState extends State<PremiumScreen> {
 
     try {
       await Future.delayed(const Duration(seconds: 2));
-      await AuthService().updatePremiumStatus(true);
+      await Provider.of<InAppPurchaseProvider>(
+        context,
+        listen: false,
+      ).updatePremiumStatus(true);
 
       if (!mounted) return;
       Navigator.pop(context);

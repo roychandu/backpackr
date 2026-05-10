@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:backpackr/features/profile/views/edit_profile.dart';
 import 'package:backpackr/features/premium/views/premium_screen.dart';
+import 'package:backpackr/features/profile/controllers/profile_controller.dart';
 import 'package:backpackr/features/profile/views/user_setup_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:backpackr/features/premium/controllers/purchase_controller.dart';
@@ -12,8 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
-import 'package:backpackr/features/auth/repositories/auth_service.dart';
-import 'package:backpackr/shared/services/theme_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -23,7 +22,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final AuthService _authService = AuthService();
+  final ProfileController _profileController = ProfileController();
 
   String _userEmail = '';
   String _userName = '';
@@ -39,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadProfileData() async {
     try {
-      final userData = await _authService.getUserData();
+      final userData = await _profileController.getUserData();
       if (mounted) {
         setState(() {
           _userEmail = userData['email'] ?? '';
@@ -55,6 +54,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _profileController.dispose();
+    super.dispose();
   }
 
   @override
@@ -188,14 +193,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             () => _buildSettingsRow(
               'Dark Mode',
               trailing: Switch(
-                value: ThemeService.to.isDarkMode.value,
+                value: _profileController.isDarkMode,
                 onChanged: (val) {
-                  ThemeService.to.switchTheme();
+                  _profileController.switchTheme();
                 },
                 activeColor: AppColors.primary,
               ),
               onTap: () {
-                ThemeService.to.switchTheme();
+                _profileController.switchTheme();
               },
             ),
           ),
@@ -394,7 +399,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onPressed: () async {
                           Navigator.pop(dialogContext);
                           try {
-                            await _authService.signOut();
+                            await _profileController.signOut();
                             if (mounted) {
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
@@ -458,7 +463,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _deleteAccount() async {
     try {
-      await _authService.deleteAccount();
+      await _profileController.deleteAccount();
       if (mounted) {
         Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
       }

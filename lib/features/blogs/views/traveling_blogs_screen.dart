@@ -6,14 +6,12 @@ import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
+import 'package:backpackr/features/blogs/controllers/blog_controller.dart';
 import 'package:backpackr/features/blogs/models/blog.dart';
-import 'package:backpackr/features/blogs/repositories/blog_service.dart';
-import 'package:backpackr/shared/services/user_setup_service.dart';
 import 'package:backpackr/shared/widgets/app_header.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
 import 'package:backpackr/features/blogs/views/create_traveling_blog_bottom_sheet.dart';
 import 'package:backpackr/features/blogs/views/traveling_blog_details_screen.dart';
-import 'package:backpackr/shared/services/local_storage_service.dart';
 
 class TravelingBlogsScreen extends StatefulWidget {
   const TravelingBlogsScreen({super.key});
@@ -23,7 +21,7 @@ class TravelingBlogsScreen extends StatefulWidget {
 }
 
 class _TravelingBlogsScreenState extends State<TravelingBlogsScreen> {
-  final BlogService _blogService = BlogService();
+  final BlogController _blogController = BlogController();
   List<Blog> _allBlogs = [];
   bool _isLoading = true;
   String? _errorMessage;
@@ -34,6 +32,12 @@ class _TravelingBlogsScreenState extends State<TravelingBlogsScreen> {
     _loadBlogs();
   }
 
+  @override
+  void dispose() {
+    _blogController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadBlogs() async {
     setState(() {
       _isLoading = true;
@@ -42,7 +46,7 @@ class _TravelingBlogsScreenState extends State<TravelingBlogsScreen> {
 
     try {
       // Load from cache first for instant UI
-      final cachedBlogs = LocalStorageService.getAllBlogs();
+      final cachedBlogs = _blogController.getCachedBlogs();
       if (cachedBlogs.isNotEmpty && mounted) {
         setState(() {
           _allBlogs = cachedBlogs;
@@ -53,7 +57,7 @@ class _TravelingBlogsScreenState extends State<TravelingBlogsScreen> {
         });
       }
 
-      final blogs = await _blogService.getAllBlogs();
+      final blogs = await _blogController.getAllBlogs();
 
       if (mounted) {
         setState(() {
@@ -238,12 +242,12 @@ class _TravelingBlogsScreenState extends State<TravelingBlogsScreen> {
 
   /// Check if user has completed profile setup
   Future<bool> _checkProfileSetup() async {
-    final hasCompleted = await UserSetupService.hasCompletedSetup();
+    final hasCompleted = await _blogController.hasCompletedSetup();
     if (!hasCompleted) {
       if (!mounted) return false;
 
       // Use the existing SetupReminderPopup
-      await UserSetupService.showSetupPopup(context);
+      await _blogController.showSetupPopup(context);
       return false;
     }
     return true;

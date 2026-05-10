@@ -1,11 +1,11 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:backpackr/features/auth/controllers/auth_controller.dart';
 import 'package:backpackr/features/auth/views/login_screen.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
-import 'package:backpackr/features/auth/repositories/auth_service.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -25,7 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isRegisterLoading = false;
   bool _isAppleLoading = false;
   bool _isGoogleLoading = false;
-  final AuthService _authService = AuthService();
+  final AuthController _authController = AuthController();
 
   @override
   void dispose() {
@@ -33,6 +33,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _authController.dispose();
     super.dispose();
   }
 
@@ -342,7 +343,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      await _authService.signUpWithEmailAndPassword(
+      await _authController.register(
         email: _emailController.text.trim(),
         password: _passwordController.text,
         name: _fullNameController.text.trim(),
@@ -351,7 +352,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       // If user accepted EULA, save it
       if (eulaAccepted) {
         try {
-          await _authService.acceptEula();
+          await _authController.acceptEula();
         } catch (e) {
           // Log error but don't block registration
           print('Error saving EULA acceptance: $e');
@@ -405,7 +406,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      await _authService.signInWithApple();
+      await _authController.signInWithApple();
 
       // After successful Apple sign-up, navigate to home
       if (mounted) {
@@ -432,7 +433,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      await _authService.signInWithGoogle();
+      await _authController.signInWithGoogle();
 
       if (mounted) {
         Navigator.of(

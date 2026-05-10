@@ -14,6 +14,10 @@ class ChatRepository {
     return _dataSource.getConversations();
   }
 
+  Stream<int> getTotalUnreadCount() {
+    return _dataSource.getTotalUnreadCount();
+  }
+
   Stream<List<ChatMessage>> getMessages(String conversationId) {
     return _dataSource.getMessages(conversationId);
   }

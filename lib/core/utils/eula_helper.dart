@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
-import 'package:backpackr/features/auth/repositories/auth_service.dart';
+import 'package:backpackr/features/auth/repositories/auth_repository.dart';
 
 class EulaHelper {
   static Future<bool> checkAndRequestEulaAcceptance(
     BuildContext context,
   ) async {
-    final authService = AuthService();
+    final authRepository = AuthRepository();
 
     // Check if user has already accepted EULA
-    final hasAccepted = await authService.hasAcceptedEula();
+    final hasAccepted = await authRepository.hasAcceptedEula();
     if (hasAccepted) {
       return true; // User has already accepted
     }
@@ -115,7 +115,7 @@ class EulaHelper {
     // If user accepted, save to database
     if (accepted == true) {
       try {
-        await authService.acceptEula();
+        await authRepository.acceptEula();
         return true;
       } catch (e) {
         // Show error but return false

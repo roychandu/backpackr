@@ -2,7 +2,7 @@ import 'package:backpackr/features/chat/models/chat_message.dart';
 import 'package:backpackr/features/chat/models/conversation.dart';
 import 'package:backpackr/features/chat/repositories/chat_repository.dart';
 import 'package:backpackr/shared/services/user_setup_service.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 class ChatController extends ChangeNotifier {
   ChatController({ChatRepository? repository})
@@ -31,6 +31,10 @@ class ChatController extends ChangeNotifier {
 
   Future<bool> hasCompletedProfileSetup() {
     return UserSetupService.hasCompletedSetup();
+  }
+
+  Future<void> showSetupPopup(BuildContext context) {
+    return UserSetupService.showSetupPopup(context);
   }
 
   String displayNameFor(Conversation conversation) {

@@ -1,4 +1,4 @@
-import 'package:backpackr/features/travelers/repositories/traveler_service.dart';
+import 'package:backpackr/features/travelers/data_sources/traveler_service.dart';
 
 class FirebaseTravelersDataSource {
   FirebaseTravelersDataSource({TravelerService? travelerService})

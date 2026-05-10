@@ -32,6 +32,49 @@ class AuthController extends ChangeNotifier {
     await _run(_repository.logout);
   }
 
+  Future<void> signInWithApple() async {
+    await _run(_repository.signInWithApple);
+  }
+
+  Future<void> signInWithGoogle() async {
+    await _run(_repository.signInWithGoogle);
+  }
+
+  Future<Map<String, dynamic>> getUserData() {
+    return _repository.getUserData();
+  }
+
+  Future<bool> hasAcceptedEula() {
+    return _repository.hasAcceptedEula();
+  }
+
+  Future<void> acceptEula() {
+    return _repository.acceptEula();
+  }
+
+  Future<void> updateUserProfile({String? displayName, String? photoURL}) {
+    return _repository.updateUserProfile(
+      displayName: displayName,
+      photoURL: photoURL,
+    );
+  }
+
+  Future<void> updateUserData(Map<String, dynamic> data) {
+    return _repository.updateUserData(data);
+  }
+
+  Future<void> updatePremiumStatus(bool isPremium) {
+    return _repository.updatePremiumStatus(isPremium);
+  }
+
+  Future<void> deleteAccount() {
+    return _repository.deleteAccount();
+  }
+
+  Future<void> ensureUserDataInFirebase() {
+    return _repository.ensureUserDataInFirebase();
+  }
+
   Future<void> _run(Future<Object?> Function() action) async {
     isLoading = true;
     errorMessage = null;
@@ -41,6 +84,7 @@ class AuthController extends ChangeNotifier {
       await action();
     } catch (e) {
       errorMessage = e.toString();
+      rethrow;
     } finally {
       isLoading = false;
       notifyListeners();

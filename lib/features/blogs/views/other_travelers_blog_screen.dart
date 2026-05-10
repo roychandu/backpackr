@@ -6,8 +6,8 @@ import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
+import 'package:backpackr/features/blogs/controllers/blog_controller.dart';
 import 'package:backpackr/features/blogs/models/blog.dart';
-import 'package:backpackr/features/blogs/repositories/blog_service.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
 import 'package:backpackr/features/blogs/views/traveling_blog_details_screen.dart';
 
@@ -33,7 +33,7 @@ class OtherTravelersBlogScreen extends StatefulWidget {
 }
 
 class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
-  final BlogService _blogService = BlogService();
+  final BlogController _blogController = BlogController();
   List<Blog> _userBlogs = [];
   bool _isLoading = true;
   String? _errorMessage;
@@ -44,6 +44,12 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
     _loadUserBlogs();
   }
 
+  @override
+  void dispose() {
+    _blogController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadUserBlogs() async {
     setState(() {
       _isLoading = true;
@@ -51,7 +57,7 @@ class _OtherTravelersBlogScreenState extends State<OtherTravelersBlogScreen> {
     });
 
     try {
-      final blogs = await _blogService.getUserBlogs(widget.userId);
+      final blogs = await _blogController.getUserBlogs(widget.userId);
 
       setState(() {
         _userBlogs = blogs;

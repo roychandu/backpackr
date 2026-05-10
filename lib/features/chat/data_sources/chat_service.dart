@@ -6,7 +6,7 @@ import 'package:backpackr/features/chat/models/chat_message.dart';
 import 'package:backpackr/features/chat/models/conversation.dart';
 // import 'notification_service.dart';
 import 'package:backpackr/shared/services/local_storage_service.dart';
-import 'package:backpackr/features/auth/repositories/auth_service.dart';
+import 'package:backpackr/features/auth/data_sources/auth_service.dart';
 
 class ChatService {
   static final ChatService _instance = ChatService._internal();

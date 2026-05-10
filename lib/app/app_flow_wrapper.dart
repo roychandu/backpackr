@@ -1,4 +1,4 @@
-import 'package:backpackr/features/auth/repositories/auth_service.dart';
+import 'package:backpackr/features/auth/repositories/auth_repository.dart';
 import 'package:backpackr/features/auth/views/login_screen.dart';
 import 'package:backpackr/features/onboarding/views/intro_screen.dart';
 import 'package:backpackr/features/travelers/views/travelers_screen.dart';
@@ -14,12 +14,12 @@ class AppFlowWrapper extends StatefulWidget {
 
 class _AppFlowWrapperState extends State<AppFlowWrapper> {
   final AppFlowService _appFlowService = AppFlowService();
-  final AuthService _authService = AuthService();
+  final AuthRepository _authRepository = AuthRepository();
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: _authService.authStateChanges,
+      stream: _authRepository.authStateChanges,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(

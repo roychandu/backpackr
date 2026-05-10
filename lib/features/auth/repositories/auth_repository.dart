@@ -40,4 +40,47 @@ class AuthRepository {
   Future<void> logout() {
     return _dataSource.signOut();
   }
+
+  Future<UserCredential?> signInWithApple() {
+    return _dataSource.signInWithApple();
+  }
+
+  Future<UserCredential?> signInWithGoogle() {
+    return _dataSource.signInWithGoogle();
+  }
+
+  Future<Map<String, dynamic>> getUserData() {
+    return _dataSource.getUserData();
+  }
+
+  Future<bool> hasAcceptedEula() {
+    return _dataSource.hasAcceptedEula();
+  }
+
+  Future<void> acceptEula() {
+    return _dataSource.acceptEula();
+  }
+
+  Future<void> updateUserProfile({String? displayName, String? photoURL}) {
+    return _dataSource.updateUserProfile(
+      displayName: displayName,
+      photoURL: photoURL,
+    );
+  }
+
+  Future<void> updateUserData(Map<String, dynamic> data) {
+    return _dataSource.updateUserData(data);
+  }
+
+  Future<void> updatePremiumStatus(bool isPremium) {
+    return _dataSource.updatePremiumStatus(isPremium);
+  }
+
+  Future<void> deleteAccount() {
+    return _dataSource.deleteAccount();
+  }
+
+  Future<void> ensureUserDataInFirebase() {
+    return _dataSource.ensureUserDataInFirebase();
+  }
 }

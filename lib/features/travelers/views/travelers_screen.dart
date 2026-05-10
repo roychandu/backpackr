@@ -4,12 +4,6 @@ import 'package:backpackr/features/blogs/views/traveling_blogs_screen.dart';
 import 'package:backpackr/features/blogs/views/other_travelers_blog_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:ui';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart' as geocoding;
-import 'package:permission_handler/permission_handler.dart' as perm;
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/app_header.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
@@ -18,13 +12,7 @@ import 'package:backpackr/features/waves/views/waves_screen.dart';
 import 'package:backpackr/features/meetups/views/meetups_screen.dart';
 import 'package:backpackr/features/chat/views/chat_list_screen.dart';
 import 'package:backpackr/features/chat/views/conversation_screen.dart';
-import 'package:backpackr/shared/services/user_setup_service.dart';
-import 'package:backpackr/features/auth/repositories/auth_service.dart';
-import 'package:backpackr/features/waves/repositories/wave_service.dart';
-import 'package:backpackr/features/chat/repositories/chat_service.dart';
-import 'package:backpackr/features/meetups/repositories/meetup_service.dart';
-import 'package:backpackr/features/travelers/repositories/traveler_service.dart';
-import 'package:backpackr/shared/services/local_storage_service.dart';
+import 'package:backpackr/features/travelers/controllers/travelers_controller.dart';
 import 'package:backpackr/features/travelers/models/user_profile.dart';
 import 'dart:math' as math;
 
@@ -147,12 +135,8 @@ class _TravelersScreenState extends State<TravelersScreen>
   bool _setupCompleted = false;
   bool _hasCheckedLocationPermission = false;
   Timer? _setupPollTimer;
-  final AuthService _authService = AuthService();
-  final WaveService _waveService = WaveService();
-  final ChatService _chatService = ChatService();
-  final MeetupService _meetupService = MeetupService();
-  final TravelerService _travelerService = TravelerService();
-  StreamSubscription<DatabaseEvent>? _profilesSubscription;
+  final TravelersController _travelersController = TravelersController();
+  StreamSubscription<NearbyTravelersSnapshot>? _profilesSubscription;
   int _profilesSubscriptionGeneration = 0;
 
   @override
@@ -167,7 +151,7 @@ class _TravelersScreenState extends State<TravelersScreen>
 
     // Initialize user setup service and check location permission
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      UserSetupService.initialize(context);
+      _travelersController.initializeUserSetup(context);
 
       // Check location permission after login
       await _checkLocationPermission();
@@ -178,18 +162,20 @@ class _TravelersScreenState extends State<TravelersScreen>
     _checkSetupAndMaybeLoadLocation();
     _applyFilters();
     // Ensure current user data exists in Firebase
-    _authService.ensureUserDataInFirebase();
+    _travelersController.ensureUserDataInFirebase();
 
     // Load cached travelers for instant UI
     _loadCachedTravelers();
 
     // Load hidden/reported travelers for current user
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final uid = FirebaseAuth.instance.currentUser?.uid;
+      final uid = _travelersController.currentUserId;
       if (uid != null) {
         try {
-          final hidden = await _travelerService.getHiddenTravelersForUser(uid);
-          final reported = await _travelerService.getUsersReportedBy(uid);
+          final hidden = await _travelersController.getHiddenTravelersForUser(
+            uid,
+          );
+          final reported = await _travelersController.getUsersReportedBy(uid);
           if (mounted) {
             setState(() {
               _hiddenTravelerIds
@@ -207,7 +193,7 @@ class _TravelersScreenState extends State<TravelersScreen>
   }
 
   void _loadCachedTravelers() {
-    final cached = LocalStorageService.getAllProfiles();
+    final cached = _travelersController.getCachedProfiles();
     if (cached.isNotEmpty) {
       setState(() {
         _allTravelers.addAll(cached);
@@ -222,7 +208,8 @@ class _TravelersScreenState extends State<TravelersScreen>
     _profilesSubscriptionGeneration++;
     _profilesSubscription?.cancel();
     WidgetsBinding.instance.removeObserver(this);
-    UserSetupService.dispose();
+    _travelersController.disposeUserSetup();
+    _travelersController.dispose();
     _travelersTabController.dispose();
     _setupPollTimer?.cancel();
     super.dispose();
@@ -253,70 +240,14 @@ class _TravelersScreenState extends State<TravelersScreen>
     await _requestLocationPermission();
   }
 
-  /// Show dialog when location service is disabled
-  void _showLocationServiceDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            Icon(Icons.location_off, color: AppColors.primary, size: 28),
-            const SizedBox(width: 12),
-            const Text('Location Service Disabled'),
-          ],
-        ),
-        content: const Text(
-          'Location services are turned off. Please enable location services to find travelers near you.',
-          style: TextStyle(fontSize: 16),
-        ),
-        actions: [
-          CustomButton(
-            text: 'Maybe Later',
-            isTextOnly: true,
-            textColor: AppColors.textSecondary,
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          CustomButton(
-            text: 'Open Settings',
-            backgroundColor: AppColors.primary,
-            onPressed: () async {
-              Navigator.of(context).pop();
-              await perm.openAppSettings();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
   /// Request location permission
   Future<void> _requestLocationPermission() async {
     try {
-      // Check current status using permission_handler
-      var status = await perm.Permission.location.status;
-
-      // If already granted or limited (iOS), no need to request
-      if (status.isGranted || status.isLimited || status.isProvisional) {
-        debugPrint('Location permission already granted or limited');
-        return;
-      }
-
-      // If permanently denied, show settings dialog
-      if (status.isPermanentlyDenied) {
+      final granted = await _travelersController.requestLocationPermission();
+      if (!granted) {
         if (mounted) {
           _showOpenSettingsDialog();
         }
-        return;
-      }
-
-      // Request permission
-      final result = await perm.Permission.location.request();
-
-      // If user denied after request, maybe show settings dialog if suitable
-      if (result.isPermanentlyDenied && mounted) {
-        _showOpenSettingsDialog();
       }
     } catch (e) {
       debugPrint('Error requesting location permission: $e');
@@ -344,7 +275,7 @@ class _TravelersScreenState extends State<TravelersScreen>
             backgroundColor: AppColors.primary,
             onPressed: () {
               Navigator.of(context).pop();
-              perm.openAppSettings();
+              _travelersController.openAppSettings();
             },
           ),
         ],
@@ -354,7 +285,7 @@ class _TravelersScreenState extends State<TravelersScreen>
 
   Future<void> _checkSetupAndMaybeLoadLocation() async {
     try {
-      final completed = await UserSetupService.hasCompletedSetup();
+      final completed = await _travelersController.hasCompletedSetup();
       if (!mounted) return;
       setState(() {
         _setupCompleted = completed;
@@ -376,7 +307,7 @@ class _TravelersScreenState extends State<TravelersScreen>
         // Start a short polling loop to detect completion soon after user finishes setup
         _setupPollTimer?.cancel();
         _setupPollTimer = Timer.periodic(const Duration(seconds: 2), (t) async {
-          final done = await UserSetupService.hasCompletedSetup();
+          final done = await _travelersController.hasCompletedSetup();
           if (done) {
             t.cancel();
             if (!mounted) return;
@@ -400,7 +331,7 @@ class _TravelersScreenState extends State<TravelersScreen>
 
   Future<void> _loadUserName() async {
     try {
-      final userData = await _authService.getUserData();
+      final userData = await _travelersController.getUserData();
       if (mounted) {
         setState(() {
           _userName = userData['name'] ?? '';
@@ -417,57 +348,40 @@ class _TravelersScreenState extends State<TravelersScreen>
       _isLocating = true;
     });
     try {
-      // First, try to get city from Firebase user profile
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        try {
-          final profileSnap = await FirebaseDatabase.instance
-              .ref('userProfiles')
-              .child(user.uid)
-              .get();
+      final saved = await _travelersController.getSavedCurrentUserLocation();
+      if (saved == null) {
+        await _loadCurrentCityFromGPS();
+        return;
+      }
+      final hasSavedLocation =
+          saved.currentLocation != null &&
+          saved.currentLocation!.trim().isNotEmpty;
+      final hasSavedCoordinates = _hasUsableCoordinates(
+        saved.latitude,
+        saved.longitude,
+      );
 
-          if (profileSnap.exists && profileSnap.value is Map) {
-            final profileData = profileSnap.value as Map<dynamic, dynamic>;
-            final savedLocation = profileData['currentLocation'] as String?;
-            final savedLatitude = _readDouble(profileData['latitude']);
-            final savedLongitude = _readDouble(profileData['longitude']);
-            final savedLastUpdated = _readInt(profileData['lastUpdated']) ?? 0;
-            final hasSavedLocation =
-                savedLocation != null && savedLocation.trim().isNotEmpty;
-            final hasSavedCoordinates = _hasUsableCoordinates(
-              savedLatitude,
-              savedLongitude,
-            );
-
-            if (hasSavedLocation || hasSavedCoordinates) {
-              if (mounted) {
-                setState(() {
-                  if (hasSavedLocation) {
-                    _currentCity = savedLocation.trim();
-                  }
-                  if (hasSavedCoordinates) {
-                    _setCurrentCoordinates(
-                      savedLatitude!,
-                      savedLongitude!,
-                      updatedAt: savedLastUpdated,
-                    );
-                  }
-                  _applyFilters();
-                });
-              }
-              if (hasSavedCoordinates) {
-                await _startNearbyTravelersWatcher();
-              }
-
-              // Refresh with GPS, but do not block first nearby results on geocoding.
-              await _loadCurrentCityFromGPS();
-              return;
+      if (hasSavedLocation || hasSavedCoordinates) {
+        if (mounted) {
+          setState(() {
+            if (hasSavedLocation) {
+              _currentCity = saved.currentLocation!.trim();
             }
-          }
-        } catch (e) {}
+            if (hasSavedCoordinates) {
+              _setCurrentCoordinates(
+                saved.latitude!,
+                saved.longitude!,
+                updatedAt: saved.lastUpdated ?? 0,
+              );
+            }
+            _applyFilters();
+          });
+        }
+        if (hasSavedCoordinates) {
+          await _startNearbyTravelersWatcher();
+        }
       }
 
-      // Fallback to GPS geocoding if no Firebase location
       await _loadCurrentCityFromGPS();
     } finally {
       if (mounted) {
@@ -480,9 +394,9 @@ class _TravelersScreenState extends State<TravelersScreen>
 
   Future<void> _loadCurrentCityFromGPS() async {
     try {
-      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        // Location service disabled - stop loading
+      final location = await _travelersController
+          .getCurrentGpsLocationIfAllowed();
+      if (location == null) {
         if (mounted) {
           setState(() {
             _isLoadingTravelers = false;
@@ -491,79 +405,19 @@ class _TravelersScreenState extends State<TravelersScreen>
         return;
       }
 
-      // Check status but DO NOT auto-request here to avoid popups on every app resume
-      var status = await perm.Permission.location.status;
-
-      if (!status.isGranted && !status.isLimited && !status.isProvisional) {
-        // Not granted - stop loading rather than showing a popup again
-        if (mounted) {
-          setState(() {
-            _isLoadingTravelers = false;
-          });
-        }
-        return;
-      }
-
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low,
-        timeLimit: const Duration(seconds: 10), // Add timeout
-      );
       if (!mounted) return;
-
-      final positionUpdatedAt = DateTime.now().millisecondsSinceEpoch;
       setState(() {
         _setCurrentCoordinates(
-          position.latitude,
-          position.longitude,
-          updatedAt: positionUpdatedAt,
+          location.latitude!,
+          location.longitude!,
+          updatedAt: location.lastUpdated,
         );
+        if ((location.currentLocation ?? '').isNotEmpty) {
+          _currentCity = location.currentLocation!;
+        }
         _applyFilters();
       });
-
-      unawaited(
-        _syncCurrentUserLocation(
-          latitude: position.latitude,
-          longitude: position.longitude,
-          lastUpdated: positionUpdatedAt,
-        ),
-      );
-
       await _startNearbyTravelersWatcher();
-
-      final placemarks = await geocoding.placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-      if (placemarks.isNotEmpty) {
-        final p = placemarks.first;
-        final city = p.locality?.isNotEmpty == true
-            ? p.locality
-            : p.subAdministrativeArea;
-        final country = p.country ?? p.isoCountryCode;
-        final display = city != null && city.isNotEmpty
-            ? (country != null && country.isNotEmpty ? '$city, $country' : city)
-            : '';
-        if (mounted && display.isNotEmpty) {
-          setState(() {
-            _currentCity = display;
-            _applyFilters();
-          });
-          unawaited(
-            _syncCurrentUserLocation(
-              latitude: position.latitude,
-              longitude: position.longitude,
-              currentLocation: display,
-            ),
-          );
-        }
-      } else {
-        // No placemarks found - stop loading
-        if (mounted && _profilesSubscription == null) {
-          setState(() {
-            _isLoadingTravelers = false;
-          });
-        }
-      }
     } catch (e) {
       // Error getting location - stop loading
       print('Error loading location: $e');
@@ -776,18 +630,6 @@ class _TravelersScreenState extends State<TravelersScreen>
 
   double _degToRad(double deg) => deg * (math.pi / 180.0);
 
-  double? _readDouble(dynamic value) {
-    if (value == null) return null;
-    if (value is num) return value.toDouble();
-    return double.tryParse(value.toString());
-  }
-
-  int? _readInt(dynamic value) {
-    if (value == null) return null;
-    if (value is num) return value.toInt();
-    return int.tryParse(value.toString());
-  }
-
   bool _hasUsableCoordinates(double? latitude, double? longitude) {
     if (latitude == null || longitude == null) return false;
     if (latitude.isNaN || longitude.isNaN) return false;
@@ -805,35 +647,6 @@ class _TravelersScreenState extends State<TravelersScreen>
     _currentLongitude = longitude;
     if (updatedAt != null) {
       _currentCoordinatesUpdatedAt = updatedAt;
-    }
-  }
-
-  Future<void> _syncCurrentUserLocation({
-    required double latitude,
-    required double longitude,
-    String? currentLocation,
-    int? lastUpdated,
-  }) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null || !_hasUsableCoordinates(latitude, longitude)) return;
-
-    final updates = <String, dynamic>{
-      'latitude': latitude,
-      'longitude': longitude,
-      'lastUpdated': lastUpdated ?? DateTime.now().millisecondsSinceEpoch,
-    };
-
-    if (currentLocation != null && currentLocation.trim().isNotEmpty) {
-      updates['currentLocation'] = currentLocation.trim();
-    }
-
-    try {
-      await FirebaseDatabase.instance
-          .ref('userProfiles')
-          .child(uid)
-          .update(updates);
-    } catch (e) {
-      debugPrint('Failed to sync current location: $e');
     }
   }
 
@@ -860,206 +673,47 @@ class _TravelersScreenState extends State<TravelersScreen>
       }
 
       await _profilesSubscription?.cancel();
-      _profilesSubscription = FirebaseDatabase.instance
-          .ref('userProfiles')
-          .onValue
+      _profilesSubscription = _travelersController
+          .watchNearbyTravelers(
+            centerLatitude: _currentLatitude!,
+            centerLongitude: _currentLongitude!,
+            radiusKm: _nearbyTravelerRadiusKm,
+            currentCoordinatesUpdatedAt: _currentCoordinatesUpdatedAt,
+          )
           .listen(
-            (DatabaseEvent event) async {
-              if (generation != _profilesSubscriptionGeneration) return;
+            (snapshot) {
+              if (!mounted || generation != _profilesSubscriptionGeneration) {
+                return;
+              }
 
-              try {
-                // Clear maps at the START, not at the end
-                _travelerIdMap.clear();
+              setState(() {
+                _travelerIdMap
+                  ..clear()
+                  ..addAll(snapshot.travelerIdMap);
                 _waveSentMap.clear();
                 _waveCheckingMap.clear();
                 _waveStatusMap.clear();
-
-                final DataSnapshot snap = event.snapshot;
-                if (!snap.exists || snap.value is! Map) {
-                  if (mounted &&
-                      generation == _profilesSubscriptionGeneration) {
-                    setState(() {
-                      _allTravelers.clear();
-                      _applyFilters();
-                      _isLoadingTravelers = false;
-                    });
-                  }
-                  return;
+                if ((snapshot.currentLocation ?? '').isNotEmpty) {
+                  _currentCity = snapshot.currentLocation!;
                 }
-
-                final Map<dynamic, dynamic> data =
-                    snap.value as Map<dynamic, dynamic>;
-                final List<UserProfile> nearby = [];
-                final String? currentUid =
-                    FirebaseAuth.instance.currentUser?.uid;
-
-                if (currentUid != null) {
-                  final currentProfileData = data[currentUid];
-                  if (currentProfileData is Map) {
-                    final currentProfile = UserProfile.fromMap(
-                      currentProfileData,
-                    );
-                    final remoteLastUpdated =
-                        _readInt(currentProfileData['lastUpdated']) ?? 0;
-                    if (_hasUsableCoordinates(
-                          currentProfile.latitude,
-                          currentProfile.longitude,
-                        ) &&
-                        remoteLastUpdated >= _currentCoordinatesUpdatedAt) {
-                      _setCurrentCoordinates(
-                        currentProfile.latitude!,
-                        currentProfile.longitude!,
-                        updatedAt: remoteLastUpdated,
-                      );
-                    }
-                    if (currentProfile.currentLocation.trim().isNotEmpty) {
-                      _currentCity = currentProfile.currentLocation.trim();
-                    }
-                  }
+                if (_hasUsableCoordinates(
+                  snapshot.latitude,
+                  snapshot.longitude,
+                )) {
+                  _setCurrentCoordinates(
+                    snapshot.latitude!,
+                    snapshot.longitude!,
+                    updatedAt: snapshot.lastUpdated,
+                  );
                 }
+                _allTravelers
+                  ..clear()
+                  ..addAll(snapshot.travelers);
+                _applyFilters();
+                _isLoadingTravelers = false;
+              });
 
-                final currentLat = _currentLatitude;
-                final currentLng = _currentLongitude;
-                if (!_hasUsableCoordinates(currentLat, currentLng)) {
-                  if (mounted &&
-                      generation == _profilesSubscriptionGeneration) {
-                    setState(() {
-                      _allTravelers.clear();
-                      _applyFilters();
-                      _isLoadingTravelers = false;
-                    });
-                  }
-                  return;
-                }
-
-                final centerLatitude = currentLat!;
-                final centerLongitude = currentLng!;
-
-                for (final entry in data.entries) {
-                  final key = entry.key;
-                  final value = entry.value;
-
-                  if (value is Map) {
-                    // Skip current user
-                    if (currentUid != null &&
-                        key is String &&
-                        key == currentUid) {
-                      continue;
-                    }
-
-                    try {
-                      final profile = UserProfile.fromMap(value);
-                      if (!profile.setupCompleted) continue;
-                      if (!_hasUsableCoordinates(
-                        profile.latitude,
-                        profile.longitude,
-                      )) {
-                        continue;
-                      }
-
-                      final distance = _distanceKm(
-                        centerLatitude,
-                        centerLongitude,
-                        profile.latitude!,
-                        profile.longitude!,
-                      );
-                      if (!distance.isFinite ||
-                          distance > _nearbyTravelerRadiusKm) {
-                        continue;
-                      }
-
-                      // Resolve username with multiple fallbacks
-                      String? username;
-
-                      // 1) Prefer name fields on profile record itself
-                      final rawMap = value;
-                      final fromProfileName = (rawMap['displayName'] as String?)
-                          ?.trim();
-                      final fromProfileAlt = (rawMap['name'] as String?)
-                          ?.trim();
-                      if (fromProfileName != null &&
-                          fromProfileName.isNotEmpty) {
-                        username = fromProfileName;
-                      } else if (fromProfileAlt != null &&
-                          fromProfileAlt.isNotEmpty) {
-                        username = fromProfileAlt;
-                      } else if (profile.displayName.isNotEmpty) {
-                        username = profile.displayName;
-                      } else {
-                        // 2) Then try users/<uid>/name
-                        try {
-                          final userSnap = await FirebaseDatabase.instance
-                              .ref('users')
-                              .child(key.toString())
-                              .get();
-                          if (userSnap.exists) {
-                            final userData =
-                                userSnap.value as Map<dynamic, dynamic>;
-                            final dbName = userData['name'] as String?;
-                            if (dbName != null && dbName.trim().isNotEmpty) {
-                              username = dbName.trim();
-                            }
-                          }
-                        } catch (_) {
-                          // leave as null
-                        }
-                      }
-
-                      // Skip users without proper names
-                      if (username == null || username.isEmpty) {
-                        continue;
-                      }
-
-                      final userProfile = UserProfile(
-                        displayName: username,
-                        bio: profile.bio.isNotEmpty
-                            ? profile.bio
-                            : 'Adventurer exploring the world',
-                        currentLocation: profile.currentLocation,
-                        latitude: profile.latitude,
-                        longitude: profile.longitude,
-                        avatarUrl: profile.avatarUrl,
-                        tags: profile.tags,
-                        destinations: profile.destinations,
-                        setupCompleted: profile.setupCompleted,
-                        lastUpdated: profile.lastUpdated,
-                        wavesSent: profile.wavesSent,
-                        wavesReceived: profile.wavesReceived,
-                        mutualConnections: profile.mutualConnections,
-                      );
-
-                      nearby.add(userProfile);
-                      // Store mapping for wave sending
-                      _travelerIdMap[userProfile.displayName] = key.toString();
-                    } catch (e) {
-                      // Skip invalid profile data
-                    }
-                  }
-                }
-
-                if (!mounted || generation != _profilesSubscriptionGeneration) {
-                  return;
-                }
-                setState(() {
-                  _allTravelers
-                    ..clear()
-                    ..addAll(nearby);
-                  _applyFilters();
-                  _isLoadingTravelers = false;
-                });
-
-                // Cache the profiles for next launch
-                LocalStorageService.saveAllProfiles(nearby);
-              } catch (e) {
-                debugPrint('Error processing nearby travelers: $e');
-                if (mounted && generation == _profilesSubscriptionGeneration) {
-                  setState(() {
-                    _allTravelers.clear();
-                    _applyFilters();
-                    _isLoadingTravelers = false;
-                  });
-                }
-              }
+              _travelersController.saveCachedProfiles(snapshot.travelers);
             },
             onError: (Object error) {
               debugPrint('Error watching nearby travelers: $error');
@@ -1483,8 +1137,8 @@ class _TravelersScreenState extends State<TravelersScreen>
             onPressed: () async {
               Navigator.pop(context);
               try {
-                final currentUser = FirebaseAuth.instance.currentUser;
-                if (currentUser == null) {
+                final currentUserId = _travelersController.currentUserId;
+                if (currentUserId == null) {
                   messenger.showSnackBar(
                     SnackBar(
                       behavior: SnackBarBehavior.floating,
@@ -1495,9 +1149,9 @@ class _TravelersScreenState extends State<TravelersScreen>
                   return;
                 }
                 if (travelerId.isEmpty) return;
-                await _travelerService.hideTravelerForUser(
-                  userId: currentUser.uid,
-                  travelerUserId: travelerId,
+                await _travelersController.hideTraveler(
+                  currentUserId: currentUserId,
+                  travelerId: travelerId,
                 );
                 setState(() {
                   _hiddenTravelerIds.add(travelerId);
@@ -1574,8 +1228,8 @@ class _TravelersScreenState extends State<TravelersScreen>
               if (reason.isEmpty) return;
               Navigator.pop(dlgCtx);
               try {
-                final currentUser = FirebaseAuth.instance.currentUser;
-                if (currentUser == null) {
+                final currentUserId = _travelersController.currentUserId;
+                if (currentUserId == null) {
                   messenger.showSnackBar(
                     SnackBar(
                       behavior: SnackBarBehavior.floating,
@@ -1586,9 +1240,9 @@ class _TravelersScreenState extends State<TravelersScreen>
                   return;
                 }
                 if (travelerId.isEmpty) return;
-                await _travelerService.reportUser(
-                  reportedUserId: travelerId,
-                  reporterUserId: currentUser.uid,
+                await _travelersController.reportTraveler(
+                  travelerId: travelerId,
+                  currentUserId: currentUserId,
                   reason: reason,
                 );
                 setState(() {
@@ -1714,40 +1368,13 @@ class _TravelersScreenState extends State<TravelersScreen>
     setState(() {});
 
     try {
-      final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser == null) {
+      if (_travelersController.currentUserId == null) {
         _waveCheckingMap[travelerId] = false;
         return false;
       }
 
-      // Fetch all waves and check locally to avoid Android warning
-      final waveSnapshot = await FirebaseDatabase.instance
-          .ref('userProfiles')
-          .child(currentUser.uid)
-          .child('waves')
-          .get();
-
-      bool hasWave = false;
-      String waveStatus = 'none';
-      if (waveSnapshot.exists) {
-        for (final child in waveSnapshot.children) {
-          try {
-            final waveData = Map<String, dynamic>.from(
-              child.value as Map<dynamic, dynamic>,
-            );
-            if (waveData['receiverId'] == travelerId) {
-              final status = waveData['status'] as String?;
-              if (status == 'pending' ||
-                  status == 'accepted' ||
-                  status == 'ignored') {
-                hasWave = true;
-                waveStatus = status ?? 'pending';
-                break;
-              }
-            }
-          } catch (_) {}
-        }
-      }
+      final hasWave = await _travelersController.hasWaveBeenSent(travelerId);
+      final waveStatus = await _travelersController.getWaveStatus(travelerId);
 
       // Update the result and clear checking state
       _waveSentMap[travelerId] = hasWave;
@@ -1769,19 +1396,12 @@ class _TravelersScreenState extends State<TravelersScreen>
       // Show loading indicator
       _showSnackBar('Opening chat...', AppColors.primary);
 
-      final conversationId = await _chatService.createConversation(
+      final conversation = await _travelersController.startConversation(
         otherUserId: otherUserId,
         otherUserName: otherUserName,
       );
 
       if (!mounted) return;
-
-      // Get the conversation object from the service
-      final conversations = await _chatService.getConversations().first;
-      final conversation = conversations.firstWhere(
-        (c) => c.id == conversationId,
-        orElse: () => throw Exception('Conversation not found'),
-      );
 
       // Navigate to conversation screen
       Navigator.push(
@@ -1805,9 +1425,8 @@ class _TravelersScreenState extends State<TravelersScreen>
         return;
       }
 
-      // Get user ID from Firebase Auth
-      final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser == null) {
+      final currentUserId = _travelersController.currentUserId;
+      if (currentUserId == null) {
         _showSnackBar('Please log in to send waves', AppColors.error);
         return;
       }
@@ -1825,7 +1444,7 @@ class _TravelersScreenState extends State<TravelersScreen>
       }
 
       // Don't allow sending waves to yourself
-      if (currentUser.uid == receiverId) {
+      if (currentUserId == receiverId) {
         _showSnackBar('You cannot send a wave to yourself', AppColors.cta1);
         return;
       }
@@ -1843,8 +1462,7 @@ class _TravelersScreenState extends State<TravelersScreen>
           return;
         }
 
-        // Send the wave using WaveService
-        await _waveService.sendWave(
+        await _travelersController.sendWave(
           receiverId: receiverId,
           receiverName: traveler.displayName,
           receiverLocation: traveler.currentLocation,
@@ -1975,12 +1593,12 @@ class _TravelersScreenState extends State<TravelersScreen>
   /// Check if user has completed profile setup
   Future<bool> _checkProfileSetup() async {
     // Use strict verification to ensure required fields are actually filled
-    final hasCompleted = await UserSetupService.isProfileStrictlyComplete();
+    final hasCompleted = await _travelersController.isProfileStrictlyComplete();
     if (!hasCompleted) {
       if (!mounted) return false;
 
       // Use the existing SetupReminderPopup
-      await UserSetupService.showSetupPopup(context);
+      await _travelersController.showSetupPopup(context);
       return false;
     }
     return true;
@@ -2014,17 +1632,17 @@ class _TravelersScreenState extends State<TravelersScreen>
 
   Widget _buildBottomNavigationBar() {
     return StreamBuilder<int>(
-      stream: _waveService.getPendingReceivedWavesCount(),
+      stream: _travelersController.getPendingReceivedWavesCount(),
       builder: (context, waveSnapshot) {
         final wavesCount = waveSnapshot.data ?? 0;
 
         return StreamBuilder<int>(
-          stream: _chatService.getTotalUnreadCount(),
+          stream: _travelersController.getTotalUnreadCount(),
           builder: (context, chatSnapshot) {
             final unreadCount = chatSnapshot.data ?? 0;
 
             return StreamBuilder<int>(
-              stream: _meetupService.getPendingHostRequestsCount(),
+              stream: _travelersController.getPendingHostRequestsCount(),
               builder: (context, meetupSnapshot) {
                 final meetupRequestsCount = meetupSnapshot.data ?? 0;
 

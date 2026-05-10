@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:backpackr/features/profile/repositories/user_profile_service.dart';
+import 'package:backpackr/features/profile/data_sources/user_profile_service.dart';
 import 'package:backpackr/shared/services/storage_service.dart';
 import 'package:backpackr/features/profile/views/user_setup_screen.dart';
 import 'package:backpackr/features/profile/views/setup_reminder_popup.dart';

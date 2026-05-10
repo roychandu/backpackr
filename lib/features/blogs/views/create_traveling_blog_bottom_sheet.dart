@@ -3,15 +3,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
-import 'package:image_picker/image_picker.dart';
+import 'package:backpackr/features/blogs/controllers/blog_controller.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
 import 'package:backpackr/shared/widgets/image_source_bottom_sheet.dart';
-import 'package:backpackr/features/blogs/repositories/blog_service.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
-import 'package:backpackr/features/auth/repositories/auth_service.dart';
-import 'package:backpackr/shared/services/user_setup_service.dart';
 
 class CreateTravelingBlogBottomSheet extends StatefulWidget {
   final VoidCallback onBlogCreated;
@@ -29,9 +26,7 @@ class CreateTravelingBlogBottomSheet extends StatefulWidget {
 class _CreateTravelingBlogBottomSheetState
     extends State<CreateTravelingBlogBottomSheet> {
   final _formKey = GlobalKey<FormState>();
-  final ImagePicker _picker = ImagePicker();
-  final BlogService _blogService = BlogService();
-  final AuthService _authService = AuthService();
+  final BlogController _blogController = BlogController();
   final GlobalKey<ScaffoldMessengerState> _sheetMessenger =
       GlobalKey<ScaffoldMessengerState>();
 
@@ -291,7 +286,7 @@ class _CreateTravelingBlogBottomSheetState
                           onPressed: () async {
                             try {
                               Navigator.of(context).pop();
-                              await _authService.acceptEula();
+                              await _blogController.acceptEula();
                               await _performCreateBlog();
                             } catch (e) {
                               if (!mounted) return;
@@ -326,6 +321,7 @@ class _CreateTravelingBlogBottomSheetState
     _destinationController.dispose();
     _distanceController.dispose();
     _tagsController.dispose();
+    _blogController.dispose();
     super.dispose();
   }
 
@@ -445,18 +441,13 @@ class _CreateTravelingBlogBottomSheetState
 
   Future<void> _pickImages() async {
     try {
-      final List<XFile> images = await _picker.pickMultiImage(
-        maxWidth: 1920,
-        maxHeight: 1080,
-        imageQuality: 85,
+      final images = await _blogController.pickImagesFromGallery(
+        remainingSlots: 6 - _selectedImages.length,
       );
 
       if (images.isNotEmpty) {
         setState(() {
-          // Limit to 6 images
-          final remainingSlots = 6 - _selectedImages.length;
-          final imagesToAdd = images.take(remainingSlots);
-          _selectedImages.addAll(imagesToAdd.map((img) => File(img.path)));
+          _selectedImages.addAll(images);
         });
       }
     } catch (e) {
@@ -472,16 +463,11 @@ class _CreateTravelingBlogBottomSheetState
 
   Future<void> _pickImageFromCamera() async {
     try {
-      final XFile? image = await _picker.pickImage(
-        source: ImageSource.camera,
-        maxWidth: 1920,
-        maxHeight: 1080,
-        imageQuality: 85,
-      );
+      final image = await _blogController.pickImageFromCamera();
 
       if (image != null && _selectedImages.length < 6) {
         setState(() {
-          _selectedImages.add(File(image.path));
+          _selectedImages.add(image);
         });
       }
     } catch (e) {
@@ -523,9 +509,9 @@ class _CreateTravelingBlogBottomSheetState
     await Future.delayed(const Duration(milliseconds: 100));
 
     // Require strict profile completion before allowing blog creation
-    final setupOk = await UserSetupService.isProfileStrictlyComplete();
+    final setupOk = await _blogController.isProfileStrictlyComplete();
     if (!setupOk) {
-      await UserSetupService.showSetupPopup(context);
+      await _blogController.showSetupPopup(context);
       return;
     }
 
@@ -563,7 +549,7 @@ class _CreateTravelingBlogBottomSheetState
     }
 
     // Check EULA acceptance before creating the blog
-    final hasAccepted = await _authService.hasAcceptedEula();
+    final hasAccepted = await _blogController.hasAcceptedEula();
     if (!hasAccepted) {
       await _showEulaDialogBeforeCreate();
       return;
@@ -588,7 +574,7 @@ class _CreateTravelingBlogBottomSheetState
           .toList();
 
       // Create blog with Firebase and AWS
-      await _blogService.createBlog(
+      await _blogController.createBlog(
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
         startPlace: _startPlaceController.text.trim(),

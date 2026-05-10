@@ -2,21 +2,13 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart' as geocoding;
-import 'package:permission_handler/permission_handler.dart' as perm;
+import 'package:backpackr/features/profile/controllers/profile_controller.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
 import 'package:backpackr/shared/widgets/image_source_bottom_sheet.dart';
-import 'package:backpackr/features/profile/repositories/user_profile_service.dart';
-import 'package:backpackr/shared/services/storage_service.dart';
-import 'package:backpackr/features/travelers/models/user_profile.dart';
-import 'package:backpackr/shared/services/upload/aws_module.dart';
 
 class UserSetupScreen extends StatefulWidget {
   const UserSetupScreen({super.key});
@@ -31,9 +23,7 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
   final _locationController = TextEditingController();
   final _destinationController = TextEditingController();
   final _userNameController = TextEditingController();
-  final ImagePicker _imagePicker = ImagePicker();
-  final UserProfileService _profileService = UserProfileService();
-  final StorageService _storageService = StorageService();
+  final ProfileController _profileController = ProfileController();
 
   File? _selectedImage;
   String? _imageUrl;
@@ -47,7 +37,6 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
   List<String> _selectedTags = [];
   List<Map<String, dynamic>> _destinations = [];
   DateTime? _destinationDate;
-  String _userName = '';
 
   // Available tags
   final List<String> _availableTags = [
@@ -96,104 +85,29 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
     _locationController.dispose();
     _destinationController.dispose();
     _userNameController.dispose();
+    _profileController.dispose();
     super.dispose();
   }
 
   Future<void> _loadExistingData() async {
     try {
-      // First, try to get username from Firebase Auth
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        String? name = user.displayName;
-        if (name == null || name.isEmpty) {
-          // Fallback to email prefix
-          name = user.email?.split('@').first ?? 'User';
-        }
-        setState(() {
-          _userName = name!;
-          _userNameController.text = name;
-        });
-      }
-
-      // Then load existing profile data
-      final profile = await _profileService.getCurrentUserProfile();
-      if (profile != null) {
-        await _storageService.setProfileDisplayName(profile.displayName);
-        await _storageService.setProfileBio(profile.bio);
-        await _storageService.setProfileCurrentLocation(
-          profile.currentLocation,
-        );
-        await _storageService.setProfileAvatarUrl(profile.avatarUrl ?? '');
-        await _storageService.setTravelerTags(profile.tags);
-        await _storageService.setProfileSetupCompleted(profile.setupCompleted);
-
-        setState(() {
-          _bioController.text = profile.bio;
-          _locationController.text = profile.currentLocation;
-          _selectedTags = List<String>.from(profile.tags);
-          _destinations = profile.destinations
-              .map((d) => {'city': d.city, 'date': d.date})
-              .toList();
-          _imageUrl = profile.avatarUrl;
-          if (profile.latitude != null && profile.longitude != null) {
-            _currentLat = profile.latitude;
-            _currentLng = profile.longitude;
-          }
-          // Use existing profile displayName if available and not empty
-          if (profile.displayName.isNotEmpty) {
-            _userName = profile.displayName;
-            _userNameController.text = profile.displayName;
-          }
-        });
-      } else {
-        final cachedDisplayName = await _storageService.getProfileDisplayName();
-        final cachedBio = await _storageService.getProfileBio();
-        final cachedLocation = await _storageService
-            .getProfileCurrentLocation();
-        final cachedAvatarUrl = await _storageService.getProfileAvatarUrl();
-        final cachedTags = await _storageService.getTravelerTags();
-
-        setState(() {
-          if ((cachedDisplayName ?? '').isNotEmpty) {
-            _userName = cachedDisplayName!;
-            _userNameController.text = cachedDisplayName;
-          }
-          if ((cachedBio ?? '').isNotEmpty) {
-            _bioController.text = cachedBio!;
-          }
-          if ((cachedLocation ?? '').isNotEmpty) {
-            _locationController.text = cachedLocation!;
-          }
-          _imageUrl = cachedAvatarUrl;
-          if (cachedTags.isNotEmpty) {
-            _selectedTags = cachedTags;
-          }
-        });
-      }
+      final setupData = await _profileController.loadSetupData();
+      setState(() {
+        _userNameController.text = setupData.displayName;
+        _bioController.text = setupData.bio;
+        _locationController.text = setupData.currentLocation;
+        _selectedTags = List<String>.from(setupData.tags);
+        _destinations = setupData.destinations
+            .map((d) => Map<String, dynamic>.from(d))
+            .toList();
+        _imageUrl = setupData.avatarUrl;
+        _currentLat = setupData.latitude;
+        _currentLng = setupData.longitude;
+      });
     } catch (e) {
       // Handle error silently
       debugPrint('Error loading existing data: $e');
     }
-  }
-
-  Future<String?> uploadProfileImage(String imagePath) async {
-    try {
-      String fileName =
-          "profileimg_${FirebaseAuth.instance.currentUser?.uid}_${DateTime.now().millisecondsSinceEpoch}.png";
-      String? newImageName = await uploadImageToAWS(
-        file: File(imagePath),
-        fileName: fileName,
-      );
-
-      // Return the CDN URL for immediate use in the UI and profile
-      if (newImageName != null && newImageName.isNotEmpty) {
-        return getUrlForUserUploadedImage(newImageName);
-      }
-      return null;
-    } catch (e) {
-      debugPrint('Error uploading profile image: $e');
-    }
-    return null;
   }
 
   Future<void> _pickImage() async {
@@ -201,33 +115,22 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
       context: context,
       title: 'Change Profile Photo',
       subtitle: 'Choose a source to update your profile picture',
-      onCameraSelected: () => _handlePick(ImageSource.camera),
-      onGallerySelected: () => _handlePick(ImageSource.gallery),
+      onCameraSelected: () => _handlePick(ProfileImageSource.camera),
+      onGallerySelected: () => _handlePick(ProfileImageSource.gallery),
     );
   }
 
-  Future<void> _handlePick(ImageSource source) async {
+  Future<void> _handlePick(ProfileImageSource source) async {
     try {
-      final XFile? image = await _imagePicker.pickImage(
+      final file = await _profileController.pickProfileImage(
         source: source,
         maxWidth: 400,
         maxHeight: 400,
         imageQuality: 85,
+        maxBytes: 2 * 1024 * 1024,
       );
 
-      if (image != null) {
-        final file = File(image.path);
-        final bytes = await file.readAsBytes();
-
-        // Check file size (2MB max)
-        if (bytes.length > 2 * 1024 * 1024) {
-          setState(() {
-            _errorMessage =
-                'Photo too large. Please choose an image under 2MB.';
-          });
-          return;
-        }
-
+      if (file != null) {
         setState(() {
           _selectedImage = file;
           _errorMessage = '';
@@ -247,84 +150,15 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
       _errorMessage = '';
     });
     try {
-      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        await Geolocator.openLocationSettings();
-
-        setState(() {
-          _errorMessage = 'Location services are disabled';
-        });
-        return;
-      }
-
-      // Use Geolocator permission flow
-      var permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-      }
-      if (permission == LocationPermission.denied) {
-        setState(() {
-          _errorMessage = 'Location permission denied';
-        });
-        return;
-      }
-      if (permission == LocationPermission.deniedForever) {
-        setState(() {
-          _errorMessage =
-              'Location permission permanently denied. Enable in Settings';
-        });
-        return;
-      }
-
-      final position =
-          await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high,
-          ).timeout(
-            const Duration(seconds: 15),
-            onTimeout: () {
-              throw Exception('Location fetching timed out');
-            },
-          );
-
-      // Cache coordinates
-      _currentLat = position.latitude;
-      _currentLng = position.longitude;
-
-      final placemarks = await geocoding.placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-
-      String display = '';
-      if (placemarks.isNotEmpty) {
-        final p = placemarks.first;
-        final city = p.locality?.isNotEmpty == true
-            ? p.locality
-            : p.subAdministrativeArea;
-        final country = p.isoCountryCode ?? p.country;
-        if (city != null && city.toString().isNotEmpty) {
-          display = country != null && country.toString().isNotEmpty
-              ? '$city, $country'
-              : city.toString();
-        } else if (p.administrativeArea != null &&
-            p.administrativeArea!.isNotEmpty) {
-          display = country != null && country.toString().isNotEmpty
-              ? '${p.administrativeArea}, $country'
-              : p.administrativeArea!;
-        }
-      }
-
-      if (display.isEmpty) {
-        display =
-            '${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}';
-      }
-
+      final location = await _profileController.fetchCurrentLocation();
       setState(() {
-        _locationController.text = display;
+        _currentLat = location.latitude;
+        _currentLng = location.longitude;
+        _locationController.text = location.displayName;
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Failed to fetch location';
+        _errorMessage = e.toString().replaceFirst('Exception: ', '');
       });
     } finally {
       setState(() {
@@ -371,15 +205,6 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
     });
 
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        setState(() {
-          _errorMessage = 'User not authenticated';
-          _isSaving = false;
-        });
-        return;
-      }
-
       // Auto-add pending destination if not explicitly added
       if (_destinationController.text.isNotEmpty && _destinationDate != null) {
         _destinations.add({
@@ -390,52 +215,17 @@ class _UserSetupScreenState extends State<UserSetupScreen> {
         _destinationDate = null;
       }
 
-      // Upload image if selected
-      String? avatarUrl = _imageUrl;
-      if (_selectedImage != null) {
-        // Upload to AWS and get CDN URL
-        avatarUrl = await uploadProfileImage(_selectedImage!.path);
-        if (avatarUrl == null) {
-          setState(() {
-            _errorMessage = 'Failed to upload image. Please try again.';
-            _isSaving = false;
-          });
-          return;
-        }
-      }
-
-      // Create UserProfile object
-      final profile = UserProfile(
-        displayName: _userNameController.text.trim().isNotEmpty
-            ? _userNameController.text.trim()
-            : (user.displayName ?? ''),
+      await _profileController.saveSetupProfile(
+        displayName: _userNameController.text,
         bio: _bioController.text,
         currentLocation: _locationController.text,
         latitude: _currentLat,
         longitude: _currentLng,
-        avatarUrl: avatarUrl,
+        existingAvatarUrl: _imageUrl,
+        selectedImage: _selectedImage,
         tags: _selectedTags,
-        destinations: _destinations
-            .map(
-              (e) => Destination(
-                city: (e['city'] as String?) ?? '',
-                date: (e['date'] as String?) ?? '',
-              ),
-            )
-            .toList(),
-        setupCompleted: true,
-        lastUpdated: DateTime.now().millisecondsSinceEpoch,
+        destinations: _destinations,
       );
-
-      // Save profile using service
-      await _profileService.setCurrentUserProfile(profile);
-
-      await _storageService.setProfileDisplayName(profile.displayName);
-      await _storageService.setProfileBio(profile.bio);
-      await _storageService.setProfileCurrentLocation(profile.currentLocation);
-      await _storageService.setProfileAvatarUrl(profile.avatarUrl ?? '');
-      await _storageService.setTravelerTags(profile.tags);
-      await _storageService.setProfileSetupCompleted(true);
 
       if (mounted) {
         Navigator.of(

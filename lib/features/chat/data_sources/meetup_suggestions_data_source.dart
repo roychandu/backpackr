@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:backpackr/features/chat/models/nearby_meetups_result.dart';
 import 'package:backpackr/features/meetups/models/meetup.dart';
-import 'package:backpackr/features/meetups/repositories/meetup_service.dart';
+import 'package:backpackr/features/meetups/data_sources/meetup_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 

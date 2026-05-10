@@ -1,16 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:backpackr/shared/services/upload/aws_module.dart';
+import 'package:backpackr/features/profile/controllers/profile_controller.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
-import 'package:backpackr/features/auth/repositories/auth_service.dart';
-import 'package:backpackr/shared/services/storage_service.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:backpackr/shared/widgets/image_source_bottom_sheet.dart';
 // profileimg_HIr4SpWp8Oei0qxLdlzxMlLb1i82_1756382329336.png
 
@@ -27,9 +22,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _userEmailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  final AuthService _authService = AuthService();
-  final StorageService _storageService = StorageService();
-  final ImagePicker _imagePicker = ImagePicker();
+  final ProfileController _profileController = ProfileController();
   File? pickedImage;
   File? _profileImage;
   bool _isPasswordVisible = false;
@@ -47,6 +40,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _userNameController.dispose();
     _userEmailController.dispose();
     _passwordController.dispose();
+    _profileController.dispose();
     super.dispose();
   }
 
@@ -56,7 +50,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _isLoadingData = true;
       });
       // Load user data
-      final userData = await _authService.getUserData();
+      final userData = await _profileController.getUserData();
       if (userData['email'] != null) {
         _userEmailController.text = userData['email']!;
       }
@@ -81,60 +75,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  Future<String?> uploadProfileImage(String imagePath) async {
+  Future<void> _handleImageFromSource(ProfileImageSource source) async {
     try {
-      String fileName =
-          "profileimg_${FirebaseAuth.instance.currentUser?.uid}_${DateTime.now().millisecondsSinceEpoch}.png";
-      String? newImageName = await uploadImageToAWS(
-        file: File(imagePath),
-        fileName: fileName,
-      );
-
-      // Return the CDN URL for immediate use in the UI and profile
-      if (newImageName != null && newImageName.isNotEmpty) {
-        return getUrlForUserUploadedImage(newImageName);
-      }
-      return null;
-    } catch (e) {
-      debugPrint('Error uploading profile image: $e');
-    }
-    return null;
-  }
-
-  Future<String?> _pickImage(ImageSource source) async {
-    try {
-      final XFile? image = await _imagePicker.pickImage(
+      final compressedImage = await _profileController.pickProfileImage(
         source: source,
         maxWidth: 512,
         maxHeight: 512,
         imageQuality: 85,
+        compress: true,
       );
-
-      if (image != null && mounted) {
-        // Navigator.of(context).pop(image.path);
-        return image.path;
-      }
-    } catch (e) {
-      debugPrint('Error picking image: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: AppColors.error,
-            behavior: SnackBarBehavior.floating,
-            content: Text('Error selecting image: $e'),
-          ),
-        );
-      }
-    }
-    return null;
-  }
-
-  Future<void> _handleImageFromSource(ImageSource source) async {
-    try {
-      final String? imagePath = await _pickImage(source);
-      if (imagePath == null) return;
-
-      final File compressedImage = await pickAndCompressImage(File(imagePath));
+      if (compressedImage == null) return;
 
       if (!mounted) return;
       setState(() {
@@ -154,10 +104,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       title: 'Change Profile Photo',
       subtitle: 'Choose a source to update your profile picture',
       onCameraSelected: () async {
-        await _handleImageFromSource(ImageSource.camera);
+        await _handleImageFromSource(ProfileImageSource.camera);
       },
       onGallerySelected: () async {
-        await _handleImageFromSource(ImageSource.gallery);
+        await _handleImageFromSource(ProfileImageSource.gallery);
       },
     );
   }
@@ -178,49 +128,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
 
     try {
-      // Upload new image if selected
-      String? uploadedImageUrl;
-      if (pickedImage != null) {
-        uploadedImageUrl = await uploadProfileImage(pickedImage!.path);
-        setState(() {
-          newUploadedImgPath = uploadedImageUrl;
-        });
-      }
-
-      // Update user profile (displayName and optional photoURL)
-      await _authService.updateUserProfile(
+      final savedPhotoUrl = await _profileController.saveEditedProfile(
         displayName: _userNameController.text.trim(),
-        photoURL: uploadedImageUrl,
+        existingPhotoUrl: newUploadedImgPath,
+        pickedImage: pickedImage,
       );
-
-      // Persist to Realtime Database so other screens fetch the latest values
-      try {
-        final String? uid = FirebaseAuth.instance.currentUser?.uid;
-        if (uid != null) {
-          final String? finalPhoto = uploadedImageUrl ?? newUploadedImgPath;
-          final Map<String, dynamic> updates = {
-            'name': _userNameController.text.trim(),
-          };
-          if (finalPhoto != null && finalPhoto.isNotEmpty) {
-            updates['photoURL'] = finalPhoto;
-          }
-          await FirebaseDatabase.instance
-              .ref('users')
-              .child(uid)
-              .update(updates);
-        }
-      } catch (e) {
-        debugPrint('Failed to persist profile to DB: $e');
-      }
-
-      await _storageService.setProfileDisplayName(
-        _userNameController.text.trim(),
-      );
-      if ((uploadedImageUrl ?? newUploadedImgPath ?? '').isNotEmpty) {
-        await _storageService.setProfileAvatarUrl(
-          uploadedImageUrl ?? newUploadedImgPath!,
-        );
-      }
+      setState(() => newUploadedImgPath = savedPhotoUrl);
 
       // Update password if provided
       if (_passwordController.text.isNotEmpty) {
@@ -330,10 +243,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             newUploadedImgPath!.isNotEmpty)
                                       ? ClipOval(
                                           child: CachedNetworkImage(
-                                            imageUrl:
-                                                getUrlForUserUploadedImage(
-                                                  newUploadedImgPath!,
-                                                ),
+                                            imageUrl: newUploadedImgPath!,
                                             width: 120,
                                             height: 120,
                                             fit: BoxFit.cover,

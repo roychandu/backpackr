@@ -11,6 +11,8 @@ import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
 import 'package:backpackr/shared/services/storage_service.dart';
 import 'package:get/get.dart';
+import 'package:backpackr/features/auth/repositories/auth_repository.dart';
+import 'package:backpackr/shared/services/app_config_service.dart';
 
 /// test ids
 
@@ -52,12 +54,22 @@ class InAppPurchaseProvider extends ChangeNotifier {
 
   final InAppPurchase _paymentService = InAppPurchase.instance;
   final StorageService _storageService = StorageService();
+  final AppConfigService _configService = AppConfigService();
   bool _serviceActive = true;
   bool isPremiumMember = false;
   List<ProductDetails> _products = [];
   StreamSubscription<List<PurchaseDetails>>? _transactionStream;
   String? errorInfo;
   Set<ConsumItemName> purchasedItems = {};
+
+  List<String> get freePlanFeatures => _configService.getAllFreePlanFeatures();
+
+  List<String> get premiumPlanFeatures =>
+      _configService.getAllPremiumPlanFeatures();
+
+  Future<void> updatePremiumStatus(bool isPremium) {
+    return AuthRepository().updatePremiumStatus(isPremium);
+  }
 
   void showErrorDialogForPurchase([String? error]) {
     Get.dialog(

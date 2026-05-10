@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
-import 'package:backpackr/features/auth/repositories/auth_service.dart';
+import 'package:backpackr/features/auth/controllers/auth_controller.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
 import 'package:backpackr/features/auth/views/register_screen.dart';
 
@@ -23,13 +23,14 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isGuestLoading = false;
   bool _isAppleLoading = false;
   bool _isGoogleLoading = false;
-  final AuthService _authService = AuthService();
+  final AuthController _authController = AuthController();
   // Removed unused AppFlowService instance
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _authController.dispose();
     super.dispose();
   }
 
@@ -317,7 +318,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await _authService.signInWithEmailAndPassword(
+      await _authController.login(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
@@ -370,12 +371,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       // Use Firebase anonymous authentication for guest login
-      await _authService.signInAnonymously();
+      await _authController.continueAsGuest();
 
       // If user accepted EULA, save it
       if (eulaAccepted) {
         try {
-          await _authService.acceptEula();
+          await _authController.acceptEula();
         } catch (e) {
           // Log error but don't block guest login
           print('Error saving EULA acceptance: $e');
@@ -408,7 +409,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await _authService.signInWithApple();
+      await _authController.signInWithApple();
 
       if (mounted) {
         Navigator.of(
@@ -434,7 +435,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await _authService.signInWithGoogle();
+      await _authController.signInWithGoogle();
 
       if (mounted) {
         Navigator.of(

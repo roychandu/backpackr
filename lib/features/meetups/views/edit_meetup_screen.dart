@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
+import 'package:backpackr/features/meetups/controllers/meetups_controller.dart';
 import 'package:backpackr/features/meetups/models/meetup.dart';
-import 'package:backpackr/features/meetups/repositories/meetup_service.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
 
 class EditMeetupScreen extends StatefulWidget {
@@ -24,7 +24,7 @@ class EditMeetupScreen extends StatefulWidget {
 
 class _EditMeetupScreenState extends State<EditMeetupScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _meetupService = MeetupService();
+  final MeetupsController _meetupsController = MeetupsController();
 
   // Form controllers
   late final TextEditingController _titleController;
@@ -59,6 +59,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
     _descriptionController.dispose();
     _locationController.dispose();
     _capacityController.dispose();
+    _meetupsController.dispose();
     super.dispose();
   }
 
@@ -144,7 +145,7 @@ class _EditMeetupScreenState extends State<EditMeetupScreen> {
         _selectedTime.minute,
       );
 
-      await _meetupService.updateMeetup(
+      await _meetupsController.updateMeetup(
         meetupId: widget.meetup.id,
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),

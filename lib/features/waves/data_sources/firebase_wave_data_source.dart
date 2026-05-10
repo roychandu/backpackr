@@ -1,5 +1,5 @@
 import 'package:backpackr/features/waves/models/wave.dart';
-import 'package:backpackr/features/waves/repositories/wave_service.dart';
+import 'package:backpackr/features/waves/data_sources/wave_service.dart';
 
 class FirebaseWaveDataSource {
   FirebaseWaveDataSource({WaveService? waveService})
@@ -7,9 +7,15 @@ class FirebaseWaveDataSource {
 
   final WaveService _waveService;
 
+  String? get currentUserId => _waveService.currentUserId;
+
   Future<List<Wave>> getUserWaves() => _waveService.getUserWaves();
 
   Stream<List<Wave>> getWavesStream() => _waveService.getWavesStream();
+
+  Stream<int> getPendingReceivedWavesCount() {
+    return _waveService.getPendingReceivedWavesCount();
+  }
 
   Future<String> sendWave({
     required String receiverId,
@@ -30,4 +36,8 @@ class FirebaseWaveDataSource {
   Future<void> ignoreWave(String waveId) => _waveService.ignoreWave(waveId);
 
   Future<void> deleteWave(String waveId) => _waveService.deleteWave(waveId);
+
+  Future<Map<WaveType, List<Wave>>> getWavesByType() {
+    return _waveService.getWavesByType();
+  }
 }

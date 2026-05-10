@@ -8,9 +8,8 @@ import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/app_header.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
 import 'package:backpackr/shared/widgets/sliver_tab_delegate.dart';
+import 'package:backpackr/features/waves/controllers/wave_controller.dart';
 import 'package:backpackr/features/waves/models/wave.dart';
-import 'package:backpackr/features/waves/repositories/wave_service.dart';
-import 'package:backpackr/features/chat/repositories/chat_service.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
 import 'package:backpackr/features/chat/views/conversation_screen.dart';
 import 'package:backpackr/features/blogs/views/other_travelers_blog_screen.dart';
@@ -24,8 +23,7 @@ class WavesScreen extends StatefulWidget {
 
 class _WavesScreenState extends State<WavesScreen>
     with SingleTickerProviderStateMixin {
-  final WaveService _waveService = WaveService();
-  final ChatService _chatService = ChatService();
+  final WaveController _waveController = WaveController();
   bool _isLoading = true;
   String _errorMessage = '';
   bool _isOpeningChat = false;
@@ -53,7 +51,7 @@ class _WavesScreenState extends State<WavesScreen>
     });
 
     try {
-      final wavesByType = await _waveService.getWavesByType();
+      final wavesByType = await _waveController.getWavesByType();
 
       final receivedWaves = wavesByType[WaveType.received] ?? [];
 
@@ -87,12 +85,13 @@ class _WavesScreenState extends State<WavesScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    _waveController.dispose();
     super.dispose();
   }
 
   Future<void> _acceptWave(Wave wave) async {
     try {
-      await _waveService.acceptWave(wave.id);
+      await _waveController.acceptWave(wave.id);
       await _loadWaves(); // Refresh the list
 
       if (mounted) {
@@ -114,7 +113,7 @@ class _WavesScreenState extends State<WavesScreen>
 
   Future<void> _ignoreWave(Wave wave) async {
     try {
-      await _waveService.ignoreWave(wave.id);
+      await _waveController.ignoreWave(wave.id);
       await _loadWaves(); // Refresh the list
 
       if (mounted) {
@@ -209,7 +208,7 @@ class _WavesScreenState extends State<WavesScreen>
     if (confirmed != true) return;
 
     try {
-      await _waveService.deleteWave(wave.id);
+      await _waveController.deleteWave(wave.id);
       await _loadWaves(); // Refresh the list
 
       if (mounted) {
@@ -256,23 +255,16 @@ class _WavesScreenState extends State<WavesScreen>
     }
     _isOpeningChat = true;
     try {
-      final conversationId = await _chatService.createConversation(
-        otherUserId: wave.receiverId == _waveService.currentUserId
+      final conversation = await _waveController.startConversation(
+        otherUserId: wave.receiverId == _waveController.currentUserId
             ? wave.senderId
             : wave.receiverId,
-        otherUserName: wave.receiverId == _waveService.currentUserId
+        otherUserName: wave.receiverId == _waveController.currentUserId
             ? wave.senderName
             : wave.receiverName,
       );
 
       if (!mounted) return;
-
-      // Get the conversation object from the service
-      final conversations = await _chatService.getConversations().first;
-      final conversation = conversations.firstWhere(
-        (c) => c.id == conversationId,
-        orElse: () => throw Exception('Conversation not found'),
-      );
 
       // Navigate to conversation screen
       Navigator.push(
@@ -520,15 +512,15 @@ class _WavesScreenState extends State<WavesScreen>
   // _sectionTitle helper is intentionally unused after refactor
 
   Widget _buildMutualCard(Wave wave) {
-    final otherUserName = wave.receiverId == _waveService.currentUserId
+    final otherUserName = wave.receiverId == _waveController.currentUserId
         ? wave.senderName
         : wave.receiverName;
-    final otherUserLocation = wave.receiverId == _waveService.currentUserId
+    final otherUserLocation = wave.receiverId == _waveController.currentUserId
         ? wave.senderLocation
         : wave.receiverLocation;
     // For mutual connections, show the other person's avatar
     // If current user is receiver, show sender's avatar, otherwise show receiver's avatar
-    final otherUserAvatar = wave.receiverId == _waveService.currentUserId
+    final otherUserAvatar = wave.receiverId == _waveController.currentUserId
         ? wave.avatarUrl
         : wave.receiverAvatarUrl;
 

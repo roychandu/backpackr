@@ -1,4 +1,4 @@
-import 'package:backpackr/features/profile/repositories/user_profile_service.dart';
+import 'package:backpackr/features/profile/data_sources/user_profile_service.dart';
 import 'package:backpackr/features/travelers/models/user_profile.dart';
 
 class FirebaseProfileDataSource {

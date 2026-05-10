@@ -7,9 +7,15 @@ class WaveRepository {
 
   final FirebaseWaveDataSource _dataSource;
 
+  String? get currentUserId => _dataSource.currentUserId;
+
   Future<List<Wave>> getUserWaves() => _dataSource.getUserWaves();
 
   Stream<List<Wave>> getWavesStream() => _dataSource.getWavesStream();
+
+  Stream<int> getPendingReceivedWavesCount() {
+    return _dataSource.getPendingReceivedWavesCount();
+  }
 
   Future<String> sendWave({
     required String receiverId,
@@ -30,4 +36,8 @@ class WaveRepository {
   Future<void> ignoreWave(String waveId) => _dataSource.ignoreWave(waveId);
 
   Future<void> deleteWave(String waveId) => _dataSource.deleteWave(waveId);
+
+  Future<Map<WaveType, List<Wave>>> getWavesByType() {
+    return _dataSource.getWavesByType();
+  }
 }

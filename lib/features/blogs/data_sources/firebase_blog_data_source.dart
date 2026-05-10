@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:backpackr/features/blogs/models/blog.dart';
-import 'package:backpackr/features/blogs/repositories/blog_service.dart';
+import 'package:backpackr/features/blogs/data_sources/blog_service.dart';
 
 class FirebaseBlogDataSource {
   FirebaseBlogDataSource({BlogService? blogService})

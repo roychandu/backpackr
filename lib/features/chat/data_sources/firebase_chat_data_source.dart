@@ -1,6 +1,6 @@
 import 'package:backpackr/features/chat/models/chat_message.dart';
 import 'package:backpackr/features/chat/models/conversation.dart';
-import 'package:backpackr/features/chat/repositories/chat_service.dart';
+import 'package:backpackr/features/chat/data_sources/chat_service.dart';
 
 class FirebaseChatDataSource {
   FirebaseChatDataSource({ChatService? chatService})
@@ -12,6 +12,10 @@ class FirebaseChatDataSource {
 
   Stream<List<Conversation>> getConversations() {
     return _chatService.getConversations();
+  }
+
+  Stream<int> getTotalUnreadCount() {
+    return _chatService.getTotalUnreadCount();
   }
 
   Stream<List<ChatMessage>> getMessages(String conversationId) {

@@ -5,8 +5,8 @@ import 'dart:ui' as ui;
 import 'package:backpackr/shared/widgets/app_colors.dart';
 import 'package:backpackr/shared/widgets/app_text_styles.dart';
 import 'package:backpackr/shared/widgets/custom_button.dart';
+import 'package:backpackr/features/meetups/controllers/meetups_controller.dart';
 import 'package:backpackr/features/meetups/models/meetup.dart';
-import 'package:backpackr/features/meetups/repositories/meetup_service.dart';
 import 'package:backpackr/core/utils/error_handler.dart';
 import 'package:backpackr/features/blogs/views/other_travelers_blog_screen.dart';
 import 'package:backpackr/features/meetups/views/edit_meetup_screen.dart';
@@ -22,7 +22,7 @@ class MeetupDetailsScreen extends StatefulWidget {
 
 class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
     with SingleTickerProviderStateMixin {
-  final MeetupService _meetupService = MeetupService();
+  final MeetupsController _meetupsController = MeetupsController();
   List<Map<String, dynamic>> _attendees = [];
   List<Map<String, dynamic>> _pendingRequestUsers = [];
   bool _isLoading = true;
@@ -52,6 +52,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _meetupsController.dispose();
     super.dispose();
   }
 
@@ -61,7 +62,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
     });
 
     try {
-      final attendees = await _meetupService.getAttendeesData(
+      final attendees = await _meetupsController.getAttendeesData(
         _currentMeetup.attendeeIds,
       );
       setState(() {
@@ -81,7 +82,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
     });
 
     try {
-      final pendingUsers = await _meetupService.getAttendeesData(
+      final pendingUsers = await _meetupsController.getAttendeesData(
         _currentMeetup.pendingRequests,
       );
       setState(() {
@@ -96,7 +97,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
   }
 
   Future<void> _refreshMeetup() async {
-    final meetup = await _meetupService.getMeetupById(_currentMeetup.id);
+    final meetup = await _meetupsController.getMeetupById(_currentMeetup.id);
     if (meetup != null && mounted) {
       setState(() {
         _currentMeetup = meetup;
@@ -112,7 +113,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
     });
 
     try {
-      await _meetupService.requestToJoinMeetup(_currentMeetup.id);
+      await _meetupsController.requestToJoinMeetup(_currentMeetup.id);
 
       if (!mounted) return;
 
@@ -164,7 +165,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
     });
 
     try {
-      await _meetupService.cancelJoinRequest(_currentMeetup.id);
+      await _meetupsController.cancelJoinRequest(_currentMeetup.id);
 
       if (!mounted) return;
 
@@ -210,7 +211,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
 
   Future<void> _approveJoinRequest(String userId, String userName) async {
     try {
-      await _meetupService.approveJoinRequest(_currentMeetup.id, userId);
+      await _meetupsController.approveJoinRequest(_currentMeetup.id, userId);
 
       if (!mounted) return;
 
@@ -244,7 +245,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
 
   Future<void> _rejectJoinRequest(String userId, String userName) async {
     try {
-      await _meetupService.rejectJoinRequest(_currentMeetup.id, userId);
+      await _meetupsController.rejectJoinRequest(_currentMeetup.id, userId);
 
       if (!mounted) return;
 
@@ -304,7 +305,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
     if (confirmed != true) return;
 
     try {
-      await _meetupService.removeAttendee(_currentMeetup.id, userId);
+      await _meetupsController.removeAttendee(_currentMeetup.id, userId);
 
       if (!mounted) return;
 
@@ -342,7 +343,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
     });
 
     try {
-      await _meetupService.leaveMeetup(_currentMeetup.id);
+      await _meetupsController.leaveMeetup(_currentMeetup.id);
 
       if (!mounted) return;
 
@@ -443,7 +444,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
 
   Future<void> _deleteMeetup() async {
     try {
-      await _meetupService.cancelMeetup(_currentMeetup.id);
+      await _meetupsController.cancelMeetup(_currentMeetup.id);
 
       if (!mounted) return;
 
@@ -470,14 +471,14 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final isHost = _currentMeetup.hostId == _meetupService.currentUserId;
+    final isHost = _currentMeetup.hostId == _meetupsController.currentUserId;
     final isAttending = _currentMeetup.attendeeIds.contains(
-      _meetupService.currentUserId,
+      _meetupsController.currentUserId,
     );
     final isFull = _currentMeetup.isFull;
     final isPast = _currentMeetup.isPast;
     final hasPendingRequest = _currentMeetup.pendingRequests.contains(
-      _meetupService.currentUserId,
+      _meetupsController.currentUserId,
     );
 
     return Scaffold(
@@ -517,7 +518,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
   }
 
   Widget _buildAppBar(BuildContext context) {
-    final isHost = _currentMeetup.hostId == _meetupService.currentUserId;
+    final isHost = _currentMeetup.hostId == _meetupsController.currentUserId;
 
     return SliverAppBar(
       expandedHeight: 220,
@@ -967,7 +968,7 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
                           ),
                         ),
                         if (_currentMeetup.hostId ==
-                            _meetupService.currentUserId)
+                            _meetupsController.currentUserId)
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 12,
@@ -1371,7 +1372,8 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
   }
 
   Widget _buildAttendeesCard() {
-    final isViewerHost = _currentMeetup.hostId == _meetupService.currentUserId;
+    final isViewerHost =
+        _currentMeetup.hostId == _meetupsController.currentUserId;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -1516,7 +1518,8 @@ class _MeetupDetailsScreenState extends State<MeetupDetailsScreen>
                       final index = entry.key;
                       final attendee = entry.value;
                       final isCurrentUser =
-                          attendee['userId'] == _meetupService.currentUserId;
+                          attendee['userId'] ==
+                          _meetupsController.currentUserId;
                       final isHost =
                           attendee['userId'] == _currentMeetup.hostId;
                       final canRemove = isViewerHost && !isHost;
